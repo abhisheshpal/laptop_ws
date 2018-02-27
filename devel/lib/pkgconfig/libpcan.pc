@@ -1,0 +1,8 @@
+prefix=/home/vigneshnuc/laptop_ws/devel
+
+Name: libpcan
+Description: Description of libpcan
+Version: 0.6.10
+Cflags: 
+Libs: -L/home/vigneshnuc/laptop_ws/devel/lib 
+Requires: 

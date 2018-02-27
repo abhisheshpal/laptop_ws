@@ -1,0 +1,14 @@
+<!-- -*- xml -*- -->
+
+<launch>
+
+
+<node pkg="nmea_navsat_driver" type="nmea_serial_driver" name="nmea_serial_driver" respawn="true">
+  <param name="port" type="string" value="/dev/ttyACM0"/>  
+  <param name="baud" type="string" value="115200"/> 
+  <remap from="/fix" to="/gps/fix" /> 
+</node>
+
+<node pkg="thorvald_2d_nav" type="gps_switch_server" name="gps_switch_server"/>
+
+</launch>

@@ -1,0 +1,8 @@
+prefix=/home/vigneshnuc/laptop_ws/devel
+
+Name: trigger_sync
+Description: Description of trigger_sync
+Version: 0.0.0
+Cflags: -I/home/vigneshnuc/laptop_ws/devel/include -I/home/vigneshnuc/laptop_ws/src/Sensors/trigger_sync-master/include
+Libs: -L/home/vigneshnuc/laptop_ws/devel/lib -ltrigger_sync_lib
+Requires: roscpp

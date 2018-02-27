@@ -1,0 +1,15 @@
+digraph G {
+"base_link" -> "down_left_corner"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1517402998.395 sec old)\nBuffer length: 0.000 sec\n"];
+"odom" -> "base_link"[label="Broadcaster: /ekf_localization\nAverage rate: 51.578 Hz\nMost recent transform: 1517402998.240 ( 0.154 sec old)\nBuffer length: 0.950 sec\n"];
+"base_link" -> "down_right_corner"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1517402998.395 sec old)\nBuffer length: 0.000 sec\n"];
+"base_link" -> "top_left_corner"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1517402998.395 sec old)\nBuffer length: 0.000 sec\n"];
+"base_link" -> "top_right_corner"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1517402998.395 sec old)\nBuffer length: 0.000 sec\n"];
+"base_link" -> "xsens_imu"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1517402998.395 sec old)\nBuffer length: 0.000 sec\n"];
+"down_right_corner" -> "RTK_right_antenna"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1517402998.395 sec old)\nBuffer length: 0.000 sec\n"];
+"top_left_corner" -> "RTK_left_antenna"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1517402998.395 sec old)\nBuffer length: 0.000 sec\n"];
+"odom" -> "utm"[label="Broadcaster: /navsat_transform_node\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1517402998.395 sec old)\nBuffer length: 0.000 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1517402998.395"[ shape=plaintext ] ;
+ }->"odom";
+}

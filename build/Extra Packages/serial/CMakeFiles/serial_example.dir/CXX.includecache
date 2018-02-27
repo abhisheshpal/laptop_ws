@@ -1,0 +1,48 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/vigneshnuc/laptop_ws/src/Extra Packages/serial/examples/serial_example.cc
+string
+-
+iostream
+-
+cstdio
+-
+windows.h
+-
+unistd.h
+-
+serial/serial.h
+/home/vigneshnuc/laptop_ws/src/Extra Packages/serial/examples/serial/serial.h
+
+/home/vigneshnuc/laptop_ws/src/Extra Packages/serial/include/serial/serial.h
+limits
+-
+vector
+-
+string
+-
+cstring
+-
+sstream
+-
+exception
+-
+stdexcept
+-
+serial/v8stdint.h
+-
+
+/home/vigneshnuc/laptop_ws/src/Extra Packages/serial/include/serial/v8stdint.h
+stddef.h
+-
+stdio.h
+-
+stdint.h
+-
+
