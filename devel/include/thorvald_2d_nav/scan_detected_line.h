@@ -28,23 +28,29 @@ struct scan_detected_line_
     : header()
     , range()
     , bearing()  {
-    }
+      range.assign(0.0);
+
+      bearing.assign(0.0);
+  }
   scan_detected_line_(const ContainerAllocator& _alloc)
     : header(_alloc)
-    , range(_alloc)
-    , bearing(_alloc)  {
+    , range()
+    , bearing()  {
   (void)_alloc;
-    }
+      range.assign(0.0);
+
+      bearing.assign(0.0);
+  }
 
 
 
    typedef  ::std_msgs::Header_<ContainerAllocator>  _header_type;
   _header_type header;
 
-   typedef std::vector<double, typename ContainerAllocator::template rebind<double>::other >  _range_type;
+   typedef boost::array<float, 10>  _range_type;
   _range_type range;
 
-   typedef std::vector<double, typename ContainerAllocator::template rebind<double>::other >  _bearing_type;
+   typedef boost::array<float, 10>  _bearing_type;
   _bearing_type bearing;
 
 
@@ -124,12 +130,12 @@ struct MD5Sum< ::thorvald_2d_nav::scan_detected_line_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "0e8b578cc1fe15d012aeba376c62f328";
+    return "e898260d96b8c031fca2533c01815bf0";
   }
 
   static const char* value(const ::thorvald_2d_nav::scan_detected_line_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x0e8b578cc1fe15d0ULL;
-  static const uint64_t static_value2 = 0x12aeba376c62f328ULL;
+  static const uint64_t static_value1 = 0xe898260d96b8c031ULL;
+  static const uint64_t static_value2 = 0xfca2533c01815bf0ULL;
 };
 
 template<class ContainerAllocator>
@@ -149,8 +155,8 @@ struct Definition< ::thorvald_2d_nav::scan_detected_line_<ContainerAllocator> >
   static const char* value()
   {
     return "Header header\n\
-float64[] range\n\
-float64[] bearing\n\
+float32[10] range\n\
+float32[10] bearing\n\
 \n\
 \n\
 ================================================================================\n\
@@ -216,13 +222,13 @@ struct Printer< ::thorvald_2d_nav::scan_detected_line_<ContainerAllocator> >
     for (size_t i = 0; i < v.range.size(); ++i)
     {
       s << indent << "  range[" << i << "]: ";
-      Printer<double>::stream(s, indent + "  ", v.range[i]);
+      Printer<float>::stream(s, indent + "  ", v.range[i]);
     }
     s << indent << "bearing[]" << std::endl;
     for (size_t i = 0; i < v.bearing.size(); ++i)
     {
       s << indent << "  bearing[" << i << "]: ";
-      Printer<double>::stream(s, indent + "  ", v.bearing[i]);
+      Printer<float>::stream(s, indent + "  ", v.bearing[i]);
     }
   }
 };

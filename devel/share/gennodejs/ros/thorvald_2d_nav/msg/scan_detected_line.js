@@ -34,13 +34,13 @@ class scan_detected_line {
         this.range = initObj.range
       }
       else {
-        this.range = [];
+        this.range = new Array(10).fill(0);
       }
       if (initObj.hasOwnProperty('bearing')) {
         this.bearing = initObj.bearing
       }
       else {
-        this.bearing = [];
+        this.bearing = new Array(10).fill(0);
       }
     }
   }
@@ -49,10 +49,18 @@ class scan_detected_line {
     // Serializes a message object of type scan_detected_line
     // Serialize message field [header]
     bufferOffset = std_msgs.msg.Header.serialize(obj.header, buffer, bufferOffset);
+    // Check that the constant length array field [range] has the right length
+    if (obj.range.length !== 10) {
+      throw new Error('Unable to serialize array field range - length must be 10')
+    }
     // Serialize message field [range]
-    bufferOffset = _arraySerializer.float64(obj.range, buffer, bufferOffset, null);
+    bufferOffset = _arraySerializer.float32(obj.range, buffer, bufferOffset, 10);
+    // Check that the constant length array field [bearing] has the right length
+    if (obj.bearing.length !== 10) {
+      throw new Error('Unable to serialize array field bearing - length must be 10')
+    }
     // Serialize message field [bearing]
-    bufferOffset = _arraySerializer.float64(obj.bearing, buffer, bufferOffset, null);
+    bufferOffset = _arraySerializer.float32(obj.bearing, buffer, bufferOffset, 10);
     return bufferOffset;
   }
 
@@ -63,18 +71,16 @@ class scan_detected_line {
     // Deserialize message field [header]
     data.header = std_msgs.msg.Header.deserialize(buffer, bufferOffset);
     // Deserialize message field [range]
-    data.range = _arrayDeserializer.float64(buffer, bufferOffset, null)
+    data.range = _arrayDeserializer.float32(buffer, bufferOffset, 10)
     // Deserialize message field [bearing]
-    data.bearing = _arrayDeserializer.float64(buffer, bufferOffset, null)
+    data.bearing = _arrayDeserializer.float32(buffer, bufferOffset, 10)
     return data;
   }
 
   static getMessageSize(object) {
     let length = 0;
     length += std_msgs.msg.Header.getMessageSize(object.header);
-    length += 8 * object.range.length;
-    length += 8 * object.bearing.length;
-    return length + 8;
+    return length + 80;
   }
 
   static datatype() {
@@ -84,15 +90,15 @@ class scan_detected_line {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '0e8b578cc1fe15d012aeba376c62f328';
+    return 'e898260d96b8c031fca2533c01815bf0';
   }
 
   static messageDefinition() {
     // Returns full string definition for message
     return `
     Header header
-    float64[] range
-    float64[] bearing
+    float32[10] range
+    float32[10] bearing
     
     
     ================================================================================
@@ -133,14 +139,14 @@ class scan_detected_line {
       resolved.range = msg.range;
     }
     else {
-      resolved.range = []
+      resolved.range = new Array(10).fill(0)
     }
 
     if (msg.bearing !== undefined) {
       resolved.bearing = msg.bearing;
     }
     else {
-      resolved.bearing = []
+      resolved.bearing = new Array(10).fill(0)
     }
 
     return resolved;

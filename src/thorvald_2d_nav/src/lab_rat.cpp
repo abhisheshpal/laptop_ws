@@ -29,7 +29,7 @@ int count_i_1[1080], count_i_2[1080];
 visualization_msgs::Marker line_strip_1, line_strip_2, final_line;
 int end_line = 0, finale_1 = 0;
 
-thorvald_2d_nav::scan_detected_line measurement_points[4];
+thorvald_2d_nav::scan_detected_line measurement_points;
 
 // Our "data".
 struct Point {
@@ -122,10 +122,10 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
             final_Index_1[2].real_x = x_1[bIndex_1];
             final_Index_1[2].real_y = y_1[bIndex_1];
 
-            measurement_points[1].range = scan_msg_main.ranges[aIndex_1];
-            measurement_points[1].bearing = angle_1[aIndex_1];
-            measurement_points[2].range = scan_msg_main.ranges[bIndex_1];
-            measurement_points[2].bearing = angle_1[bIndex_1];
+            measurement_points.range[1] = scan_msg_main.ranges[aIndex_1];
+            measurement_points.bearing[1] = angle_1[aIndex_1];
+            measurement_points.range[2] = scan_msg_main.ranges[bIndex_1];
+            measurement_points.bearing[2] = angle_1[bIndex_1];
             } 
            }
 
@@ -196,10 +196,10 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
             final_Index_2[2].real_x = x_2[bIndex_2];
             final_Index_2[2].real_y = y_2[bIndex_2];
 
-            measurement_points[3].range = scan_msg_main.ranges[aIndex_2];
-            measurement_points[3].bearing = angle_2[aIndex_2];
-            measurement_points[4].range = scan_msg_main.ranges[bIndex_2];
-            measurement_points[4].bearing = angle_2[bIndex_2];
+            measurement_points.range[3] = scan_msg_main.ranges[aIndex_2];
+            measurement_points.bearing[3] = angle_2[aIndex_2];
+            measurement_points.range[4] = scan_msg_main.ranges[bIndex_2];
+            measurement_points.bearing[4] = angle_2[bIndex_2];
                               // std::cout << "final_Index_2[2].real_x:" << final_Index_2[2].real_x << "\n" << std::endl;
             } 
            }

@@ -1,4 +1,4 @@
 Header header
-float64[] range
-float64[] bearing
+float32[10] range
+float32[10] bearing
 

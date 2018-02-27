@@ -22,8 +22,8 @@
   (:init
    (&key
     ((:header __header) (instance std_msgs::Header :init))
-    ((:range __range) (make-array 0 :initial-element 0.0 :element-type :float))
-    ((:bearing __bearing) (make-array 0 :initial-element 0.0 :element-type :float))
+    ((:range __range) (make-array 10 :initial-element 0.0 :element-type :float))
+    ((:bearing __bearing) (make-array 10 :initial-element 0.0 :element-type :float))
     )
    (send-super :init)
    (setq _header __header)
@@ -48,10 +48,10 @@
    (+
     ;; std_msgs/Header _header
     (send _header :serialization-length)
-    ;; float64[] _range
-    (* 8    (length _range)) 4
-    ;; float64[] _bearing
-    (* 8    (length _bearing)) 4
+    ;; float32[10] _range
+    (* 4    10)
+    ;; float32[10] _bearing
+    (* 4    10)
     ))
   (:serialize
    (&optional strm)
@@ -59,15 +59,13 @@
               (make-string-output-stream (send self :serialization-length)))))
      ;; std_msgs/Header _header
        (send _header :serialize s)
-     ;; float64[] _range
-     (write-long (length _range) s)
-     (dotimes (i (length _range))
-       (sys::poke (elt _range i) (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
+     ;; float32[10] _range
+     (dotimes (i 10)
+       (sys::poke (elt _range i) (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
        )
-     ;; float64[] _bearing
-     (write-long (length _bearing) s)
-     (dotimes (i (length _bearing))
-       (sys::poke (elt _bearing i) (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
+     ;; float32[10] _bearing
+     (dotimes (i 10)
+       (sys::poke (elt _bearing i) (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
        )
      ;;
      (if (null strm) (get-output-stream-string s))))
@@ -75,30 +73,24 @@
    (buf &optional (ptr- 0))
    ;; std_msgs/Header _header
      (send _header :deserialize buf ptr-) (incf ptr- (send _header :serialization-length))
-   ;; float64[] _range
-   (let (n)
-     (setq n (sys::peek buf ptr- :integer)) (incf ptr- 4)
-     (setq _range (instantiate float-vector n))
-     (dotimes (i n)
-     (setf (elt _range i) (sys::peek buf ptr- :double)) (incf ptr- 8)
-     ))
-   ;; float64[] _bearing
-   (let (n)
-     (setq n (sys::peek buf ptr- :integer)) (incf ptr- 4)
-     (setq _bearing (instantiate float-vector n))
-     (dotimes (i n)
-     (setf (elt _bearing i) (sys::peek buf ptr- :double)) (incf ptr- 8)
-     ))
+   ;; float32[10] _range
+   (dotimes (i (length _range))
+     (setf (elt _range i) (sys::peek buf ptr- :float)) (incf ptr- 4)
+     )
+   ;; float32[10] _bearing
+   (dotimes (i (length _bearing))
+     (setf (elt _bearing i) (sys::peek buf ptr- :float)) (incf ptr- 4)
+     )
    ;;
    self)
   )
 
-(setf (get thorvald_2d_nav::scan_detected_line :md5sum-) "0e8b578cc1fe15d012aeba376c62f328")
+(setf (get thorvald_2d_nav::scan_detected_line :md5sum-) "e898260d96b8c031fca2533c01815bf0")
 (setf (get thorvald_2d_nav::scan_detected_line :datatype-) "thorvald_2d_nav/scan_detected_line")
 (setf (get thorvald_2d_nav::scan_detected_line :definition-)
       "Header header
-float64[] range
-float64[] bearing
+float32[10] range
+float32[10] bearing
 
 
 ================================================================================
@@ -123,6 +115,6 @@ string frame_id
 
 
 
-(provide :thorvald_2d_nav/scan_detected_line "0e8b578cc1fe15d012aeba376c62f328")
+(provide :thorvald_2d_nav/scan_detected_line "e898260d96b8c031fca2533c01815bf0")
 
 

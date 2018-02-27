@@ -74,17 +74,15 @@ count_1 = count_1 + 1;
 }
 
 //line point data
-/*void linepointsCallback(const thorvald_2d_nav::scan_detected_line::ConstPtr& line_points){
+void linepointsCallback(const thorvald_2d_nav::scan_detected_line::ConstPtr& line_points){
 
 if (line_points->range.size() > 0){
-std::copy(line_points->range.begin(), line_points->range.end(), measured_points_range);   //----Check this---//
-std::copy(line_points->bearing.begin(), line_points->bearing.end(), measured_points_bearing);
 for (int num = 1; num <= total_landmarks; num++){
-measured_points_range[num] = line_points.begin();
-measured_points_bearing[num] = line_points.begin();
+measured_points_range[num] = line_points->range[num];
+measured_points_bearing[num] = line_points->bearing[num];
+}}
+
 }
-}
-}*/
 
 // line_marker_1 data
 void leftlineCallback (const visualization_msgs::Marker::ConstPtr& line_1){
@@ -235,7 +233,7 @@ int main(int argc, char** argv)
         ros::Subscriber line_1_sub = n.subscribe("line_marker_1", 100, leftlineCallback);
 	ros::Subscriber line_2_sub = n.subscribe("line_marker_2", 100, rightlineCallback);
 	ros::Subscriber odom_sub = n.subscribe("/odometry/wheel", 100, odometryCallback);
-	// ros::Subscriber point_sub = n.subscribe("measurement_points", 100, linepointsCallback);
+	ros::Subscriber point_sub = n.subscribe("measurement_points", 100, linepointsCallback);
 
         // Publishers
        ros::Publisher thorvald_pose_pub = n.advertise<geometry_msgs::Pose>("thorvald_pose", 10);
