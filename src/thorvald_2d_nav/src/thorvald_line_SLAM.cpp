@@ -33,7 +33,7 @@ int count_1, count_2 = 0;
 int total_landmarks = 4; 
 // std::cout << "fhmr" << std::endl;
 
-MatrixXd mu = MatrixXd::Zero(1,2*total_landmarks+3); // mu
+MatrixXd mu = MatrixXd::Zero(2*total_landmarks+3,1); // mu
 MatrixXd cov = MatrixXd::Identity((2*total_landmarks+3),(2*total_landmarks+3)); // covariance
 MatrixXd line_local(4,2); // line_local
 MatrixXd line_local_fixed(4,2); // line_local_fixed
@@ -41,7 +41,7 @@ MatrixXd R = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3)); // Mot
 MatrixXd R3 = MatrixXd::Identity(3,3); // Motion Noise
 MatrixXd Z = MatrixXd::Zero(8,1); // Z
 MatrixXd expectedZ = MatrixXd::Zero(8,1); // expectedZ
-MatrixXd Q = MatrixXd::Zero(2,2); // Measurement Noise
+MatrixXd Q = MatrixXd::Zero(8,8); // Measurement Noise
 MatrixXd K = MatrixXd::Zero((2*total_landmarks+3),2); // Kalman gain
 MatrixXd diff = MatrixXd::Zero(2,2); // error
 MatrixXd H = MatrixXd::Zero(2*total_landmarks,(2*total_landmarks+3)); // H - Jacobian
@@ -55,6 +55,13 @@ double sub_goal_thershold = 0.05;
 bool landmarks_observed = false;
 geometry_msgs::Pose thorvald_estimated_pose;
 thorvald_2d_nav::sub_goal goal_count; 
+double yaw;
+   
+ //initialize velocity variables
+   double vx = 0.0;
+   double vy = 0.0;
+   double vth = 0.0;
+double d = 0.5; // distance between two wheels
 
 double normalizeangle(double bearing);
 // MatrixXd prediction_step(MatrixXd mu_1,MatrixXd cov_1, MatrixXd line_local_1);
@@ -69,6 +76,10 @@ robot_pose.pose.pose.orientation = odometry->pose.pose.orientation;
 robot_pose.twist.twist.linear.x = odometry->twist.twist.linear.x;
 robot_pose.twist.twist.angular.z = odometry->twist.twist.angular.x;
 
+tf::Quaternion quat(robot_pose.pose.pose.orientation.x,robot_pose.pose.pose.orientation.y, robot_pose.pose.pose.orientation.z, robot_pose.pose.pose.orientation.w);
+quat = quat.normalize();
+yaw = tf::getYaw(quat);
+
 count_1 = count_1 + 1;
 
 }
@@ -77,7 +88,7 @@ count_1 = count_1 + 1;
 void linepointsCallback(const thorvald_2d_nav::scan_detected_line::ConstPtr& line_points){
 
 if (line_points->range.size() > 0){
-for (int num = 1; num <= total_landmarks; num++){
+for (int num = 0; num < total_landmarks; num++){
 measured_points_range[num] = line_points->range[num];
 measured_points_bearing[num] = line_points->bearing[num];
 }}
@@ -139,24 +150,28 @@ bearing = -M_PI;
 // template <typename Derived>
 void prediction_step(MatrixXd& mu1,MatrixXd& cov1,MatrixXd& line_local1,MatrixXd& line_local_fixed1,double dt){
 
+      vx = (robot_pose.twist.twist.linear.x + robot_pose.twist.twist.linear.y)/2;
+      vy = 0.0;
+      vth = (robot_pose.twist.twist.linear.y - robot_pose.twist.twist.linear.x)/d;
+
       // Odometry Compensation 
-      double delta_x = (robot_pose.twist.twist.linear.x * cos(mu1(0,2)) - robot_pose.twist.twist.linear.y * sin(mu1(0,2))) * dt;
-      double delta_y = (robot_pose.twist.twist.linear.x * sin(mu1(0,2)) + robot_pose.twist.twist.linear.y * cos(mu1(0,2))) * dt;
-      double delta_th = robot_pose.twist.twist.angular.z * dt;
+      double delta_x = (vx * cos(mu1(2,0)) - vy * sin(mu1(2,0))) * dt;
+      double delta_y = (vx * sin(mu1(2,0)) + vy * cos(mu1(2,0))) * dt;
+      double delta_th = vth * dt;
 
       mu1(0,0) = mu1(0,0) + delta_x;
-      mu1(0,1) = mu1(0,1) + delta_y;
-      mu1(0,2) = mu1(0,2) + delta_th;
-      mu1(0,2)= normalizeangle(mu1(0,2));
-
+      mu1(1,0) = mu1(1,0) + delta_y;
+      mu1(2,0) = mu1(2,0) + delta_th;
+      mu1(2,0)= normalizeangle(mu1(2,0));
+             std::cout << "mu_x" << "\t" << mu1(0,0) << "\t" << "mu_y" << "\t" << mu1(1,0) << std::endl;
 //--------------------JACOBIAN NEEDED TO BE CALCULATED--------------//
 
       // Gtx = [0 0 -robot_pose.twist.twist.linear.x*sin(mu_1(1,3)); 0 0 robot_pose.twist.twist.linear.y*sin(mu_1(1,3)); 0 0 0]];
 
       // cov1(1,1) = 1;  // ***need to calculate*** //
-      cov1(0,2) = -robot_pose.twist.twist.linear.x * sin(mu1(0,2));
+      cov1(0,2) = -robot_pose.twist.twist.linear.x * sin(mu1(2,0)) - robot_pose.twist.twist.linear.y * cos(mu1(2,0));
       // cov1(2,2) = 1; 
-      cov1(1,2) = robot_pose.twist.twist.linear.x * cos(mu1(0,2));
+      cov1(1,2) = robot_pose.twist.twist.linear.x * cos(mu1(2,0)) - robot_pose.twist.twist.linear.y * sin(mu1(2,0));
       // cov1(3,3) = 1; 
 
       cov1(0,0) = R3(0,0) * motion_noise;
@@ -178,10 +193,10 @@ MatrixXd correction_step(MatrixXd mu_2,MatrixXd cov_2, MatrixXd line_local_2, Ma
         // Transformation of Line from global co-ordinate into robot frame
       if (landmarks_observed == false){
         line_local_2(z,0) =  line_pho(z,0) - (robot_pose.pose.pose.position.x * cos(line_theta(z,0))) - (robot_pose.pose.pose.position.y * sin(line_theta(z,0)));
-        line_local_2(z,1) =  line_theta(z,0) - tf::getYaw(robot_pose.pose.pose.orientation) + M_PI/2;
+        line_local_2(z,1) =  line_theta(z,0) - yaw + (3.14/2);
         if (z == total_landmarks){ landmarks_observed = true;}
       }
-        ROS_INFO("HERE_1");
+
       Z(2*z,0) = measured_points_range[z];
       Z((2*z)+1,0) = measured_points_bearing[z];
 
@@ -191,27 +206,27 @@ MatrixXd correction_step(MatrixXd mu_2,MatrixXd cov_2, MatrixXd line_local_2, Ma
 
 
       double expectedRange = sqrt(q);
-      double expectedBearing = normalizeangle((lambda_y/lambda_x) - tf::getYaw(robot_pose.pose.pose.orientation));
+      double expectedBearing = normalizeangle((lambda_y/lambda_x) - yaw);
       expectedZ(2*z,0) = expectedRange;
       expectedZ((2*z)+1,0) = expectedBearing;
-	      std::cout << "lambda_x" << "\t" << lambda_x << std::endl; 
+
       // Compute the Jacobian H of the measurement function h wrt the landmark location
-       H(2*z,0) = 1/q * (-sqrt(q)*lambda_x);
+       H((2*z),0) = 1/q * (-sqrt(q)*lambda_x);
        H((2*z)+1,0) = 1/q * lambda_y;
-       H(2*z,1) = 1/q * (-sqrt(q)*lambda_y);
+       H((2*z),1) = 1/q * (-sqrt(q)*lambda_y);
        H((2*z)+1,1) = 1/q * (-lambda_y);
-       H(2*z,2) = 0;
+       H((2*z),2) = 0;
        H((2*z)+1,2) = -q;
 
-       H(2*z,((2*z)+1)+2) = 1/q * (sqrt(q)*lambda_x);
-       H((2*z)+1,((2*z)+1)+2) = 1/q * (-lambda_y);
-       H(2*z,((2*z)+1)+3) = 1/q * (sqrt(q)*lambda_y);
-       H((2*z)+1,((2*z)+1)+3) = 1/q * (lambda_x);       
+       H((2*z),2*z+3) = 1/q * (sqrt(q)*lambda_x);
+       H((2*z)+1,2*z+3) = 1/q * (-lambda_y);
+       H((2*z),2*z+4) = 1/q * (sqrt(q)*lambda_y);
+       H((2*z)+1,2*z+4) = 1/q * (lambda_x);       
       }	
 		
-	// Compute the Kalman gain
+      // Compute the Kalman gain
        K = cov_2*H.transpose()*(H*cov_2*H.transpose() + Q).inverse();
-		
+ 
         // Compute the diference between the expected and recorded measurements.
        diff = Z - expectedZ;
         // diff = normalize_all_bearings(diff);
@@ -219,7 +234,7 @@ MatrixXd correction_step(MatrixXd mu_2,MatrixXd cov_2, MatrixXd line_local_2, Ma
 	// Finish the correction step by computing the new mu and sigma.
        mu_2 = mu_2 + K*diff;
        cov_2 =  (MatrixXd::Identity((2*total_landmarks+3),(2*total_landmarks+3))- K*H)*cov_2 ;
-       mu_2(0,2)= normalizeangle(mu_2(0,2));
+       mu_2(2,0)= normalizeangle(mu_2(2,0));
 }
 
 int main(int argc, char** argv)
@@ -250,27 +265,27 @@ int main(int argc, char** argv)
        current_time = ros::Time::now();
        double dt = (current_time - last_time).toSec();
 
-       // if(count_1 > 0){
+        if(count_1 > 0){
           
        // for (int i = 1; i <= 5; i++){ // ****change this timestep*** //
-        ROS_INFO("HERE");
+
 
        // prediction step
         prediction_step(mu, cov, line_local, line_local_fixed, dt);
  
        // correction step
-        correction_step(mu, cov, line_local, line_local_fixed, dt);
-
+       // correction_step(mu, cov, line_local, line_local_fixed, dt);
+             // std::cout << "mu_x" << "\t" << mu(0,0) << "\t" << mu_y" << "\t" << mu(1,0) << std::endl;
        // }
 
        // count_1 = 0;
 
-       // }
+        }
 
    // Robot pose estimation
    thorvald_estimated_pose.position.x = mu(0,0);
-   thorvald_estimated_pose.position.y = mu(0,1);
-   geometry_msgs::Quaternion q = tf::createQuaternionMsgFromYaw(mu(0,2));
+   thorvald_estimated_pose.position.y = mu(1,0);
+   geometry_msgs::Quaternion q = tf::createQuaternionMsgFromYaw(mu(2,0));
    thorvald_estimated_pose.orientation = q;
 
    // sub-goal check

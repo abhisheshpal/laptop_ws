@@ -240,7 +240,7 @@ int main(int argc, char** argv)
         ros::Publisher marker_pub_1 = n.advertise<visualization_msgs::Marker>("line_marker_1", 10);
         ros::Publisher marker_pub_2 = n.advertise<visualization_msgs::Marker>("line_marker_2", 10);
         ros::Publisher marker_pub_3 = n.advertise<visualization_msgs::Marker>("final_line", 10);
-        // ros::Publisher point_pub = n.advertise<thorvald_2d_nav::scan_detected_line>("measurement_points", 10);
+        ros::Publisher point_pub = n.advertise<thorvald_2d_nav::scan_detected_line>("measurement_points", 10);
 
         // Service Servers
         ros::ServiceServer service = n.advertiseService("sub_goal_check", add);
@@ -357,6 +357,7 @@ int main(int argc, char** argv)
         marker_pub_1.publish(line_strip_1);
         marker_pub_2.publish(line_strip_2);
         marker_pub_3.publish(final_line);
+        point_pub.publish(measurement_points);
         r.sleep();
 	} // node shutdown
   return 0;

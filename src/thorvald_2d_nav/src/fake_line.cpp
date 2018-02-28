@@ -8,7 +8,11 @@
 #include <cmath>
 #include <visualization_msgs/Marker.h>
 
+#include <thorvald_2d_nav/scan_detected_line.h>
+
 visualization_msgs::Marker line_strip_1, line_strip_2, final_line;
+
+thorvald_2d_nav::scan_detected_line measurement_points;
 
 int main(int argc, char **argv)
   {
@@ -20,6 +24,7 @@ int main(int argc, char **argv)
     ros::Publisher marker_pub_1 = n.advertise<visualization_msgs::Marker>("line_marker_1", 10);
     ros::Publisher marker_pub_2 = n.advertise<visualization_msgs::Marker>("line_marker_2", 10);
     ros::Publisher marker_pub_3 = n.advertise<visualization_msgs::Marker>("final_line", 10);
+    ros::Publisher point_pub = n.advertise<thorvald_2d_nav::scan_detected_line>("measurement_points", 10);
 
       while (ros::ok()){
 	ros::spinOnce();
@@ -39,13 +44,17 @@ int main(int argc, char **argv)
         line_strip_1.color.a = 1.0;
 
         // Create the vertices for the points and lines
-
         geometry_msgs::Point pt_1[2];
 
         pt_1[1].x = -1.23; 
         pt_1[1].y = -0.4744; 
         pt_1[2].x = -0.525; 
         pt_1[2].y = -0.48967; 
+
+        measurement_points.range[0] = 1.33;
+        measurement_points.bearing[0] = -2.65;
+        measurement_points.range[1] = 0.717;
+        measurement_points.bearing[1] = -2.234;
 
          for(int q_1 = 1; q_1 <= 2; q_1++){
            line_strip_1.points.push_back(pt_1[q_1]);            
@@ -70,10 +79,10 @@ int main(int argc, char **argv)
 
         geometry_msgs::Point pt_2[2];
 
-        pt_2[1].x = -0.59; 
-        pt_2[1].y = 0.534; 
-        pt_2[2].x = -1.31; 
-        pt_2[2].y = 0.454; 
+        pt_2[2].x = -0.59; 
+        pt_2[2].y = 0.534; 
+        pt_2[3].x = -1.31; 
+        pt_2[3].y = 0.454; 
   
          for(int q_2 = 1; q_2 <= 2; q_2++){
            line_strip_2.points.push_back(pt_2[q_2]);            
@@ -101,6 +110,11 @@ int main(int argc, char **argv)
         pt_3[1].y = 0.0; 
         pt_3[2].x = -0.5575; 
         pt_3[2].y = 0.0; 
+
+        measurement_points.range[3] = 1.338;
+        measurement_points.bearing[3] = 2.8623;
+        measurement_points.range[4] = 0.712;
+        measurement_points.bearing[4] = 2.4262;
   
          for(int q_3 = 1; q_3 <= 2; q_3++){
          final_line.points.push_back(pt_3[q_3]); 
@@ -114,6 +128,7 @@ int main(int argc, char **argv)
         marker_pub_1.publish(line_strip_1);
         marker_pub_2.publish(line_strip_2);
         marker_pub_3.publish(final_line);
+        point_pub.publish(measurement_points);
         // r.sleep();
 	} // node shutdown
    
