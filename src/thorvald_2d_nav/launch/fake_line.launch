@@ -13,7 +13,7 @@
   <param name="baud" value="57600" />
 </node>
 
-<node pkg="odometry_package" type="odometry_package_node" name="odometry_package_node"/>
+<node pkg="odometry_package" type="odometry_package_node" name="odometry_package_node" output="screen" />
 
 <node pkg="thorvald_2d_nav" type="fake_lines" name="fake_lines"/>
 
