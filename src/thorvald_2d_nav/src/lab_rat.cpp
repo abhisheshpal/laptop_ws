@@ -16,8 +16,8 @@
 // Parameters 
 geometry_msgs::Point n;
 int k; // iterations need to find the best model
-double thershold = 0.3;
-int d = 15; // nearby point to fit the line
+double thershold = 0.5;
+int d = 13; // nearby point to fit the line
 
 double best_model;
 double x_1[1080], y_1[1080], angle_1[1080], x_2[1080], y_2[1080], angle_2[1080];

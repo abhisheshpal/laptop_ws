@@ -46,15 +46,15 @@ int main(int argc, char **argv)
         // Create the vertices for the points and lines
         geometry_msgs::Point pt_1[2];
 
-        pt_1[1].x = -1.23; 
-        pt_1[1].y = -0.4744; 
-        pt_1[2].x = -0.525; 
-        pt_1[2].y = -0.48967; 
+        pt_1[1].x = -1.3704; 
+        pt_1[1].y = -0.4452; 
+        pt_1[2].x = -0.5791; 
+        pt_1[2].y = -0.4525; 
 
-        measurement_points.range[0] = 1.33;
-        measurement_points.bearing[0] = -2.65;
-        measurement_points.range[1] = 0.717;
-        measurement_points.bearing[1] = -2.234;
+        measurement_points.range[0] = 1.44099;
+        measurement_points.bearing[0] = -2.8274;
+        measurement_points.range[1] = 0.735;
+        measurement_points.bearing[1] = -2.4783;
 
          for(int q_1 = 1; q_1 <= 2; q_1++){
            line_strip_1.points.push_back(pt_1[q_1]);            
@@ -79,10 +79,15 @@ int main(int argc, char **argv)
 
         geometry_msgs::Point pt_2[2];
 
-        pt_2[2].x = -0.59; 
-        pt_2[2].y = 0.534; 
-        pt_2[3].x = -1.31; 
-        pt_2[3].y = 0.454; 
+        pt_2[1].x = -0.5725; 
+        pt_2[1].y = 0.55294; 
+        pt_2[2].x = -1.3284; 
+        pt_2[2].y = 0.50995; 
+
+        measurement_points.range[2] = 0.796;
+        measurement_points.bearing[2] = 2.37364;
+        measurement_points.range[3] = 1.4229;
+        measurement_points.bearing[3] = 2.77507;
   
          for(int q_2 = 1; q_2 <= 2; q_2++){
            line_strip_2.points.push_back(pt_2[q_2]);            
@@ -106,15 +111,10 @@ int main(int argc, char **argv)
 
         // Create the vertices for the points and lines
         geometry_msgs::Point pt_3[2];
-        pt_3[1].x = -1.27; 
-        pt_3[1].y = 0.0; 
-        pt_3[2].x = -0.5575; 
-        pt_3[2].y = 0.0; 
-
-        measurement_points.range[3] = 1.338;
-        measurement_points.bearing[3] = 2.8623;
-        measurement_points.range[4] = 0.712;
-        measurement_points.bearing[4] = 2.4262;
+        pt_3[1].x = -1.3494; 
+        pt_3[1].y = 0.03233; 
+        pt_3[2].x = -0.57589; 
+        pt_3[2].y = 0.05021; 
   
          for(int q_3 = 1; q_3 <= 2; q_3++){
          final_line.points.push_back(pt_3[q_3]); 

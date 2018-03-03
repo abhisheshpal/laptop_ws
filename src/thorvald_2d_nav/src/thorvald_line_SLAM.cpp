@@ -21,6 +21,7 @@
 #include <thorvald_2d_nav/landmarks.h>
 #include <thorvald_2d_nav/sub_goal.h>
 
+#define INF 1000
 using namespace Eigen;
 
 thorvald_2d_nav::landmarks landmarks_pos;
@@ -31,16 +32,11 @@ int count_1, count_2 = 0;
 
 // Initialization
 int total_landmarks = 4; 
-// std::cout << "fhmr" << std::endl;
 
-MatrixXd cov = MatrixXd::Identity((2*total_landmarks+3),(2*total_landmarks+3)); // covariance
 MatrixXd line_local(4,2); // line_local
 MatrixXd line_local_fixed(4,2); // line_local_fixed
-MatrixXd R = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3)); // Motion Noise
-MatrixXd R3 = MatrixXd::Identity(3,3); // Motion Noise
 MatrixXd Z = MatrixXd::Zero(8,1); // Z
 MatrixXd expectedZ = MatrixXd::Zero(8,1); // expectedZ
-MatrixXd Q = MatrixXd::Zero(8,8); // Measurement Noise
 MatrixXd K = MatrixXd::Zero((2*total_landmarks+3),2); // Kalman gain
 MatrixXd diff = MatrixXd::Zero(2,2); // error
 MatrixXd H = MatrixXd::Zero(2*total_landmarks,(2*total_landmarks+3)); // H - Jacobian
@@ -57,16 +53,22 @@ thorvald_2d_nav::sub_goal goal_count;
 double yaw;
 geometry_msgs::Twist odom_vel;
 
-        //initialize velocity variables
-       double vx = 0.0;
-       double vy = 0.0;
-       double vth = 0.0;
+//initialize velocity variables
+double vx = 0.0;
+double vy = 0.0;
+double vth = 0.0;
    
 double d = 0.5; // distance between two wheels
 
+MatrixXd robSigma    = MatrixXd::Zero(3,3);
+MatrixXd robMapSigma = MatrixXd::Zero(3,(2*total_landmarks));
+MatrixXd mapSigma    = INF*MatrixXd::Identity((2*total_landmarks), (2*total_landmarks));
+MatrixXd cov = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3));
+MatrixXd R = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3)); // Motion Noise
+MatrixXd Q = MatrixXd::Zero(8,8); // Measurement Noise
+
+
 double normalizeangle(double bearing);
-// MatrixXd prediction_step(MatrixXd mu_1,MatrixXd cov_1, MatrixXd line_local_1);
-// MatrixXd correction_step(MatrixXd mu_2,MatrixXd cov_2, MatrixXd line_local_2);
 
 // robot velocity data
 void odometryvelCallback (const geometry_msgs::Twist::ConstPtr& odometry_vel){
@@ -109,10 +111,10 @@ measured_points_bearing[num] = line_points->bearing[num];
 void leftlineCallback (const visualization_msgs::Marker::ConstPtr& line_1){
 
 if(line_1->points.size() > 0){
-landmarks_pos.pt_1.x = line_1->points[1].x;
-landmarks_pos.pt_1.y = line_1->points[1].y;
-landmarks_pos.pt_2.x = line_1->points[2].x;
-landmarks_pos.pt_2.y = line_1->points[2].y;
+landmarks_pos.pt_1.x = line_1->points[0].x;
+landmarks_pos.pt_1.y = line_1->points[0].y;
+landmarks_pos.pt_2.x = line_1->points[1].x;
+landmarks_pos.pt_2.y = line_1->points[1].y;
 }
 
 line_pho(0,0) = sqrt(pow(landmarks_pos.pt_1.x,2) + pow(landmarks_pos.pt_1.y,2));
@@ -128,10 +130,10 @@ count_1 = count_1 + 1;
 void rightlineCallback (const visualization_msgs::Marker::ConstPtr& line_2){
 
 if(line_2->points.size() > 0){
-landmarks_pos.pt_3.x = line_2->points[1].x;
-landmarks_pos.pt_3.y = line_2->points[1].y;
-landmarks_pos.pt_4.x = line_2->points[2].x;
-landmarks_pos.pt_4.y = line_2->points[2].y;
+landmarks_pos.pt_3.x = line_2->points[0].x;
+landmarks_pos.pt_3.y = line_2->points[0].y;
+landmarks_pos.pt_4.x = line_2->points[1].x;
+landmarks_pos.pt_4.y = line_2->points[1].y;
 }
 
 line_pho(2,0) = sqrt(pow(landmarks_pos.pt_3.x,2) + pow(landmarks_pos.pt_3.y,2));
@@ -158,41 +160,42 @@ bearing = -M_PI;
 //prediction step
 void prediction_step(MatrixXd& mu1,MatrixXd& cov1,MatrixXd& line_local1,MatrixXd& line_local_fixed1,double dt){
 
-      vx = (odom_vel.linear.x + odom_vel.linear.y)/2;
-      vy = 0.0;
-      vth = (odom_vel.linear.y - odom_vel.linear.x)/d;
+  vx = (odom_vel.linear.x + odom_vel.linear.y)/2;
+  vy = 0.0;
+  vth = (odom_vel.linear.y - odom_vel.linear.x)/d;
 
-      // Odometry Compensation 
-      double delta_x = (vx * cos(mu1(2,0)) - vy * sin(mu1(2,0))) * dt;
-      double delta_y = (vx * sin(mu1(2,0)) + vy * cos(mu1(2,0))) * dt;
-      double delta_th = vth * dt;
+  // Odometry Compensation 
+  double delta_x = (vx * cos(mu1(2,0)) - vy * sin(mu1(2,0))) * dt;
+  double delta_y = (vx * sin(mu1(2,0)) + vy * cos(mu1(2,0))) * dt;
+  double delta_th = vth * dt;
 
-      mu1(0,0) = mu1(0,0) + delta_x;
-      mu1(1,0) = mu1(1,0) + delta_y;
-      mu1(2,0) = mu1(2,0) + delta_th;
-      // mu(2,0)= normalizeangle(mu(2,0));
+  mu1(0,0) = mu1(0,0) + delta_x;
+  mu1(1,0) = mu1(1,0) + delta_y;
+  mu1(2,0) = mu1(2,0) + delta_th;
+  // mu(2,0)= normalizeangle(mu(2,0));
 
-      // std::cout << "x" << "\t" << mu1(0,0) << "\t" << "y" << "\t" << mu1(2,0) << std::endl;
-//--------------------JACOBIAN NEEDED TO BE CALCULATED--------------//
+  MatrixXd Gt = MatrixXd(3,3);
+  Gt << 1, 0, -vx * sin(mu1(2,0)) - vy * cos(mu1(2,0)),
+        0, 1,  vx * cos(mu1(2,0)) - vy * sin(mu1(2,0)),
+        0, 0,  0;
 
-      // Gtx = [0 0 -robot_pose.twist.twist.linear.x*sin(mu_1(1,3)); 0 0 robot_pose.twist.twist.linear.y*sin(mu_1(1,3)); 0 0 0]];
+  R.topLeftCorner(3,3) << motion_noise, 0, 0,
+                          0, motion_noise , 0,
+                          0, 0,   motion_noise/10;
 
-      // cov1(1,1) = 1;  // ***need to calculate*** //
-      cov(0,2) = -vx * sin(mu1(2,0)) - vy * cos(mu1(2,0));
-      // cov1(2,2) = 1; 
-      cov(1,2) = vx * cos(mu1(2,0)) - vy * sin(mu1(2,0));
-      // cov1(3,3) = 1; 
+  cov1.topLeftCorner(3,3) = Gt * cov1.topLeftCorner(3,3) * Gt.transpose();
+  cov1.topRightCorner(3, 2*total_landmarks) = Gt * cov1.topRightCorner(3, 2*total_landmarks);
+  cov1.bottomLeftCorner(2*total_landmarks, 3) = cov1.topRightCorner(3, 2*total_landmarks).transpose();
 
-      cov(0,0) += R3(0,0) * motion_noise;
-      cov(1,1) += R3(1,1) * motion_noise;
-      cov(2,2) += R3(2,2) * motion_noise/10;
-                  
-      // cov1 = cov1 + R; // Motion Noise
+  cov1 = cov1 + R; // Motion Noise
+
+  // std::cout << "mu1" << "\t" << mu1(0,0) << "\t" << "mu1" << "\t" << mu1(1,0) << "\t" << "mu1" << "\t" << mu1(2,0) << std::endl;
+  // std::cout << "cov_x" << "\t" << cov1(1,0) << "\t" << "cov_y" << "\t" << cov1(0,1) << std::endl;
 
 }
 
 //correction step
-MatrixXd correction_step(MatrixXd mu_2,MatrixXd cov_2, MatrixXd line_local_2, MatrixXd line_local_fixed_2, double dt){
+void correction_step(MatrixXd mu_2, MatrixXd cov_2, MatrixXd line_local_2, MatrixXd line_local_fixed_2, double dt){
 
       // if (i == 1){
             
@@ -218,7 +221,8 @@ MatrixXd correction_step(MatrixXd mu_2,MatrixXd cov_2, MatrixXd line_local_2, Ma
       double expectedBearing = normalizeangle((lambda_y/lambda_x) - yaw);
       expectedZ(2*z,0) = expectedRange;
       expectedZ((2*z)+1,0) = expectedBearing;
-
+   //std::cout << "line_pho(2,0)" << "\t" << line_pho(2,0) << "\t" << "line_pho(3,0)" << "\t" << line_pho(3,0) << "\t" << "line_theta(2,0)" << "\t" << line_theta(2,0) << std::endl;
+   // std::cout << "expectedRange" << "\t" << line_pho(z,0) << "\t" << "Z" << "\t" <<  Z(2*z,0) << std::endl;
       // Compute the Jacobian H of the measurement function h wrt the landmark location
        H((2*z),0) = 1/q * (-sqrt(q)*lambda_x);
        H((2*z)+1,0) = 1/q * lambda_y;
@@ -235,7 +239,7 @@ MatrixXd correction_step(MatrixXd mu_2,MatrixXd cov_2, MatrixXd line_local_2, Ma
 		
       // Compute the Kalman gain
        K = cov_2*H.transpose()*(H*cov_2*H.transpose() + Q).inverse();
- 
+
         // Compute the diference between the expected and recorded measurements.
        diff = Z - expectedZ;
         // diff = normalize_all_bearings(diff);
@@ -243,6 +247,7 @@ MatrixXd correction_step(MatrixXd mu_2,MatrixXd cov_2, MatrixXd line_local_2, Ma
 	// Finish the correction step by computing the new mu and sigma.
        mu_2 = mu_2 + K*diff;
        cov_2 =  (MatrixXd::Identity((2*total_landmarks+3),(2*total_landmarks+3))- K*H)*cov_2 ;
+   // std::cout << "mu_2_x" << "\t" << mu_2(0,0) << "\t" << "mu_2(1,0)" << "\t" << mu_2(1,0) << "\t" << "mu_2(2,0)" << "\t" << mu_2(2,0) << std::endl;
        // mu_2(2,0)= normalizeangle(mu_2(2,0));
 }
 
@@ -267,6 +272,10 @@ int main(int argc, char** argv)
        ros::ServiceClient client = n.serviceClient<thorvald_2d_nav::sub_goal>("sub_goal_check");
 
        MatrixXd mu = MatrixXd::Zero(2*total_landmarks+3,1); // mu
+       cov.topLeftCorner(3,3) = robSigma;
+       cov.topRightCorner(3, (2*total_landmarks)) = robMapSigma;
+       cov.bottomLeftCorner((2*total_landmarks), 3) = robMapSigma.transpose();
+       cov.bottomRightCorner((2*total_landmarks), (2*total_landmarks)) = mapSigma;
 
        ros::Time current_time, last_time;
        current_time = ros::Time::now();
@@ -280,50 +289,14 @@ int main(int argc, char** argv)
       double dt = (current_time - last_time).toSec();
 
       // if(count_1 > 0){
-/*
-      current_time = ros::Time::now();
-      vx = (odom_vel.linear.x + odom_vel.linear.y)/2;
-      vy = 0.0;
-      vth = (odom_vel.linear.y - odom_vel.linear.x)/d;
 
-      // Odometry Compensation 
-      double dt = (current_time - last_time).toSec();
-      double delta_x = (vx * cos(th) - vy * sin(th)) * dt;
-      double delta_y = (vx * sin(th) + vy * cos(th)) * dt;
-      double delta_th = vth * dt;
-
-      mu(0,0) = mu(0,0) + delta_x;
-      mu(1,0) = mu(1,0) + delta_y;
-      mu(2,0) = mu(2,0) + delta_th;
-      // mu(2,0)= normalizeangle(mu(2,0));
-       // x = x + delta_x;
-       // y = y + delta_y;
-       //th = th + delta_th;
-      std::cout << "x" << "\t" << mu(0,0) << "\t" << "y" << "\t" << mu(2,0) << std::endl;
-//--------------------JACOBIAN NEEDED TO BE CALCULATED--------------//
-
-      // Gtx = [0 0 -robot_pose.twist.twist.linear.x*sin(mu_1(1,3)); 0 0 robot_pose.twist.twist.linear.y*sin(mu_1(1,3)); 0 0 0]];
-
-      // cov1(1,1) = 1;  // ***need to calculate*** //
-      cov(0,2) = -robot_pose.twist.twist.linear.x * sin(mu(2,0)) - robot_pose.twist.twist.linear.y * cos(mu(2,0));
-      // cov1(2,2) = 1; 
-      cov(1,2) = robot_pose.twist.twist.linear.x * cos(mu(2,0)) - robot_pose.twist.twist.linear.y * sin(mu(2,0));
-      // cov1(3,3) = 1; 
-
-      cov(0,0) = R3(0,0) * motion_noise;
-      cov(1,1) = R3(1,1) * motion_noise;
-      cov(2,2) = R3(2,2) * motion_noise/10;
-                  
-       // for (int i = 1; i <= 5; i++){ // ****change this timestep*** //
-*/
        // prediction step
          prediction_step(mu, cov, line_local, line_local_fixed, dt);
  
        // correction step
-       // correction_step(mu, cov, line_local, line_local_fixed, dt);
-             // std::cout << "mu_x" << "\t" << mu(0,0) << "\t" << mu_y" << "\t" << mu(1,0) << std::endl;
+         correction_step(mu, cov, line_local, line_local_fixed, dt);
        // }
-
+//  ROS_INFO("HERE");
        // count_1 = 0;
 
       //  }
