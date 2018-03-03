@@ -219,6 +219,7 @@ bool add(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Res
    {
      finale_1 = end_line;
      end_line = end_line + req.counter;
+ROS_INFO("service on time");
      if(end_line > finale_1){
      finale = 0; 
      }

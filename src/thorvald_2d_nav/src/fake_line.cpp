@@ -9,10 +9,24 @@
 #include <visualization_msgs/Marker.h>
 
 #include <thorvald_2d_nav/scan_detected_line.h>
+#include <thorvald_2d_nav/sub_goal.h>
 
 visualization_msgs::Marker line_strip_1, line_strip_2, final_line;
 
 thorvald_2d_nav::scan_detected_line measurement_points;
+int end_line = 0, finale = 0, finale_1 = 0;
+
+bool add(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
+   {
+     finale_1 = end_line;
+     end_line = end_line + req.counter;
+ROS_INFO("service on time");
+     if(end_line > finale_1){
+     finale = 0; 
+     }
+ 
+     return true;
+   }
 
 int main(int argc, char **argv)
   {
@@ -25,6 +39,9 @@ int main(int argc, char **argv)
     ros::Publisher marker_pub_2 = n.advertise<visualization_msgs::Marker>("line_marker_2", 10);
     ros::Publisher marker_pub_3 = n.advertise<visualization_msgs::Marker>("final_line", 10);
     ros::Publisher point_pub = n.advertise<thorvald_2d_nav::scan_detected_line>("measurement_points", 10);
+
+    // Service Servers
+    ros::ServiceServer service = n.advertiseService("sub_goal_check", add);
 
       while (ros::ok()){
 	ros::spinOnce();

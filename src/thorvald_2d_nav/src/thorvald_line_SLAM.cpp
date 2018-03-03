@@ -44,7 +44,7 @@ MatrixXd line_pho = MatrixXd::Zero(4,1); // polar co-ordinates
 MatrixXd line_theta = MatrixXd::Zero(4,1); // polar co-ordinates
 double measured_points_range[4];
 double measured_points_bearing[4];
-float motion_noise = 0.01;
+double motion_noise = 0.000000000000000000000001;
 float measurement_noise = 0.01;
 double sub_goal_thershold = 0.05;
 bool landmarks_observed = false;
@@ -52,6 +52,7 @@ geometry_msgs::Pose thorvald_estimated_pose;
 thorvald_2d_nav::sub_goal goal_count; 
 double yaw;
 geometry_msgs::Twist odom_vel;
+int end_line = 0, finale_1 = 0;
 
 //initialize velocity variables
 double vx = 0.0;
@@ -65,7 +66,7 @@ MatrixXd robMapSigma = MatrixXd::Zero(3,(2*total_landmarks));
 MatrixXd mapSigma    = INF*MatrixXd::Identity((2*total_landmarks), (2*total_landmarks));
 MatrixXd cov = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3));
 MatrixXd R = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3)); // Motion Noise
-MatrixXd Q = MatrixXd::Zero(8,8); // Measurement Noise
+MatrixXd Q = MatrixXd::Identity(8,8)* 000000000000000000000001; // Measurement Noise
 
 
 double normalizeangle(double bearing);
@@ -247,9 +248,10 @@ void correction_step(MatrixXd mu_2, MatrixXd cov_2, MatrixXd line_local_2, Matri
 	// Finish the correction step by computing the new mu and sigma.
        mu_2 = mu_2 + K*diff;
        cov_2 =  (MatrixXd::Identity((2*total_landmarks+3),(2*total_landmarks+3))- K*H)*cov_2 ;
-   // std::cout << "mu_2_x" << "\t" << mu_2(0,0) << "\t" << "mu_2(1,0)" << "\t" << mu_2(1,0) << "\t" << "mu_2(2,0)" << "\t" << mu_2(2,0) << std::endl;
+    std::cout << "mu_2_x" << "\t" << mu_2(0,0) << "\t" << "mu_2(1,1)" << "\t" << mu_2(1,0) << "\t" << "mu_2(2,2)" << "\t" << mu_2(2,0) << std::endl;
        // mu_2(2,0)= normalizeangle(mu_2(2,0));
 }
+
 
 int main(int argc, char** argv)
 {
@@ -311,6 +313,7 @@ int main(int argc, char** argv)
    double goal = std::max(landmarks_pos.pt_1.x,landmarks_pos.pt_2.x);
    if ((thorvald_estimated_pose.position.x - goal) < sub_goal_thershold){  //sub-goal thershold
    goal_count.request.counter = 1;
+   ROS_INFO("client request");
    }
 
   thorvald_pose_pub.publish(thorvald_estimated_pose); 
