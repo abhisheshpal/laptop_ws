@@ -1,8 +1,8 @@
-prefix=/home/vigneshnuc/laptop_ws/devel
+prefix=/home/vignesh/laptop_ws/devel
 
 Name: thorvald_2d_nav
 Description: Description of thorvald_2d_nav
 Version: 0.0.0
-Cflags: -I/home/vigneshnuc/laptop_ws/devel/include
-Libs: -L/home/vigneshnuc/laptop_ws/devel/lib 
+Cflags: -I/home/vignesh/laptop_ws/devel/include
+Libs: -L/home/vignesh/laptop_ws/devel/lib 
 Requires: actionlib_msgs

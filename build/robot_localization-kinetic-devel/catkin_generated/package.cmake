@@ -10,4 +10,7 @@ set(robot_localization_EXEC_DEPENDS "message_runtime" "cmake_modules" "diagnosti
 set(robot_localization_RUN_DEPENDS "message_runtime" "cmake_modules" "diagnostic_msgs" "diagnostic_updater" "eigen" "eigen_conversions" "geographic_msgs" "geometry_msgs" "message_filters" "nav_msgs" "roscpp" "sensor_msgs" "std_msgs" "std_srvs" "tf2" "tf2_geometry_msgs" "tf2_ros" "xmlrpcpp" "yaml-cpp")
 set(robot_localization_TEST_DEPENDS "rosbag" "rostest" "rosunit")
 set(robot_localization_DOC_DEPENDS )
+set(robot_localization_URL_WEBSITE "http://ros.org/wiki/robot_localization")
+set(robot_localization_URL_BUGTRACKER "")
+set(robot_localization_URL_REPOSITORY "")
 set(robot_localization_DEPRECATED "")

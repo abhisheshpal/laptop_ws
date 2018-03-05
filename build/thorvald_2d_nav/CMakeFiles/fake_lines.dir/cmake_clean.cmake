@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/fake_lines.dir/src/fake_line.cpp.o"
-  "/home/vigneshnuc/laptop_ws/devel/lib/thorvald_2d_nav/fake_lines.pdb"
-  "/home/vigneshnuc/laptop_ws/devel/lib/thorvald_2d_nav/fake_lines"
+  "/home/vignesh/laptop_ws/devel/lib/thorvald_2d_nav/fake_lines.pdb"
+  "/home/vignesh/laptop_ws/devel/lib/thorvald_2d_nav/fake_lines"
 )
 
 # Per-language clean rules from dependency scanning.

@@ -1,7 +1,7 @@
 # Make file names absolute:
 #
-get_filename_component(filename "/home/vigneshnuc/laptop_ws/build/Extra Packages/libpcan/EP_libpcan-prefix/src/peak-linux-driver-8.3.tar.gz" ABSOLUTE)
-get_filename_component(directory "/home/vigneshnuc/laptop_ws/build/Extra Packages/libpcan/libpcan-src" ABSOLUTE)
+get_filename_component(filename "/home/vignesh/laptop_ws/build/Extra Packages/libpcan/EP_libpcan-prefix/src/peak-linux-driver-8.3.tar.gz" ABSOLUTE)
+get_filename_component(directory "/home/vignesh/laptop_ws/build/Extra Packages/libpcan/libpcan-src" ABSOLUTE)
 
 message(STATUS "extracting...
      src='${filename}'
