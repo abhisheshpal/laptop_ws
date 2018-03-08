@@ -167,6 +167,9 @@ include_directories(/usr/include/eigen3)
  add_executable(laser_points src/laser_points_count.cpp)
  target_link_libraries(laser_points ${catkin_LIBRARIES})
 
+ add_executable(guinea_pig src/guinea_pig.cpp)
+ target_link_libraries(guinea_pig ${catkin_LIBRARIES})
+
 ## Declare a C++ executable
 # add_executable(thorvald_2dnav_node src/thorvald_2dnav_node.cpp)
 
@@ -181,6 +184,7 @@ add_dependencies(gps_switch_server ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catk
 add_dependencies(gps_switch_client ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(fake_lines ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(laser_points ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(guinea_pig ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(thorvald_2dnav_node

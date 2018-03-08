@@ -14,6 +14,7 @@
 #include <visualization_msgs/Marker.h>
 
 sensor_msgs::LaserScan scan_msg_main;
+int dummy = 0;
 
 // Laser Scan data
 void scanCallback (const sensor_msgs::LaserScan::ConstPtr& scan_msg)
@@ -43,15 +44,15 @@ int main(int argc, char** argv)
 
 	ros::spinOnce();
 
-        if (scan_msg_main.ranges.size() > 0){  
+        if (scan_msg_main.ranges.size() > 0 && (dummy == 0)){  
 
-	for (int i_1 = 0; i_1 <= 1440; i_1++){ // check the min to max angles 
+	for (int i_1 = 270; i_1 <= 960; i_1++){ // check the min to max angles 
 
           if((scan_msg_main.ranges[i_1] > 0) && (scan_msg_main.ranges[i_1] < 1.5) ){
           point_count = point_count + 1;
           } // if loop end
         } // laser scan loop end
-
+        dummy = 1;
         std::cout << "pt_count" << point_count << std::endl;
         }
 

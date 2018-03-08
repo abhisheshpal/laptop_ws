@@ -2987,6 +2987,19 @@ move_base_msgs_generate_messages_eus/fast:
 .PHONY : move_base_msgs_generate_messages_eus/fast
 
 #=============================================================================
+# Target rules for targets named thorvald_2d_nav_gencpp
+
+# Build rule for target.
+thorvald_2d_nav_gencpp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav_gencpp
+.PHONY : thorvald_2d_nav_gencpp
+
+# fast build rule for target.
+thorvald_2d_nav_gencpp/fast:
+	$(MAKE) -f thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_gencpp.dir/build.make thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_gencpp.dir/build
+.PHONY : thorvald_2d_nav_gencpp/fast
+
+#=============================================================================
 # Target rules for targets named thorvald_RANSAC
 
 # Build rule for target.
@@ -3208,17 +3221,17 @@ laser_points/fast:
 .PHONY : laser_points/fast
 
 #=============================================================================
-# Target rules for targets named thorvald_2d_nav_gencpp
+# Target rules for targets named guinea_pig
 
 # Build rule for target.
-thorvald_2d_nav_gencpp: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav_gencpp
-.PHONY : thorvald_2d_nav_gencpp
+guinea_pig: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 guinea_pig
+.PHONY : guinea_pig
 
 # fast build rule for target.
-thorvald_2d_nav_gencpp/fast:
-	$(MAKE) -f thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_gencpp.dir/build.make thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_gencpp.dir/build
-.PHONY : thorvald_2d_nav_gencpp/fast
+guinea_pig/fast:
+	$(MAKE) -f thorvald_2d_nav/CMakeFiles/guinea_pig.dir/build.make thorvald_2d_nav/CMakeFiles/guinea_pig.dir/build
+.PHONY : guinea_pig/fast
 
 # Help Target
 help:
@@ -3450,6 +3463,7 @@ help:
 	@echo "... visualization_msgs_generate_messages_py"
 	@echo "... dynamic_reconfigure_generate_messages_py"
 	@echo "... move_base_msgs_generate_messages_eus"
+	@echo "... thorvald_2d_nav_gencpp"
 	@echo "... thorvald_RANSAC"
 	@echo "... thorvald_2d_nav_generate_messages_eus"
 	@echo "... thorvald_control_modes"
@@ -3467,7 +3481,7 @@ help:
 	@echo "... gps_switch_client"
 	@echo "... fake_lines"
 	@echo "... laser_points"
-	@echo "... thorvald_2d_nav_gencpp"
+	@echo "... guinea_pig"
 .PHONY : help
 
 
