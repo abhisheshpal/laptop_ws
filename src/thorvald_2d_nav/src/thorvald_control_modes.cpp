@@ -69,14 +69,20 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "thorvald_control_modes");
   ros::NodeHandle n;
 
-  while (ros::ok()){
-
   ros::Subscriber pose_sub = n.subscribe("thorvald_pose", 100, robotposeCallback);
   ros::Subscriber finalline_sub = n.subscribe("final_line", 100, finallineCallback);
+
+  ros::Publisher twist_gazebo = n.advertise<geometry_msgs::Twist>( "/nav_vel", 100);
+
+  while (ros::ok()){
 
   if(!boost::empty(line)){
   control_law (linear_velocity,angular_velocity); 
   }
+
+  geometry_msgs::Twist est_twist;
+
+  twist_gazebo.publish(est_twist);
 
   ros::spinOnce();	
   }

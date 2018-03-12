@@ -3233,6 +3233,19 @@ guinea_pig/fast:
 	$(MAKE) -f thorvald_2d_nav/CMakeFiles/guinea_pig.dir/build.make thorvald_2d_nav/CMakeFiles/guinea_pig.dir/build
 .PHONY : guinea_pig/fast
 
+#=============================================================================
+# Target rules for targets named gazebo_line
+
+# Build rule for target.
+gazebo_line: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gazebo_line
+.PHONY : gazebo_line
+
+# fast build rule for target.
+gazebo_line/fast:
+	$(MAKE) -f thorvald_2d_nav/CMakeFiles/gazebo_line.dir/build.make thorvald_2d_nav/CMakeFiles/gazebo_line.dir/build
+.PHONY : gazebo_line/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -3482,6 +3495,7 @@ help:
 	@echo "... fake_lines"
 	@echo "... laser_points"
 	@echo "... guinea_pig"
+	@echo "... gazebo_line"
 .PHONY : help
 
 

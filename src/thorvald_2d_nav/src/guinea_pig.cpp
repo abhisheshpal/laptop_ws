@@ -16,8 +16,8 @@
 // Parameters 
 geometry_msgs::Point n;
 int k; // iterations need to find the best model
-double thershold = 0.1;
-int d = 15; // nearby point to fit the line
+double thershold = 0.08;
+int d = 25; // nearby point to fit the line
 
 double best_model;
 double x_1[1080], y_1[1080], angle_1[1080], x_2[1080], y_2[1080], angle_2[1080];
@@ -66,7 +66,7 @@ void scanCallback (const sensor_msgs::LaserScan::ConstPtr& scan_msg)
 Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
 
         // x, y, theta calculation
-	for (int i_1 = 235; i_1 <= 540; i_1++){
+	for (int i_1 = 35; i_1 <= 100; i_1++){
 	 angle_1[i_1] = scan_msg_main.angle_min +i_1*scan_msg_main.angle_increment; 
 	 x_1[i_1] = scan_msg_main.ranges[i_1]*cos(angle_1[i_1]);
 	 y_1[i_1] = scan_msg_main.ranges[i_1]*sin(angle_1[i_1]);
@@ -116,24 +116,19 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
 
         if(final_count_1 > d){ // selecting the inliers with max of points    
 
-     if(final_count_1 > final_count_2){
-           // if(fabs(x_1[aIndex_1]-x_1[bIndex_1]) > thershold){
+     if((final_count_1 > final_count_2) && (fabs(y_1[aIndex_1]) < 1.0) && (fabs(y_1[bIndex_1]) < 1.0)){
             final_Index_1[1].real_x = x_1[aIndex_1];
             final_Index_1[1].real_y = y_1[aIndex_1];
             final_Index_1[2].real_x = x_1[bIndex_1];
             final_Index_1[2].real_y = y_1[bIndex_1];
-        std::cout << "final_count_1:" << final_count_1 << "\n" << std::endl;
+        std::cout << "final_count_1:" << final_count_1 << "\n" << "final_count_2:" << final_count_2 << "\n" << std::endl;
     //std::cout << "final_Index_1[1].real_x" << final_Index_1[1].real_x << "final_Index_1[1].real_y" << final_Index_1[1].real_y << std::endl;
             measurement_points.range[1] = scan_msg_main.ranges[aIndex_1];
             measurement_points.bearing[1] = angle_1[aIndex_1];
             measurement_points.range[2] = scan_msg_main.ranges[bIndex_1];
             measurement_points.bearing[2] = angle_1[bIndex_1];
-           // } 
-           }
-
-             final_count_2 = final_count_1;
-
-                 
+            final_count_2 = final_count_1;
+           }                 
           } // max inliers selection end
 
         // Assigning variables to zero to start over
@@ -145,12 +140,12 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
 Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 
         // x, y, theta calculation
-	for (int i_2 = 540; i_2 <= 800; i_2++){
+	for (int i_2 = 140; i_2 <= 320; i_2++){
 	angle_2[i_2] = scan_msg_main.angle_min+i_2*scan_msg_main.angle_increment;
 	x_2[i_2] = scan_msg_main.ranges[i_2]*cos(angle_2[i_2]);
 	y_2[i_2] = scan_msg_main.ranges[i_2]*sin(angle_2[i_2]);
 
-          if(!std::isnan(x_2[i_2]) && !std::isnan(y_2[i_2]) && (scan_msg_main.ranges[i_2] < 4.0)){
+          if(!std::isnan(x_2[i_2]) && !std::isnan(y_2[i_2]) && (scan_msg_main.ranges[i_2] < 6.0)){
            count_i_2[l_2] = i_2;
            l_2 = l_2 + 1;                
           } // storing the ith value with pre-conditions
@@ -191,22 +186,21 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 
         if(final_count_4 > d){ // selecting the inliers with max of points    
 
-         if(final_count_4 > final_count_5){
-            if(fabs(y_2[aIndex_2] < 1.0 && y_2[bIndex_2]) < 1.0){
+         if(final_count_4 > final_count_5 && (fabs(y_2[aIndex_2]) < 1.0) && (fabs(y_2[bIndex_2]) < 1.0)){
+
             final_Index_2[1].real_x = x_2[aIndex_2];
             final_Index_2[1].real_y = y_2[aIndex_2];
             final_Index_2[2].real_x = x_2[bIndex_2];
             final_Index_2[2].real_y = y_2[bIndex_2];
-        std::cout << "final_count_4:" << final_count_4 << "\n" << std::endl;
+        std::cout << "final_count_4:" << final_count_4 << "\n" << "final_count_5:" << final_count_5 << "\n" << std::endl;
             measurement_points.range[3] = scan_msg_main.ranges[aIndex_2];
             measurement_points.bearing[3] = angle_2[aIndex_2];
             measurement_points.range[4] = scan_msg_main.ranges[bIndex_2];
             measurement_points.bearing[4] = angle_2[bIndex_2];
-                             // std::cout << "final_Index_2[2].real_x:" << final_Index_2[2].real_x << "\n" << std::endl;
-            } 
+            final_count_5 = final_count_4;
            }
             
-            final_count_5 = final_count_4;
+
 
           } // max inliers selection end
 
@@ -251,8 +245,9 @@ int main(int argc, char** argv)
         while (ros::ok()){
 	ros::spinOnce();
 
+// std::cout << scan_msg_main.ranges.size() << std::endl;
         if(scan_msg_main.ranges.size() > 0 && (finale == 0)){
-         for (k=0; k <= 20000; k++){ // Number of iterations
+         for (k=0; k <= 10000; k++){ // Number of iterations
           Line_detection_1(scan_msg_main, final_Index_1);
           Line_detection_2(scan_msg_main, final_Index_2);
           }
@@ -260,7 +255,7 @@ int main(int argc, char** argv)
         }
 
         if ( (final_count_1 != 0) && (line_strip_1.points.size() < 2) && (!boost::empty(final_Index_1))){ 
-        line_strip_1.header.frame_id = "/laser";
+        line_strip_1.header.frame_id = "/hokuyo";
         // line_strip_1.header.stamp = ros::Time::now();
         line_strip_1.action = visualization_msgs::Marker::ADD;
         line_strip_1.pose.orientation.w = 1.0;
@@ -288,7 +283,7 @@ int main(int argc, char** argv)
         } // count check
 
       if ( (final_count_4 != 0) && (line_strip_2.points.size() < 2) && (!boost::empty(final_Index_2))){ 
-        line_strip_2.header.frame_id = "/laser";
+        line_strip_2.header.frame_id = "/hokuyo";
         line_strip_2.action = visualization_msgs::Marker::ADD;
         line_strip_2.pose.orientation.w = 1.0;
         line_strip_2.type = visualization_msgs::Marker::LINE_STRIP;

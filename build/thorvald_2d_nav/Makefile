@@ -795,6 +795,21 @@ guinea_pig/fast:
 	cd /home/vignesh/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/guinea_pig.dir/build.make thorvald_2d_nav/CMakeFiles/guinea_pig.dir/build
 .PHONY : guinea_pig/fast
 
+# Convenience name for target.
+thorvald_2d_nav/CMakeFiles/gazebo_line.dir/rule:
+	cd /home/vignesh/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/gazebo_line.dir/rule
+.PHONY : thorvald_2d_nav/CMakeFiles/gazebo_line.dir/rule
+
+# Convenience name for target.
+gazebo_line: thorvald_2d_nav/CMakeFiles/gazebo_line.dir/rule
+
+.PHONY : gazebo_line
+
+# fast build rule for target.
+gazebo_line/fast:
+	cd /home/vignesh/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/gazebo_line.dir/build.make thorvald_2d_nav/CMakeFiles/gazebo_line.dir/build
+.PHONY : gazebo_line/fast
+
 src/fake_line.o: src/fake_line.cpp.o
 
 .PHONY : src/fake_line.o
@@ -821,6 +836,33 @@ src/fake_line.s: src/fake_line.cpp.s
 src/fake_line.cpp.s:
 	cd /home/vignesh/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fake_lines.dir/build.make thorvald_2d_nav/CMakeFiles/fake_lines.dir/src/fake_line.cpp.s
 .PHONY : src/fake_line.cpp.s
+
+src/gazebo_line.o: src/gazebo_line.cpp.o
+
+.PHONY : src/gazebo_line.o
+
+# target to build an object file
+src/gazebo_line.cpp.o:
+	cd /home/vignesh/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/gazebo_line.dir/build.make thorvald_2d_nav/CMakeFiles/gazebo_line.dir/src/gazebo_line.cpp.o
+.PHONY : src/gazebo_line.cpp.o
+
+src/gazebo_line.i: src/gazebo_line.cpp.i
+
+.PHONY : src/gazebo_line.i
+
+# target to preprocess a source file
+src/gazebo_line.cpp.i:
+	cd /home/vignesh/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/gazebo_line.dir/build.make thorvald_2d_nav/CMakeFiles/gazebo_line.dir/src/gazebo_line.cpp.i
+.PHONY : src/gazebo_line.cpp.i
+
+src/gazebo_line.s: src/gazebo_line.cpp.s
+
+.PHONY : src/gazebo_line.s
+
+# target to generate assembly for a file
+src/gazebo_line.cpp.s:
+	cd /home/vignesh/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/gazebo_line.dir/build.make thorvald_2d_nav/CMakeFiles/gazebo_line.dir/src/gazebo_line.cpp.s
+.PHONY : src/gazebo_line.cpp.s
 
 src/gps_client.o: src/gps_client.cpp.o
 
@@ -1119,10 +1161,14 @@ help:
 	@echo "... fake_lines"
 	@echo "... laser_points"
 	@echo "... guinea_pig"
+	@echo "... gazebo_line"
 	@echo "... install/local"
 	@echo "... src/fake_line.o"
 	@echo "... src/fake_line.i"
 	@echo "... src/fake_line.s"
+	@echo "... src/gazebo_line.o"
+	@echo "... src/gazebo_line.i"
+	@echo "... src/gazebo_line.s"
 	@echo "... src/gps_client.o"
 	@echo "... src/gps_client.i"
 	@echo "... src/gps_client.s"
