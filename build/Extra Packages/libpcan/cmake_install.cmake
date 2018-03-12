@@ -1,8 +1,8 @@
-# Install script for directory: /home/vigneshnuc/laptop_ws/src/Extra Packages/libpcan
+# Install script for directory: /home/vignesh/laptop_ws/src/Extra Packages/libpcan
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/vigneshnuc/laptop_ws/install")
+  set(CMAKE_INSTALL_PREFIX "/home/vignesh/laptop_ws/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,33 +33,33 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/vigneshnuc/laptop_ws/build/Extra Packages/libpcan/catkin_generated/installspace/libpcan.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/vignesh/laptop_ws/build/Extra Packages/libpcan/catkin_generated/installspace/libpcan.pc")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/libpcan/cmake" TYPE FILE FILES "/home/vigneshnuc/laptop_ws/build/Extra Packages/libpcan/catkin_generated/installspace/libpcan-extras.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/libpcan/cmake" TYPE FILE FILES "/home/vignesh/laptop_ws/build/Extra Packages/libpcan/catkin_generated/installspace/libpcan-extras.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/libpcan/cmake" TYPE FILE FILES
-    "/home/vigneshnuc/laptop_ws/build/Extra Packages/libpcan/catkin_generated/installspace/libpcanConfig.cmake"
-    "/home/vigneshnuc/laptop_ws/build/Extra Packages/libpcan/catkin_generated/installspace/libpcanConfig-version.cmake"
+    "/home/vignesh/laptop_ws/build/Extra Packages/libpcan/catkin_generated/installspace/libpcanConfig.cmake"
+    "/home/vignesh/laptop_ws/build/Extra Packages/libpcan/catkin_generated/installspace/libpcanConfig-version.cmake"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/libpcan" TYPE FILE FILES "/home/vigneshnuc/laptop_ws/src/Extra Packages/libpcan/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/libpcan" TYPE FILE FILES "/home/vignesh/laptop_ws/src/Extra Packages/libpcan/package.xml")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/libpcan" TYPE DIRECTORY FILES "/home/vigneshnuc/laptop_ws/devel/include/libpcan/")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/libpcan" TYPE DIRECTORY FILES "/home/vignesh/laptop_ws/devel/include/libpcan/")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE PROGRAM FILES
-    "/home/vigneshnuc/laptop_ws/devel/lib/libpcan.so"
-    "/home/vigneshnuc/laptop_ws/devel/lib/libpcan.so.0"
-    "/home/vigneshnuc/laptop_ws/devel/lib/libpcan.so.0.6"
+    "/home/vignesh/laptop_ws/devel/lib/libpcan.so"
+    "/home/vignesh/laptop_ws/devel/lib/libpcan.so.0"
+    "/home/vignesh/laptop_ws/devel/lib/libpcan.so.0.6"
     )
 endif()
 

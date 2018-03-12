@@ -10,4 +10,7 @@ set(trigger_sync_EXEC_DEPENDS "std_msgs" "rospy" "roscpp" "ackerman_msgs" "image
 set(trigger_sync_RUN_DEPENDS "std_msgs" "rospy" "roscpp" "ackerman_msgs" "image_geometry" "camera_info_manager")
 set(trigger_sync_TEST_DEPENDS )
 set(trigger_sync_DOC_DEPENDS )
+set(trigger_sync_URL_WEBSITE "")
+set(trigger_sync_URL_BUGTRACKER "")
+set(trigger_sync_URL_REPOSITORY "")
 set(trigger_sync_DEPRECATED "")

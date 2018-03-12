@@ -16,12 +16,13 @@
 
 nav_msgs::Odometry thorvald_estimated_pose;
 geometry_msgs::Point line[2];
-double linear_velocity = 0 , angular_velocity = 0;
+double   linear_velocity = 0.1 , angular_velocity = 0;
 int Total_Points = 20;
 geometry_msgs::Pose Points[20];
 double yaw;
 geometry_msgs::Twist est_twist;
-double counter = 0;
+double counter = 0, counter_1 = 0;
+double position_error, angular_error;
 
 // Thorvald Estimated Pose data
 void robotposeCallback (const nav_msgs::Odometry::ConstPtr& pose_msg)
@@ -58,25 +59,25 @@ double control_law(double v){
         Points[i].position.y =line[1].y * (1 - (i/Total_Points)) + line[2].y * (i / Total_Points);
     }
 
-  linear_velocity = 0.1; // angluar velocity
+ // linear_velocity = 0.1; // angluar velocity
   double K_d = 0.5;
   double K_p = 0.1;
 
   // calculation of error
-  double q_x =  pow((0.26-thorvald_estimated_pose.pose.pose.position.x),2);
+  double q_x =  pow((2.1-thorvald_estimated_pose.pose.pose.position.x),2);
   double q_y =  pow((-0.08-thorvald_estimated_pose.pose.pose.position.y),2);
-  double position_error = sqrt(q_x + q_y);
-  double angular_error = (0.08/0.26) - yaw;
-
+  position_error = sqrt(q_x + q_y);
+  angular_error = (0.08/0.26) - yaw;
+std::cout << "position_error" << position_error << std::endl;
   // control law
-  // omega = v * pow(cos(angular_error),3) * (-(K_d*tan(angular_error)) - (K_p*position_error));
+  double omega = v * pow(cos(angular_error),3) * (-(K_d*tan(angular_error)) - (K_p*position_error));
  // omega = 0;
 //std::cout << "v:" << v << std::endl;
  /* if((position_error < 0.01) && (angular_error < 0.01)){
   v = 0;
   omega = 0;
   }*/
-
+  return omega;
 }
 
 int main(int argc, char** argv)
@@ -95,12 +96,22 @@ int main(int argc, char** argv)
 
   ros::spinOnce();	
 
-   if(counter == 1){
-  control_law (linear_velocity); 
-  std::cout << "linear_velocity:" << linear_velocity << std::endl;
+  if(counter == 1){
+  
+  if(counter_1 == 0){
+  angular_velocity = control_law (linear_velocity); 
+  }
+
+  if((position_error < 0.2)){
+  linear_velocity = 0;
+  angular_velocity = 0;
+  counter_1 = 1;
+  }
+std::cout << "angular_velocity" << angular_velocity << std::endl;
   est_twist.linear.x = linear_velocity;
- // est_twist.angular.z = angular_velocity;
+  //est_twist.angular.z = angular_velocity;
   twist_gazebo.publish(est_twist);
+
    }
 
    else{

@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/vigneshnuc/laptop_ws/src
+CMAKE_SOURCE_DIR = /home/vignesh/laptop_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/vigneshnuc/laptop_ws/build
+CMAKE_BINARY_DIR = /home/vignesh/laptop_ws/build
 
 # Include any dependencies generated for this target.
 include Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/depend.make
@@ -58,17 +58,17 @@ include Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/progress.make
 include Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/flags.make
 
 Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/src/pps_config.c.o: Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/flags.make
-Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/src/pps_config.c.o: /home/vigneshnuc/laptop_ws/src/Sensors/trigger_sync-master/src/pps_config.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vigneshnuc/laptop_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/src/pps_config.c.o"
-	cd /home/vigneshnuc/laptop_ws/build/Sensors/trigger_sync-master && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/pps_config.dir/src/pps_config.c.o   -c /home/vigneshnuc/laptop_ws/src/Sensors/trigger_sync-master/src/pps_config.c
+Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/src/pps_config.c.o: /home/vignesh/laptop_ws/src/Sensors/trigger_sync-master/src/pps_config.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/vignesh/laptop_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/src/pps_config.c.o"
+	cd /home/vignesh/laptop_ws/build/Sensors/trigger_sync-master && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/pps_config.dir/src/pps_config.c.o   -c /home/vignesh/laptop_ws/src/Sensors/trigger_sync-master/src/pps_config.c
 
 Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/src/pps_config.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/pps_config.dir/src/pps_config.c.i"
-	cd /home/vigneshnuc/laptop_ws/build/Sensors/trigger_sync-master && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/vigneshnuc/laptop_ws/src/Sensors/trigger_sync-master/src/pps_config.c > CMakeFiles/pps_config.dir/src/pps_config.c.i
+	cd /home/vignesh/laptop_ws/build/Sensors/trigger_sync-master && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/vignesh/laptop_ws/src/Sensors/trigger_sync-master/src/pps_config.c > CMakeFiles/pps_config.dir/src/pps_config.c.i
 
 Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/src/pps_config.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/pps_config.dir/src/pps_config.c.s"
-	cd /home/vigneshnuc/laptop_ws/build/Sensors/trigger_sync-master && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/vigneshnuc/laptop_ws/src/Sensors/trigger_sync-master/src/pps_config.c -o CMakeFiles/pps_config.dir/src/pps_config.c.s
+	cd /home/vignesh/laptop_ws/build/Sensors/trigger_sync-master && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/vignesh/laptop_ws/src/Sensors/trigger_sync-master/src/pps_config.c -o CMakeFiles/pps_config.dir/src/pps_config.c.s
 
 Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/src/pps_config.c.o.requires:
 
@@ -88,14 +88,14 @@ pps_config_OBJECTS = \
 # External object files for target pps_config
 pps_config_EXTERNAL_OBJECTS =
 
-/home/vigneshnuc/laptop_ws/devel/lib/trigger_sync/pps_config: Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/src/pps_config.c.o
-/home/vigneshnuc/laptop_ws/devel/lib/trigger_sync/pps_config: Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/build.make
-/home/vigneshnuc/laptop_ws/devel/lib/trigger_sync/pps_config: Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/vigneshnuc/laptop_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable /home/vigneshnuc/laptop_ws/devel/lib/trigger_sync/pps_config"
-	cd /home/vigneshnuc/laptop_ws/build/Sensors/trigger_sync-master && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/pps_config.dir/link.txt --verbose=$(VERBOSE)
+/home/vignesh/laptop_ws/devel/lib/trigger_sync/pps_config: Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/src/pps_config.c.o
+/home/vignesh/laptop_ws/devel/lib/trigger_sync/pps_config: Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/build.make
+/home/vignesh/laptop_ws/devel/lib/trigger_sync/pps_config: Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/vignesh/laptop_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable /home/vignesh/laptop_ws/devel/lib/trigger_sync/pps_config"
+	cd /home/vignesh/laptop_ws/build/Sensors/trigger_sync-master && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/pps_config.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/build: /home/vigneshnuc/laptop_ws/devel/lib/trigger_sync/pps_config
+Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/build: /home/vignesh/laptop_ws/devel/lib/trigger_sync/pps_config
 
 .PHONY : Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/build
 
@@ -104,10 +104,10 @@ Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/requires: Sensors/trigger_
 .PHONY : Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/requires
 
 Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/clean:
-	cd /home/vigneshnuc/laptop_ws/build/Sensors/trigger_sync-master && $(CMAKE_COMMAND) -P CMakeFiles/pps_config.dir/cmake_clean.cmake
+	cd /home/vignesh/laptop_ws/build/Sensors/trigger_sync-master && $(CMAKE_COMMAND) -P CMakeFiles/pps_config.dir/cmake_clean.cmake
 .PHONY : Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/clean
 
 Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/depend:
-	cd /home/vigneshnuc/laptop_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/vigneshnuc/laptop_ws/src /home/vigneshnuc/laptop_ws/src/Sensors/trigger_sync-master /home/vigneshnuc/laptop_ws/build /home/vigneshnuc/laptop_ws/build/Sensors/trigger_sync-master /home/vigneshnuc/laptop_ws/build/Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/vignesh/laptop_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/vignesh/laptop_ws/src /home/vignesh/laptop_ws/src/Sensors/trigger_sync-master /home/vignesh/laptop_ws/build /home/vignesh/laptop_ws/build/Sensors/trigger_sync-master /home/vignesh/laptop_ws/build/Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/depend
 

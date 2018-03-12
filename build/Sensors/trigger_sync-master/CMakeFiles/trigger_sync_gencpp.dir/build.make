@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/vigneshnuc/laptop_ws/src
+CMAKE_SOURCE_DIR = /home/vignesh/laptop_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/vigneshnuc/laptop_ws/build
+CMAKE_BINARY_DIR = /home/vignesh/laptop_ws/build
 
 # Utility rule file for trigger_sync_gencpp.
 
@@ -63,10 +63,10 @@ Sensors/trigger_sync-master/CMakeFiles/trigger_sync_gencpp.dir/build: trigger_sy
 .PHONY : Sensors/trigger_sync-master/CMakeFiles/trigger_sync_gencpp.dir/build
 
 Sensors/trigger_sync-master/CMakeFiles/trigger_sync_gencpp.dir/clean:
-	cd /home/vigneshnuc/laptop_ws/build/Sensors/trigger_sync-master && $(CMAKE_COMMAND) -P CMakeFiles/trigger_sync_gencpp.dir/cmake_clean.cmake
+	cd /home/vignesh/laptop_ws/build/Sensors/trigger_sync-master && $(CMAKE_COMMAND) -P CMakeFiles/trigger_sync_gencpp.dir/cmake_clean.cmake
 .PHONY : Sensors/trigger_sync-master/CMakeFiles/trigger_sync_gencpp.dir/clean
 
 Sensors/trigger_sync-master/CMakeFiles/trigger_sync_gencpp.dir/depend:
-	cd /home/vigneshnuc/laptop_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/vigneshnuc/laptop_ws/src /home/vigneshnuc/laptop_ws/src/Sensors/trigger_sync-master /home/vigneshnuc/laptop_ws/build /home/vigneshnuc/laptop_ws/build/Sensors/trigger_sync-master /home/vigneshnuc/laptop_ws/build/Sensors/trigger_sync-master/CMakeFiles/trigger_sync_gencpp.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/vignesh/laptop_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/vignesh/laptop_ws/src /home/vignesh/laptop_ws/src/Sensors/trigger_sync-master /home/vignesh/laptop_ws/build /home/vignesh/laptop_ws/build/Sensors/trigger_sync-master /home/vignesh/laptop_ws/build/Sensors/trigger_sync-master/CMakeFiles/trigger_sync_gencpp.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : Sensors/trigger_sync-master/CMakeFiles/trigger_sync_gencpp.dir/depend
 
