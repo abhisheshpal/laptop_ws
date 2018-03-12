@@ -7,4 +7,5 @@
 # new environment variables
 
 # modified environment variables
-export PWD="/home/vignesh/laptop_ws/build"
+export PATH="/opt/ros/kinetic/bin:/home/vigneshnuc/terrapos-2.4.90/bin:/home/vigneshnuc/bin:/home/vigneshnuc/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+export PWD="/home/vigneshnuc/laptop_ws/build"

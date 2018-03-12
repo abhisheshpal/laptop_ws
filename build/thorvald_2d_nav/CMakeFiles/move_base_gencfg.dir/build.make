@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/vignesh/laptop_ws/src
+CMAKE_SOURCE_DIR = /home/vigneshnuc/laptop_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/vignesh/laptop_ws/build
+CMAKE_BINARY_DIR = /home/vigneshnuc/laptop_ws/build
 
 # Utility rule file for move_base_gencfg.
 
@@ -63,10 +63,10 @@ thorvald_2d_nav/CMakeFiles/move_base_gencfg.dir/build: move_base_gencfg
 .PHONY : thorvald_2d_nav/CMakeFiles/move_base_gencfg.dir/build
 
 thorvald_2d_nav/CMakeFiles/move_base_gencfg.dir/clean:
-	cd /home/vignesh/laptop_ws/build/thorvald_2d_nav && $(CMAKE_COMMAND) -P CMakeFiles/move_base_gencfg.dir/cmake_clean.cmake
+	cd /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav && $(CMAKE_COMMAND) -P CMakeFiles/move_base_gencfg.dir/cmake_clean.cmake
 .PHONY : thorvald_2d_nav/CMakeFiles/move_base_gencfg.dir/clean
 
 thorvald_2d_nav/CMakeFiles/move_base_gencfg.dir/depend:
-	cd /home/vignesh/laptop_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/vignesh/laptop_ws/src /home/vignesh/laptop_ws/src/thorvald_2d_nav /home/vignesh/laptop_ws/build /home/vignesh/laptop_ws/build/thorvald_2d_nav /home/vignesh/laptop_ws/build/thorvald_2d_nav/CMakeFiles/move_base_gencfg.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/vigneshnuc/laptop_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/vigneshnuc/laptop_ws/src /home/vigneshnuc/laptop_ws/src/thorvald_2d_nav /home/vigneshnuc/laptop_ws/build /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/move_base_gencfg.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : thorvald_2d_nav/CMakeFiles/move_base_gencfg.dir/depend
 

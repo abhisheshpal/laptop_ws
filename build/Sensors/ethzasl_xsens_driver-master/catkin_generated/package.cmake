@@ -10,7 +10,4 @@ set(xsens_driver_EXEC_DEPENDS "rospy" "std_msgs" "tf" "sensor_msgs" "geometry_ms
 set(xsens_driver_RUN_DEPENDS "rospy" "std_msgs" "tf" "sensor_msgs" "geometry_msgs" "diagnostic_msgs")
 set(xsens_driver_TEST_DEPENDS )
 set(xsens_driver_DOC_DEPENDS )
-set(xsens_driver_URL_WEBSITE "")
-set(xsens_driver_URL_BUGTRACKER "")
-set(xsens_driver_URL_REPOSITORY "")
 set(xsens_driver_DEPRECATED "")

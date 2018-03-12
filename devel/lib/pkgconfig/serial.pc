@@ -1,0 +1,8 @@
+prefix=/home/vigneshnuc/laptop_ws/devel
+
+Name: serial
+Description: Description of serial
+Version: 1.2.1
+Cflags: -I/home/vigneshnuc/laptop_ws/src/Extra Packages/serial/include
+Libs: -L/home/vigneshnuc/laptop_ws/devel/lib -lserial
+Requires: 

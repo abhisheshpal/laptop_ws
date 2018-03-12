@@ -2,16 +2,19 @@
 
 <launch>
 
-<node pkg="rosserial_python" type="serial_node.py" name="rosserial">
+<!--node pkg="rosserial_python" type="serial_node.py" name="rosserial">
   <param name="port" value="/dev/ttyUSB1" />
   <param name="baud" value="57600" />
 </node>
 
-<node pkg="odometry_package" type="odometry_package_node" name="odometry_package_node"/>
+<node pkg="odometry_package" type="odometry_package_node" name="odometry_package_node"/-->
+<param name ="/use_sim_time" value="true"/>
 
-<node pkg="thorvald_2d_nav" type="lab_rat" name="lab_rat"/>
+<node pkg="thorvald_2d_nav" type="guinea_pig" name="guinea_pig" output="screen"/>
 
-<node pkg="thorvald_2d_nav" type="thorvald_line_SLAM" name="thorvald_line_SLAM"/>
+<!--node pkg="thorvald_2d_nav" type="thorvald_line_SLAM" name="thorvald_line_SLAM"/-->
+
+<node pkg="thorvald_2d_nav" type="thorvald_control_modes" name="thorvald_control_modes" output="screen"/>
 
 
 </launch>
