@@ -3156,6 +3156,19 @@ lab_rat/fast:
 .PHONY : lab_rat/fast
 
 #=============================================================================
+# Target rules for targets named fake_lines
+
+# Build rule for target.
+fake_lines: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 fake_lines
+.PHONY : fake_lines
+
+# fast build rule for target.
+fake_lines/fast:
+	$(MAKE) -f thorvald_2d_nav/CMakeFiles/fake_lines.dir/build.make thorvald_2d_nav/CMakeFiles/fake_lines.dir/build
+.PHONY : fake_lines/fast
+
+#=============================================================================
 # Target rules for targets named laser_points
 
 # Build rule for target.
@@ -3450,6 +3463,7 @@ help:
 	@echo "... dynamic_reconfigure_gencfg"
 	@echo "... thorvald_laserscan"
 	@echo "... lab_rat"
+	@echo "... fake_lines"
 	@echo "... laser_points"
 	@echo "... guinea_pig"
 	@echo "... gazebo_line"

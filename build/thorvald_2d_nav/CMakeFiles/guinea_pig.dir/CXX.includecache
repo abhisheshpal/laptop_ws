@@ -6,6 +6,32 @@
 
 #IncludeRegexTransform: 
 
+/home/vignesh/laptop_ws/devel/include/thorvald_2d_nav/landmarks.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+std_msgs/Header.h
+-
+geometry_msgs/Point.h
+-
+geometry_msgs/Point.h
+-
+geometry_msgs/Point.h
+-
+geometry_msgs/Point.h
+-
+
 /home/vignesh/laptop_ws/devel/include/thorvald_2d_nav/scan_detected_line.h
 string
 -
@@ -88,6 +114,8 @@ visualization_msgs/Marker.h
 thorvald_2d_nav/scan_detected_line.h
 -
 thorvald_2d_nav/sub_goal.h
+-
+thorvald_2d_nav/landmarks.h
 -
 
 /opt/ros/kinetic/include/geometry_msgs/Point.h

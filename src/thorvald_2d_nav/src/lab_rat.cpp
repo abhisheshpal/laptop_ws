@@ -16,8 +16,8 @@
 // Parameters 
 geometry_msgs::Point n;
 int k; // iterations need to find the best model
-double thershold = 0.5;
-int d = 5; // nearby point to fit the line
+double thershold = 0.08;
+int d = 25; // nearby point to fit the line
 
 double best_model;
 double x_1[1080], y_1[1080], angle_1[1080], x_2[1080], y_2[1080], angle_2[1080];
@@ -65,12 +65,12 @@ void scanCallback (const sensor_msgs::LaserScan::ConstPtr& scan_msg)
 Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
 
         // x, y, theta calculation
-	for (int i_1 = 0; i_1 <= 800; i_1++){
+	for (int i_1 = 1; i_1 <= 540; i_1++){
 	 angle_1[i_1] = scan_msg_main.angle_min +i_1*scan_msg_main.angle_increment; 
 	 x_1[i_1] = scan_msg_main.ranges[i_1]*cos(angle_1[i_1]);
 	 y_1[i_1] = scan_msg_main.ranges[i_1]*sin(angle_1[i_1]);
                 
-          if(!std::isnan(x_1[i_1]) && !std::isnan(y_1[i_1]) && (scan_msg_main.ranges[i_1] < 3.0)){
+          if(!std::isnan(x_1[i_1]) && !std::isnan(y_1[i_1]) && (scan_msg_main.ranges[i_1] < 6.0)){
            count_i_1[l_1] = i_1;
            l_1= l_1 + 1;
           } // storing the ith value with pre-conditions
@@ -144,12 +144,12 @@ std::cout << "final_Index_1[1].real_x" << final_Index_1[1].real_x << "final_Inde
 Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 
         // x, y, theta calculation
-	for (int i_2 = 400; i_2 <= 1080; i_2++){
+	for (int i_2 = 540; i_2 <= 1079; i_2++){
 	angle_2[i_2] = scan_msg_main.angle_min+i_2*scan_msg_main.angle_increment;
 	x_2[i_2] = scan_msg_main.ranges[i_2]*cos(angle_2[i_2]);
 	y_2[i_2] = scan_msg_main.ranges[i_2]*sin(angle_2[i_2]);
 
-          if(!std::isnan(x_2[i_2]) && !std::isnan(y_2[i_2]) && (scan_msg_main.ranges[i_2] < 3.0)){
+          if(!std::isnan(x_2[i_2]) && !std::isnan(y_2[i_2]) && (scan_msg_main.ranges[i_2] < 6.0)){
            count_i_2[l_2] = i_2;
            l_2 = l_2 + 1;                
           } // storing the ith value with pre-conditions

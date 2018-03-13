@@ -706,6 +706,21 @@ lab_rat/fast:
 .PHONY : lab_rat/fast
 
 # Convenience name for target.
+thorvald_2d_nav/CMakeFiles/fake_lines.dir/rule:
+	cd /home/vignesh/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/fake_lines.dir/rule
+.PHONY : thorvald_2d_nav/CMakeFiles/fake_lines.dir/rule
+
+# Convenience name for target.
+fake_lines: thorvald_2d_nav/CMakeFiles/fake_lines.dir/rule
+
+.PHONY : fake_lines
+
+# fast build rule for target.
+fake_lines/fast:
+	cd /home/vignesh/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fake_lines.dir/build.make thorvald_2d_nav/CMakeFiles/fake_lines.dir/build
+.PHONY : fake_lines/fast
+
+# Convenience name for target.
 thorvald_2d_nav/CMakeFiles/laser_points.dir/rule:
 	cd /home/vignesh/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/laser_points.dir/rule
 .PHONY : thorvald_2d_nav/CMakeFiles/laser_points.dir/rule
@@ -764,6 +779,33 @@ thorvald_2d_nav_gencpp: thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_gencpp.dir/ru
 thorvald_2d_nav_gencpp/fast:
 	cd /home/vignesh/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_gencpp.dir/build.make thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_gencpp.dir/build
 .PHONY : thorvald_2d_nav_gencpp/fast
+
+src/fake_line.o: src/fake_line.cpp.o
+
+.PHONY : src/fake_line.o
+
+# target to build an object file
+src/fake_line.cpp.o:
+	cd /home/vignesh/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fake_lines.dir/build.make thorvald_2d_nav/CMakeFiles/fake_lines.dir/src/fake_line.cpp.o
+.PHONY : src/fake_line.cpp.o
+
+src/fake_line.i: src/fake_line.cpp.i
+
+.PHONY : src/fake_line.i
+
+# target to preprocess a source file
+src/fake_line.cpp.i:
+	cd /home/vignesh/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fake_lines.dir/build.make thorvald_2d_nav/CMakeFiles/fake_lines.dir/src/fake_line.cpp.i
+.PHONY : src/fake_line.cpp.i
+
+src/fake_line.s: src/fake_line.cpp.s
+
+.PHONY : src/fake_line.s
+
+# target to generate assembly for a file
+src/fake_line.cpp.s:
+	cd /home/vignesh/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fake_lines.dir/build.make thorvald_2d_nav/CMakeFiles/fake_lines.dir/src/fake_line.cpp.s
+.PHONY : src/fake_line.cpp.s
 
 src/gazebo_line.o: src/gazebo_line.cpp.o
 
@@ -988,8 +1030,8 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... list_install_components"
-	@echo "... _thorvald_2d_nav_generate_messages_check_deps_GpsSwitch"
 	@echo "... install"
+	@echo "... _thorvald_2d_nav_generate_messages_check_deps_GpsSwitch"
 	@echo "... _thorvald_2d_nav_generate_messages_check_deps_landmarks"
 	@echo "... move_base_msgs_generate_messages_cpp"
 	@echo "... thorvald_2d_nav_generate_messages_cpp"
@@ -1028,12 +1070,16 @@ help:
 	@echo "... dynamic_reconfigure_gencfg"
 	@echo "... thorvald_laserscan"
 	@echo "... lab_rat"
+	@echo "... fake_lines"
 	@echo "... laser_points"
 	@echo "... guinea_pig"
 	@echo "... gazebo_line"
 	@echo "... install/local"
 	@echo "... thorvald_2d_nav_gencpp"
 	@echo "... rebuild_cache"
+	@echo "... src/fake_line.o"
+	@echo "... src/fake_line.i"
+	@echo "... src/fake_line.s"
 	@echo "... src/gazebo_line.o"
 	@echo "... src/gazebo_line.i"
 	@echo "... src/gazebo_line.s"

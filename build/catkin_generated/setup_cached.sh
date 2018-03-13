@@ -7,7 +7,4 @@
 # new environment variables
 
 # modified environment variables
-export LD_LIBRARY_PATH="/home/vignesh/Thorvald/devel/lib:/opt/ros/kinetic/lib"
-export PKG_CONFIG_PATH="/home/vignesh/Thorvald/devel/lib/pkgconfig:/opt/ros/kinetic/lib/pkgconfig"
 export PWD="/home/vignesh/laptop_ws/build"
-export PYTHONPATH="/home/vignesh/Thorvald/devel/lib/python2.7/dist-packages:/opt/ros/kinetic/lib/python2.7/dist-packages"

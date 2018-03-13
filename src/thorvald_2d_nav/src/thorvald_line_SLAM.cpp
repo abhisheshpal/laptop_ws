@@ -270,7 +270,7 @@ int main(int argc, char** argv)
         // Publishers
        ros::Publisher thorvald_pose_pub = n.advertise<geometry_msgs::Pose>("thorvald_pose", 10);
 
-        // Servic Client
+        // Service Client
        ros::ServiceClient client = n.serviceClient<thorvald_2d_nav::sub_goal>("sub_goal_check");
 
        MatrixXd mu = MatrixXd::Zero(2*total_landmarks+3,1); // mu

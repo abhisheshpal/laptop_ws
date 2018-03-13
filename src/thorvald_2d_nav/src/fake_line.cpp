@@ -127,12 +127,24 @@ int main(int argc, char **argv)
         final_line.color.a = 1.0;
 
         // Create the vertices for the points and lines
-        geometry_msgs::Point pt_3[2];
+        geometry_msgs::Point pt_3[2], max_line[2], min_line[2];
         pt_3[1].x = -1.3494; 
         pt_3[1].y = 0.03233; 
         pt_3[2].x = -0.57589; 
         pt_3[2].y = 0.05021; 
-  
+
+geometry_msgs::Pose Points[20];
+ // split the line into segment of points
+  for(int i=1;i<=20;i++){
+       Points[i].position.x = (pt_3[1].x *(1-(float(i)/20))) + (pt_3[2].x *(float(i)/20));
+       Points[i].position.y =pt_3[1].y * (1 - (float(i)/20)) + pt_3[2].y * (float(i)/20);
+
+ std::cout << "Points["<<i<<"].position.x" << Points[i].position.x  << std::endl;
+  }
+
+
+  //std::cout << "Points[20].position.x" << Points[10].position.x << std::endl;
+
          for(int q_3 = 1; q_3 <= 2; q_3++){
          final_line.points.push_back(pt_3[q_3]); 
          } // for loop end for storing points          
