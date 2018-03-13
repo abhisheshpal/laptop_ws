@@ -23,6 +23,7 @@ double yaw;
 geometry_msgs::Twist est_twist;
 double counter = 0, counter_1 = 0;
 double position_error, angular_error;
+int c = 0;
 
 // Thorvald Estimated Pose data
 void robotposeCallback (const nav_msgs::Odometry::ConstPtr& pose_msg)
@@ -59,24 +60,23 @@ double control_law(double v){
         Points[i].position.y =line[1].y * (1 - (i/Total_Points)) + line[2].y * (i / Total_Points);
     }
 
- // linear_velocity = 0.1; // angluar velocity
   double K_d = 0.5;
   double K_p = 0.1;
 
   // calculation of error
-  double q_x =  pow((2.1-thorvald_estimated_pose.pose.pose.position.x),2);
-  double q_y =  pow((-0.08-thorvald_estimated_pose.pose.pose.position.y),2);
+  double q_x =  pow((Points[c].position.x-thorvald_estimated_pose.pose.pose.position.x),2);
+  double q_y =  pow((Points[c].position.y-thorvald_estimated_pose.pose.pose.position.y),2);
   position_error = sqrt(q_x + q_y);
-  angular_error = (0.08/0.26) - yaw;
-std::cout << "position_error" << position_error << std::endl;
+  angular_error = (Points[c].position.y/Points[c].position.x) - yaw;
+  std::cout << "position_error" << position_error << std::endl;
   // control law
   double omega = v * pow(cos(angular_error),3) * (-(K_d*tan(angular_error)) - (K_p*position_error));
- // omega = 0;
-//std::cout << "v:" << v << std::endl;
- /* if((position_error < 0.01) && (angular_error < 0.01)){
-  v = 0;
-  omega = 0;
-  }*/
+  // omega = 0;
+  //std::cout << "v:" << v << std::endl;
+   if((position_error < 0.01) && (angular_error < 0.01)){
+   c = c + 1;
+   ROS_INFO("New Mini-Goal Initiated");
+   }
   return omega;
 }
 
@@ -102,7 +102,7 @@ int main(int argc, char** argv)
   angular_velocity = control_law (linear_velocity); 
   }
 
-  if((position_error < 0.2)){
+  if((thorvald_estimated_pose.pose.pose.position.x - std::max(line[1].x,line[2].x)) < 0.1){
   linear_velocity = 0;
   angular_velocity = 0;
   counter_1 = 1;
