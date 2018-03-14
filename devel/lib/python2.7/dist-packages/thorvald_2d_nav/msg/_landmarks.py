@@ -9,7 +9,7 @@ import geometry_msgs.msg
 import std_msgs.msg
 
 class landmarks(genpy.Message):
-  _md5sum = "8eef2551dccb95eccba1954107457f32"
+  _md5sum = "af209cef473c1468511c6d5084a11b46"
   _type = "thorvald_2d_nav/landmarks"
   _has_header = True #flag to mark the presence of a Header object
   _full_text = """Header header
@@ -17,6 +17,9 @@ geometry_msgs/Point pt_1
 geometry_msgs/Point pt_2
 geometry_msgs/Point pt_3
 geometry_msgs/Point pt_4
+geometry_msgs/Point pt_5
+geometry_msgs/Point pt_6
+int64 landmark_check
 
 
 ================================================================================
@@ -44,8 +47,8 @@ float64 x
 float64 y
 float64 z
 """
-  __slots__ = ['header','pt_1','pt_2','pt_3','pt_4']
-  _slot_types = ['std_msgs/Header','geometry_msgs/Point','geometry_msgs/Point','geometry_msgs/Point','geometry_msgs/Point']
+  __slots__ = ['header','pt_1','pt_2','pt_3','pt_4','pt_5','pt_6','landmark_check']
+  _slot_types = ['std_msgs/Header','geometry_msgs/Point','geometry_msgs/Point','geometry_msgs/Point','geometry_msgs/Point','geometry_msgs/Point','geometry_msgs/Point','int64']
 
   def __init__(self, *args, **kwds):
     """
@@ -55,7 +58,7 @@ float64 z
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       header,pt_1,pt_2,pt_3,pt_4
+       header,pt_1,pt_2,pt_3,pt_4,pt_5,pt_6,landmark_check
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -74,12 +77,21 @@ float64 z
         self.pt_3 = geometry_msgs.msg.Point()
       if self.pt_4 is None:
         self.pt_4 = geometry_msgs.msg.Point()
+      if self.pt_5 is None:
+        self.pt_5 = geometry_msgs.msg.Point()
+      if self.pt_6 is None:
+        self.pt_6 = geometry_msgs.msg.Point()
+      if self.landmark_check is None:
+        self.landmark_check = 0
     else:
       self.header = std_msgs.msg.Header()
       self.pt_1 = geometry_msgs.msg.Point()
       self.pt_2 = geometry_msgs.msg.Point()
       self.pt_3 = geometry_msgs.msg.Point()
       self.pt_4 = geometry_msgs.msg.Point()
+      self.pt_5 = geometry_msgs.msg.Point()
+      self.pt_6 = geometry_msgs.msg.Point()
+      self.landmark_check = 0
 
   def _get_types(self):
     """
@@ -102,7 +114,7 @@ float64 z
         length = len(_x)
       buff.write(struct.pack('<I%ss'%length, length, _x))
       _x = self
-      buff.write(_get_struct_12d().pack(_x.pt_1.x, _x.pt_1.y, _x.pt_1.z, _x.pt_2.x, _x.pt_2.y, _x.pt_2.z, _x.pt_3.x, _x.pt_3.y, _x.pt_3.z, _x.pt_4.x, _x.pt_4.y, _x.pt_4.z))
+      buff.write(_get_struct_18dq().pack(_x.pt_1.x, _x.pt_1.y, _x.pt_1.z, _x.pt_2.x, _x.pt_2.y, _x.pt_2.z, _x.pt_3.x, _x.pt_3.y, _x.pt_3.z, _x.pt_4.x, _x.pt_4.y, _x.pt_4.z, _x.pt_5.x, _x.pt_5.y, _x.pt_5.z, _x.pt_6.x, _x.pt_6.y, _x.pt_6.z, _x.landmark_check))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -122,6 +134,10 @@ float64 z
         self.pt_3 = geometry_msgs.msg.Point()
       if self.pt_4 is None:
         self.pt_4 = geometry_msgs.msg.Point()
+      if self.pt_5 is None:
+        self.pt_5 = geometry_msgs.msg.Point()
+      if self.pt_6 is None:
+        self.pt_6 = geometry_msgs.msg.Point()
       end = 0
       _x = self
       start = end
@@ -138,8 +154,8 @@ float64 z
         self.header.frame_id = str[start:end]
       _x = self
       start = end
-      end += 96
-      (_x.pt_1.x, _x.pt_1.y, _x.pt_1.z, _x.pt_2.x, _x.pt_2.y, _x.pt_2.z, _x.pt_3.x, _x.pt_3.y, _x.pt_3.z, _x.pt_4.x, _x.pt_4.y, _x.pt_4.z,) = _get_struct_12d().unpack(str[start:end])
+      end += 152
+      (_x.pt_1.x, _x.pt_1.y, _x.pt_1.z, _x.pt_2.x, _x.pt_2.y, _x.pt_2.z, _x.pt_3.x, _x.pt_3.y, _x.pt_3.z, _x.pt_4.x, _x.pt_4.y, _x.pt_4.z, _x.pt_5.x, _x.pt_5.y, _x.pt_5.z, _x.pt_6.x, _x.pt_6.y, _x.pt_6.z, _x.landmark_check,) = _get_struct_18dq().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -161,7 +177,7 @@ float64 z
         length = len(_x)
       buff.write(struct.pack('<I%ss'%length, length, _x))
       _x = self
-      buff.write(_get_struct_12d().pack(_x.pt_1.x, _x.pt_1.y, _x.pt_1.z, _x.pt_2.x, _x.pt_2.y, _x.pt_2.z, _x.pt_3.x, _x.pt_3.y, _x.pt_3.z, _x.pt_4.x, _x.pt_4.y, _x.pt_4.z))
+      buff.write(_get_struct_18dq().pack(_x.pt_1.x, _x.pt_1.y, _x.pt_1.z, _x.pt_2.x, _x.pt_2.y, _x.pt_2.z, _x.pt_3.x, _x.pt_3.y, _x.pt_3.z, _x.pt_4.x, _x.pt_4.y, _x.pt_4.z, _x.pt_5.x, _x.pt_5.y, _x.pt_5.z, _x.pt_6.x, _x.pt_6.y, _x.pt_6.z, _x.landmark_check))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -182,6 +198,10 @@ float64 z
         self.pt_3 = geometry_msgs.msg.Point()
       if self.pt_4 is None:
         self.pt_4 = geometry_msgs.msg.Point()
+      if self.pt_5 is None:
+        self.pt_5 = geometry_msgs.msg.Point()
+      if self.pt_6 is None:
+        self.pt_6 = geometry_msgs.msg.Point()
       end = 0
       _x = self
       start = end
@@ -198,8 +218,8 @@ float64 z
         self.header.frame_id = str[start:end]
       _x = self
       start = end
-      end += 96
-      (_x.pt_1.x, _x.pt_1.y, _x.pt_1.z, _x.pt_2.x, _x.pt_2.y, _x.pt_2.z, _x.pt_3.x, _x.pt_3.y, _x.pt_3.z, _x.pt_4.x, _x.pt_4.y, _x.pt_4.z,) = _get_struct_12d().unpack(str[start:end])
+      end += 152
+      (_x.pt_1.x, _x.pt_1.y, _x.pt_1.z, _x.pt_2.x, _x.pt_2.y, _x.pt_2.z, _x.pt_3.x, _x.pt_3.y, _x.pt_3.z, _x.pt_4.x, _x.pt_4.y, _x.pt_4.z, _x.pt_5.x, _x.pt_5.y, _x.pt_5.z, _x.pt_6.x, _x.pt_6.y, _x.pt_6.z, _x.landmark_check,) = _get_struct_18dq().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -214,9 +234,9 @@ def _get_struct_3I():
     if _struct_3I is None:
         _struct_3I = struct.Struct("<3I")
     return _struct_3I
-_struct_12d = None
-def _get_struct_12d():
-    global _struct_12d
-    if _struct_12d is None:
-        _struct_12d = struct.Struct("<12d")
-    return _struct_12d
+_struct_18dq = None
+def _get_struct_18dq():
+    global _struct_18dq
+    if _struct_18dq is None:
+        _struct_18dq = struct.Struct("<18dq")
+    return _struct_18dq

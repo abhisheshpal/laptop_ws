@@ -20,6 +20,8 @@
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/Point.h>
+#include <geometry_msgs/Point.h>
+#include <geometry_msgs/Point.h>
 
 namespace thorvald_2d_nav
 {
@@ -33,14 +35,20 @@ struct landmarks_
     , pt_1()
     , pt_2()
     , pt_3()
-    , pt_4()  {
+    , pt_4()
+    , pt_5()
+    , pt_6()
+    , landmark_check(0)  {
     }
   landmarks_(const ContainerAllocator& _alloc)
     : header(_alloc)
     , pt_1(_alloc)
     , pt_2(_alloc)
     , pt_3(_alloc)
-    , pt_4(_alloc)  {
+    , pt_4(_alloc)
+    , pt_5(_alloc)
+    , pt_6(_alloc)
+    , landmark_check(0)  {
   (void)_alloc;
     }
 
@@ -60,6 +68,15 @@ struct landmarks_
 
    typedef  ::geometry_msgs::Point_<ContainerAllocator>  _pt_4_type;
   _pt_4_type pt_4;
+
+   typedef  ::geometry_msgs::Point_<ContainerAllocator>  _pt_5_type;
+  _pt_5_type pt_5;
+
+   typedef  ::geometry_msgs::Point_<ContainerAllocator>  _pt_6_type;
+  _pt_6_type pt_6;
+
+   typedef int64_t _landmark_check_type;
+  _landmark_check_type landmark_check;
 
 
 
@@ -95,7 +112,7 @@ namespace message_traits
 
 
 // BOOLTRAITS {'IsFixedSize': False, 'IsMessage': True, 'HasHeader': True}
-// {'thorvald_2d_nav': ['/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg'], 'geometry_msgs': ['/opt/ros/kinetic/share/geometry_msgs/cmake/../msg'], 'actionlib_msgs': ['/opt/ros/kinetic/share/actionlib_msgs/cmake/../msg'], 'std_msgs': ['/opt/ros/kinetic/share/std_msgs/cmake/../msg']}
+// {'thorvald_2d_nav': ['/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg'], 'geometry_msgs': ['/opt/ros/kinetic/share/geometry_msgs/cmake/../msg'], 'actionlib_msgs': ['/opt/ros/kinetic/share/actionlib_msgs/cmake/../msg'], 'std_msgs': ['/opt/ros/kinetic/share/std_msgs/cmake/../msg']}
 
 // !!!!!!!!!!! ['__class__', '__delattr__', '__dict__', '__doc__', '__eq__', '__format__', '__getattribute__', '__hash__', '__init__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_parsed_fields', 'constants', 'fields', 'full_name', 'has_header', 'header_present', 'names', 'package', 'parsed_fields', 'short_name', 'text', 'types']
 
@@ -138,12 +155,12 @@ struct MD5Sum< ::thorvald_2d_nav::landmarks_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "8eef2551dccb95eccba1954107457f32";
+    return "af209cef473c1468511c6d5084a11b46";
   }
 
   static const char* value(const ::thorvald_2d_nav::landmarks_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x8eef2551dccb95ecULL;
-  static const uint64_t static_value2 = 0xcba1954107457f32ULL;
+  static const uint64_t static_value1 = 0xaf209cef473c1468ULL;
+  static const uint64_t static_value2 = 0x511c6d5084a11b46ULL;
 };
 
 template<class ContainerAllocator>
@@ -167,6 +184,9 @@ geometry_msgs/Point pt_1\n\
 geometry_msgs/Point pt_2\n\
 geometry_msgs/Point pt_3\n\
 geometry_msgs/Point pt_4\n\
+geometry_msgs/Point pt_5\n\
+geometry_msgs/Point pt_6\n\
+int64 landmark_check\n\
 \n\
 \n\
 ================================================================================\n\
@@ -216,6 +236,9 @@ namespace serialization
       stream.next(m.pt_2);
       stream.next(m.pt_3);
       stream.next(m.pt_4);
+      stream.next(m.pt_5);
+      stream.next(m.pt_6);
+      stream.next(m.landmark_check);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
@@ -249,6 +272,14 @@ struct Printer< ::thorvald_2d_nav::landmarks_<ContainerAllocator> >
     s << indent << "pt_4: ";
     s << std::endl;
     Printer< ::geometry_msgs::Point_<ContainerAllocator> >::stream(s, indent + "  ", v.pt_4);
+    s << indent << "pt_5: ";
+    s << std::endl;
+    Printer< ::geometry_msgs::Point_<ContainerAllocator> >::stream(s, indent + "  ", v.pt_5);
+    s << indent << "pt_6: ";
+    s << std::endl;
+    Printer< ::geometry_msgs::Point_<ContainerAllocator> >::stream(s, indent + "  ", v.pt_6);
+    s << indent << "landmark_check: ";
+    Printer<int64_t>::stream(s, indent + "  ", v.landmark_check);
   }
 };
 

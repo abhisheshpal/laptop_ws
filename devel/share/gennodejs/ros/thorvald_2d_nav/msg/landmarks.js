@@ -25,6 +25,9 @@ class landmarks {
       this.pt_2 = null;
       this.pt_3 = null;
       this.pt_4 = null;
+      this.pt_5 = null;
+      this.pt_6 = null;
+      this.landmark_check = null;
     }
     else {
       if (initObj.hasOwnProperty('header')) {
@@ -57,6 +60,24 @@ class landmarks {
       else {
         this.pt_4 = new geometry_msgs.msg.Point();
       }
+      if (initObj.hasOwnProperty('pt_5')) {
+        this.pt_5 = initObj.pt_5
+      }
+      else {
+        this.pt_5 = new geometry_msgs.msg.Point();
+      }
+      if (initObj.hasOwnProperty('pt_6')) {
+        this.pt_6 = initObj.pt_6
+      }
+      else {
+        this.pt_6 = new geometry_msgs.msg.Point();
+      }
+      if (initObj.hasOwnProperty('landmark_check')) {
+        this.landmark_check = initObj.landmark_check
+      }
+      else {
+        this.landmark_check = 0;
+      }
     }
   }
 
@@ -72,6 +93,12 @@ class landmarks {
     bufferOffset = geometry_msgs.msg.Point.serialize(obj.pt_3, buffer, bufferOffset);
     // Serialize message field [pt_4]
     bufferOffset = geometry_msgs.msg.Point.serialize(obj.pt_4, buffer, bufferOffset);
+    // Serialize message field [pt_5]
+    bufferOffset = geometry_msgs.msg.Point.serialize(obj.pt_5, buffer, bufferOffset);
+    // Serialize message field [pt_6]
+    bufferOffset = geometry_msgs.msg.Point.serialize(obj.pt_6, buffer, bufferOffset);
+    // Serialize message field [landmark_check]
+    bufferOffset = _serializer.int64(obj.landmark_check, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -89,13 +116,19 @@ class landmarks {
     data.pt_3 = geometry_msgs.msg.Point.deserialize(buffer, bufferOffset);
     // Deserialize message field [pt_4]
     data.pt_4 = geometry_msgs.msg.Point.deserialize(buffer, bufferOffset);
+    // Deserialize message field [pt_5]
+    data.pt_5 = geometry_msgs.msg.Point.deserialize(buffer, bufferOffset);
+    // Deserialize message field [pt_6]
+    data.pt_6 = geometry_msgs.msg.Point.deserialize(buffer, bufferOffset);
+    // Deserialize message field [landmark_check]
+    data.landmark_check = _deserializer.int64(buffer, bufferOffset);
     return data;
   }
 
   static getMessageSize(object) {
     let length = 0;
     length += std_msgs.msg.Header.getMessageSize(object.header);
-    return length + 96;
+    return length + 152;
   }
 
   static datatype() {
@@ -105,7 +138,7 @@ class landmarks {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '8eef2551dccb95eccba1954107457f32';
+    return 'af209cef473c1468511c6d5084a11b46';
   }
 
   static messageDefinition() {
@@ -116,6 +149,9 @@ class landmarks {
     geometry_msgs/Point pt_2
     geometry_msgs/Point pt_3
     geometry_msgs/Point pt_4
+    geometry_msgs/Point pt_5
+    geometry_msgs/Point pt_6
+    int64 landmark_check
     
     
     ================================================================================
@@ -185,6 +221,27 @@ class landmarks {
     }
     else {
       resolved.pt_4 = new geometry_msgs.msg.Point()
+    }
+
+    if (msg.pt_5 !== undefined) {
+      resolved.pt_5 = geometry_msgs.msg.Point.Resolve(msg.pt_5)
+    }
+    else {
+      resolved.pt_5 = new geometry_msgs.msg.Point()
+    }
+
+    if (msg.pt_6 !== undefined) {
+      resolved.pt_6 = geometry_msgs.msg.Point.Resolve(msg.pt_6)
+    }
+    else {
+      resolved.pt_6 = new geometry_msgs.msg.Point()
+    }
+
+    if (msg.landmark_check !== undefined) {
+      resolved.landmark_check = msg.landmark_check;
+    }
+    else {
+      resolved.landmark_check = 0
     }
 
     return resolved;

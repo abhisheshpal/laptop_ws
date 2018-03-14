@@ -9,4 +9,10 @@
           PT_3
           PT_4-VAL
           PT_4
+          PT_5-VAL
+          PT_5
+          PT_6-VAL
+          PT_6
+          LANDMARK_CHECK-VAL
+          LANDMARK_CHECK
 ))
