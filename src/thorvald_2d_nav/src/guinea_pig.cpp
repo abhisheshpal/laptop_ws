@@ -31,6 +31,7 @@ int count_i_1[1080], count_i_2[1080];
 visualization_msgs::Marker line_strip_1, line_strip_2, final_line;
 int end_line = 0, finale_1 = 0;
 double yaw;
+int line_pt = 0;
 nav_msgs::Odometry thorvald_estimated_pose;
 
 thorvald_2d_nav::scan_detected_line measurement_points;
@@ -288,16 +289,21 @@ int main(int argc, char** argv)
 
         final_count_2 = 0;
         final_count_5 = 0;
+
+       // Create the vertices for the points and lines
+        geometry_msgs::Point pt_3, max_line[2], min_line[2];
+        max_line[1].x = std::max(final_Index_1[1].real_x,final_Index_1[2].real_x);
+        max_line[2].x = std::max(final_Index_2[1].real_x,final_Index_2[2].real_x);
+        min_line[1].x = std::min(final_Index_1[1].real_x,final_Index_1[2].real_x);
+        min_line[2].x = std::min(final_Index_2[1].real_x,final_Index_2[2].real_x);
+
+        if(line_pt == 0){
+
         geometry_msgs::Point pt_1[2];
         pt_1[1].x = final_Index_1[1].real_x; 
         pt_1[1].y = final_Index_1[1].real_y; 
         pt_1[2].x = final_Index_1[2].real_x; 
         pt_1[2].y = final_Index_1[2].real_y; 
-
-        for(int q_1 = 1; q_1 <= 2; q_1++){
-        if(pt_1[q_1].x != 0 && pt_1[q_1].y != 0){
-          line_strip_1.points.push_back(pt_1[q_1]); }
-        }// for loop end for storing points
 
         geometry_msgs::Point pt_2[2];
         pt_2[1].x = final_Index_2[1].real_x; 
@@ -305,18 +311,15 @@ int main(int argc, char** argv)
         pt_2[2].x = final_Index_2[2].real_x; 
         pt_2[2].y = final_Index_2[2].real_y; 
 
+        for(int q_1 = 1; q_1 <= 2; q_1++){
+        if(pt_1[q_1].x != 0 && pt_1[q_1].y != 0){
+          line_strip_1.points.push_back(pt_1[q_1]); }
+        }// for loop end for storing points
+
         for(int q_2 = 1; q_2 <= 2; q_2++){
         if(pt_2[q_2].x != 0 && pt_2[q_2].y != 0){
           line_strip_2.points.push_back(pt_2[q_2]); }
         }// for loop end for storing points
-
-        // Create the vertices for the points and lines
-        geometry_msgs::Point pt_3, max_line[2], min_line[2];
-        max_line[1].x = std::max(final_Index_1[1].real_x,final_Index_1[2].real_x);
-        max_line[2].x = std::max(final_Index_2[1].real_x,final_Index_2[2].real_x);
-        min_line[1].x = std::min(final_Index_1[1].real_x,final_Index_1[2].real_x);
-        min_line[2].x = std::min(final_Index_2[1].real_x,final_Index_2[2].real_x);
-
 
         if ( ((max_line[1].x - min_line[1].x)< 1.5) && ((max_line[2].x - min_line[2].x)< 1.5)){
         ROS_INFO("Trajectory not generated in a right manner!"); 
@@ -328,23 +331,50 @@ int main(int argc, char** argv)
          final_line.points.push_back(pt_3); }  
         pt_3.x = (max_line[1].x + max_line[2].x)/2; 
         pt_3.y = (final_Index_1[2].real_y + final_Index_2[2].real_y)/2; 
+           if(pt_3.x != 0 && pt_3.y != 0){
+              final_line.points.push_back(pt_3); } 
+        } // pt_3
+
+        line_pt = 1;
+        } // line_pt
+
+        else{
+        geometry_msgs::Point pt_1[1];
+        pt_1[1].x = max_line[1].x; 
+        pt_1[1].y = final_Index_1[1].real_y;
+        line_strip_1.points.push_back(pt_1[1]); 
+
+        geometry_msgs::Point pt_2[1];
+        pt_2[1].x = max_line[2].x; 
+        pt_2[1].y = final_Index_2[1].real_y; 
+        line_strip_2.points.push_back(pt_2[1]); 
+
+        if ( ((max_line[1].x - min_line[1].x)< 1.5) && ((max_line[2].x - min_line[2].x)< 1.5)){
+        ROS_INFO("Trajectory not generated in a right manner!"); 
+        }
+        else{ 
+        pt_3.x = (max_line[1].x + max_line[2].x)/2; 
+        pt_3.y = (final_Index_1[2].real_y + final_Index_2[2].real_y)/2; 
         if(pt_3.x != 0 && pt_3.y != 0){
          final_line.points.push_back(pt_3); } 
+        }
 
+        } //line_pt else end
+ 
         landmarks_pos.pt_5.x = (min_line[1].x + min_line[2].x)/2;
         landmarks_pos.pt_5.y = (final_Index_1[1].real_y + final_Index_2[1].real_y)/2;
         landmarks_pos.pt_6.x = (max_line[1].x + max_line[2].x)/2;
         landmarks_pos.pt_6.y = (final_Index_1[2].real_y + final_Index_2[2].real_y)/2;
         std::cout << "landmarks_pos.pt_5.x:" << landmarks_pos.pt_5.x << "\n" << "landmarks_pos.pt_6.x" << landmarks_pos.pt_6.x << "\n"  << std::endl;
         landmarks_pos.landmark_check = landmarks_pos.landmark_check + 1;
-        }
+        
         finale = 1;
 
         }// check for new lines
 
       if ( (final_count_1 != 0) && (line_strip_1.points.size() < 2) && (!boost::empty(final_Index_1))){ 
         line_strip_1.header.frame_id = "/hokuyo";
-        line_strip_1.header.stamp = ros::Time::now();
+        // line_strip_1.header.stamp = ros::Time::now();
         line_strip_1.action = visualization_msgs::Marker::ADD;
         line_strip_1.pose.orientation.w = 1.0;
         line_strip_1.type = visualization_msgs::Marker::LINE_STRIP;
@@ -371,7 +401,7 @@ int main(int argc, char** argv)
 
       if ( (final_count_4 != 0) && (line_strip_2.points.size() < 2) && (!boost::empty(final_Index_2))){ 
         line_strip_2.header.frame_id = "/hokuyo";
-        line_strip_2.header.stamp = ros::Time::now();
+        // line_strip_2.header.stamp = ros::Time::now();
         line_strip_2.action = visualization_msgs::Marker::ADD;
         line_strip_2.pose.orientation.w = 1.0;
         line_strip_2.type = visualization_msgs::Marker::LINE_STRIP;
@@ -399,7 +429,7 @@ int main(int argc, char** argv)
  
       if(line_strip_1.points.size() > 1 && line_strip_2.points.size() > 1 && (final_line.points.size() < 2)){
         final_line.header.frame_id = "/hokuyo";
-        final_line.header.stamp = ros::Time::now();
+       // final_line.header.stamp = ros::Time::now();
         final_line.action = visualization_msgs::Marker::ADD;
         final_line.pose.orientation.w = 1.0;
         final_line.type = visualization_msgs::Marker::LINE_STRIP;
@@ -439,9 +469,9 @@ int main(int argc, char** argv)
         //}*/
          } // count check 
       
-        //line_strip_1.header.stamp = scan_msg_main.header.stamp;
-        //line_strip_2.header.stamp = scan_msg_main.header.stamp;
-        //final_line.header.stamp = scan_msg_main.header.stamp;
+        line_strip_1.header.stamp = ros::Time::now();
+        line_strip_2.header.stamp = ros::Time::now();
+        final_line.header.stamp = ros::Time::now();
 
         marker_pub_1.publish(line_strip_1);
         marker_pub_2.publish(line_strip_2);
