@@ -166,6 +166,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+thorvald_2d_nav/CMakeFiles/row_transition.dir/rule:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/row_transition.dir/rule
+.PHONY : thorvald_2d_nav/CMakeFiles/row_transition.dir/rule
+
+# Convenience name for target.
+row_transition: thorvald_2d_nav/CMakeFiles/row_transition.dir/rule
+
+.PHONY : row_transition
+
+# fast build rule for target.
+row_transition/fast:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/row_transition.dir/build.make thorvald_2d_nav/CMakeFiles/row_transition.dir/build
+.PHONY : row_transition/fast
+
+# Convenience name for target.
 thorvald_2d_nav/CMakeFiles/gazebo_line.dir/rule:
 	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/gazebo_line.dir/rule
 .PHONY : thorvald_2d_nav/CMakeFiles/gazebo_line.dir/rule
@@ -825,6 +840,33 @@ src/laser_points_count.cpp.s:
 	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/laser_points.dir/build.make thorvald_2d_nav/CMakeFiles/laser_points.dir/src/laser_points_count.cpp.s
 .PHONY : src/laser_points_count.cpp.s
 
+src/row_transition.o: src/row_transition.cpp.o
+
+.PHONY : src/row_transition.o
+
+# target to build an object file
+src/row_transition.cpp.o:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/row_transition.dir/build.make thorvald_2d_nav/CMakeFiles/row_transition.dir/src/row_transition.cpp.o
+.PHONY : src/row_transition.cpp.o
+
+src/row_transition.i: src/row_transition.cpp.i
+
+.PHONY : src/row_transition.i
+
+# target to preprocess a source file
+src/row_transition.cpp.i:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/row_transition.dir/build.make thorvald_2d_nav/CMakeFiles/row_transition.dir/src/row_transition.cpp.i
+.PHONY : src/row_transition.cpp.i
+
+src/row_transition.s: src/row_transition.cpp.s
+
+.PHONY : src/row_transition.s
+
+# target to generate assembly for a file
+src/row_transition.cpp.s:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/row_transition.dir/build.make thorvald_2d_nav/CMakeFiles/row_transition.dir/src/row_transition.cpp.s
+.PHONY : src/row_transition.cpp.s
+
 src/thorvald_RANSAC.o: src/thorvald_RANSAC.cpp.o
 
 .PHONY : src/thorvald_RANSAC.o
@@ -943,6 +985,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... install/local"
 	@echo "... install/strip"
+	@echo "... row_transition"
 	@echo "... gazebo_line"
 	@echo "... guinea_pig"
 	@echo "... laser_points"
@@ -996,6 +1039,9 @@ help:
 	@echo "... src/laser_points_count.o"
 	@echo "... src/laser_points_count.i"
 	@echo "... src/laser_points_count.s"
+	@echo "... src/row_transition.o"
+	@echo "... src/row_transition.i"
+	@echo "... src/row_transition.s"
 	@echo "... src/thorvald_RANSAC.o"
 	@echo "... src/thorvald_RANSAC.i"
 	@echo "... src/thorvald_RANSAC.s"

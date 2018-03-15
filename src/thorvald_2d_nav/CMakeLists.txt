@@ -173,6 +173,9 @@ include_directories(/usr/include/eigen3)
  add_executable(gazebo_line src/gazebo_line.cpp)
  target_link_libraries(gazebo_line ${catkin_LIBRARIES})
 
+ add_executable(row_transition src/row_transition.cpp)
+ target_link_libraries(row_transition ${catkin_LIBRARIES})
+
 ## Declare a C++ executable
 # add_executable(thorvald_2dnav_node src/thorvald_2dnav_node.cpp)
 
@@ -189,6 +192,7 @@ add_dependencies(fake_lines ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPO
 add_dependencies(laser_points ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(guinea_pig ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(gazebo_line ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(row_transition ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(thorvald_2dnav_node
 #   ${catkin_LIBRARIES}
