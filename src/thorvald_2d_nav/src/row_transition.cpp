@@ -132,7 +132,7 @@ double Current_x_1, Current_y_1;
 //---------------------- GOAL ---------------------------// 
 
  // std::cout << initial_count_1 << "\n" << k << "\n" << q << "\n" << unfit_1 << std::endl;
-  marker_1.header.frame_id = "hokuyo";
+  marker_1.header.frame_id = "map";
   marker_1.ns = "poles";
   marker_1.id = 1;
   marker_1.type = visualization_msgs::Marker::CYLINDER;
@@ -147,7 +147,7 @@ double Current_x_1, Current_y_1;
   marker_1.color.b = 1.0;
 
   if(q>5){
-  marker_2.header.frame_id = "hokuyo";
+  marker_2.header.frame_id = "map";
   marker_2.ns = "poles";
   marker_2.id = 2;
   marker_2.type = visualization_msgs::Marker::CYLINDER;
@@ -162,7 +162,7 @@ double Current_x_1, Current_y_1;
   marker_2.color.b = 1.0;
   }
 
-  marker_3.header.frame_id = "hokuyo";
+  marker_3.header.frame_id = "map";
   marker_3.ns = "poles";
   marker_3.id = 3;
   marker_3.type = visualization_msgs::Marker::CYLINDER;
@@ -195,7 +195,7 @@ double Current_x_1, Current_y_1;
   next_nearest_pole_y = std::max(marker_1.pose.position.y,marker_2.pose.position.y);
   }
 
-  marker_goal.header.frame_id = "hokuyo";
+  marker_goal.header.frame_id = "map";
   marker_goal.ns = "poles";
   marker_goal.id = 3;
   marker_goal.type = visualization_msgs::Marker::CYLINDER;
@@ -272,9 +272,9 @@ int main(int argc, char** argv)
   total_angular_rotation = total_angular_rotation + angular_velocity;
   }
   else{
-  est_twist.linear.x = 0.0; 
-  est_twist.angular.z = 0.0;
-  ros::Duration(5.0).sleep();
+  // est_twist.linear.x = 0.0; 
+  // est_twist.angular.z = 0.0;
+  ros::Duration(2.0).sleep();
   pole_detect = true;
   }
   } // teach-in row transition end
@@ -294,10 +294,10 @@ int main(int argc, char** argv)
    est_twist.angular.z = 0.0;
    } 
    else{
-   //est_twist.linear.x = 0.1; 
-   //est_twist.angular.z = angular_velocity;
-    est_twist.linear.x = 0.0; 
-    est_twist.angular.z = 0.0;
+   est_twist.linear.x = 0.1; 
+   est_twist.angular.z = angular_velocity;
+    // est_twist.linear.x = 0.0; 
+    // est_twist.angular.z = 0.0;
    }
 
   // publish the markers
