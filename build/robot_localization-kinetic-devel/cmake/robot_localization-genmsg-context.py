@@ -1,7 +1,7 @@
 # generated from genmsg/cmake/pkg-genmsg.context.in
 
 messages_str = ""
-services_str = "/home/vigneshnuc/laptop_ws/src/robot_localization-kinetic-devel/srv/GetState.srv;/home/vigneshnuc/laptop_ws/src/robot_localization-kinetic-devel/srv/SetDatum.srv;/home/vigneshnuc/laptop_ws/src/robot_localization-kinetic-devel/srv/SetPose.srv"
+services_str = "/home/vignesh/laptop_ws/src/robot_localization-kinetic-devel/srv/GetState.srv;/home/vignesh/laptop_ws/src/robot_localization-kinetic-devel/srv/SetDatum.srv;/home/vignesh/laptop_ws/src/robot_localization-kinetic-devel/srv/SetPose.srv"
 pkg_name = "robot_localization"
 dependencies_str = "geographic_msgs;geometry_msgs;std_msgs"
 langs = "gencpp;geneus;genlisp;gennodejs;genpy"

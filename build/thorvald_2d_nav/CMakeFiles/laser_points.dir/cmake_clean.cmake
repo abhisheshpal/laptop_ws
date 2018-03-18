@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/laser_points.dir/src/laser_points_count.cpp.o"
-  "/home/vigneshnuc/laptop_ws/devel/lib/thorvald_2d_nav/laser_points.pdb"
-  "/home/vigneshnuc/laptop_ws/devel/lib/thorvald_2d_nav/laser_points"
+  "/home/vignesh/laptop_ws/devel/lib/thorvald_2d_nav/laser_points.pdb"
+  "/home/vignesh/laptop_ws/devel/lib/thorvald_2d_nav/laser_points"
 )
 
 # Per-language clean rules from dependency scanning.

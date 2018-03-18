@@ -10,4 +10,7 @@ set(thorvald_2d_nav_EXEC_DEPENDS "actionlib_msgs" "move_base" "roscpp" "rospy" "
 set(thorvald_2d_nav_RUN_DEPENDS "actionlib_msgs" "move_base" "roscpp" "rospy" "geometry_msgs" "visualization_msgs" "sensor_msgs" "nav_msgs" "std_msgs" "std_srvs" "tf" "message_generation" "message_runtime")
 set(thorvald_2d_nav_TEST_DEPENDS )
 set(thorvald_2d_nav_DOC_DEPENDS )
+set(thorvald_2d_nav_URL_WEBSITE "")
+set(thorvald_2d_nav_URL_BUGTRACKER "")
+set(thorvald_2d_nav_URL_REPOSITORY "")
 set(thorvald_2d_nav_DEPRECATED "")

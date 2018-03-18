@@ -9,13 +9,20 @@
 #include <cmath>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/TransformStamped.h>
 #include <visualization_msgs/Marker.h>
+
+#include "tf2_ros/message_filter.h"
+#include "tf2_ros/transform_listener.h"
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 geometry_msgs::Twist est_twist;
 double yaw;
 nav_msgs::Odometry thorvald_estimated_pose;
 double thorvald_position_x, thorvald_position_y;
 geometry_msgs::Pose goal_pt;
+tf2_ros::Buffer tfBuffer;
+geometry_msgs::TransformStamped transformStamped;
 
 // Parameters for pole detection
 double min_range = 5.0;
@@ -127,18 +134,46 @@ double Current_x_1, Current_y_1;
   current_range_3 = scan_msg_poles.ranges[current_itr_3];
   angle_3 = (scan_msg_poles.angle_min + current_itr_3*scan_msg_poles.angle_increment);
 }   
-}
 
 //---------------------- GOAL ---------------------------// 
 
+geometry_msgs::PoseStamped pole_1, pole_1_transformed;
+geometry_msgs::PoseStamped pole_2, pole_2_transformed;
+geometry_msgs::PoseStamped pole_3, pole_3_transformed;
+pole_1.header.frame_id = "hokuyo";
+pole_1.pose.position.x = sum_x_1/(k);
+pole_1.pose.position.y = sum_y_1/(k);
+
+pole_2.header.frame_id = "hokuyo";
+pole_2.pose.position.x = current_range_2*cos(angle_2) ;
+pole_2.pose.position.y = current_range_2*sin(angle_2) ;
+
+pole_3.header.frame_id = "hokuyo";
+pole_3.pose.position.x = current_range_3*cos(angle_3);
+pole_3.pose.position.y = current_range_3*sin(angle_3);
+
+ try{
+   transformStamped = tfBuffer.lookupTransform("odom", "hokuyo", ros::Time(0));
+ }
+ catch (tf2::TransformException &ex){
+   ROS_WARN("%s",ex.what());
+   ros::Duration(1.0).sleep();
+   // continue;
+ }
+
+tf2::doTransform(pole_1, pole_1_transformed, transformStamped);
+tf2::doTransform(pole_2, pole_2_transformed, transformStamped);
+tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
+
  // std::cout << initial_count_1 << "\n" << k << "\n" << q << "\n" << unfit_1 << std::endl;
-  marker_1.header.frame_id = "map";
-  marker_1.ns = "poles";
+  marker_1.header.frame_id = "odom";
+  marker_1.ns = "poles_1";
   marker_1.id = 1;
   marker_1.type = visualization_msgs::Marker::CYLINDER;
   marker_1.action = visualization_msgs::Marker::ADD;
-  marker_1.pose.position.x = (sum_x_1/(k));
-  marker_1.pose.position.y = (sum_y_1/(k));
+  marker_1.pose.position.x = pole_1_transformed.pose.position.x;
+  marker_1.pose.position.y = pole_1_transformed.pose.position.y;
+  marker_1.pose.position.z = 0.75;
   marker_1.pose.orientation.w = 1.0;
   marker_1.scale.x = 0.05;
   marker_1.scale.y = 0.05;
@@ -147,13 +182,14 @@ double Current_x_1, Current_y_1;
   marker_1.color.b = 1.0;
 
   if(q>5){
-  marker_2.header.frame_id = "map";
-  marker_2.ns = "poles";
+  marker_2.header.frame_id = "odom";
+  marker_2.ns = "poles_2";
   marker_2.id = 2;
   marker_2.type = visualization_msgs::Marker::CYLINDER;
   marker_2.action = visualization_msgs::Marker::ADD;
-  marker_2.pose.position.x = current_range_2*cos(angle_2);
-  marker_2.pose.position.y = current_range_2*sin(angle_2);
+  marker_2.pose.position.x = pole_2_transformed.pose.position.x;
+  marker_2.pose.position.y = pole_2_transformed.pose.position.y;
+  marker_2.pose.position.z = 0.75;
   marker_2.pose.orientation.w = 1.0;
   marker_2.scale.x = 0.05;
   marker_2.scale.y = 0.05;
@@ -162,13 +198,14 @@ double Current_x_1, Current_y_1;
   marker_2.color.b = 1.0;
   }
 
-  marker_3.header.frame_id = "map";
-  marker_3.ns = "poles";
+  marker_3.header.frame_id = "odom";
+  marker_3.ns = "poles_3";
   marker_3.id = 3;
   marker_3.type = visualization_msgs::Marker::CYLINDER;
   marker_3.action = visualization_msgs::Marker::ADD;
-  marker_3.pose.position.x = (current_range_3)*cos((angle_3));
-  marker_3.pose.position.y = (current_range_3)*sin(angle_3);
+  marker_3.pose.position.x = pole_3_transformed.pose.position.x;
+  marker_3.pose.position.y = pole_3_transformed.pose.position.y;
+  marker_3.pose.position.z = 0.75;
   marker_3.pose.orientation.w = 1.0;
   marker_3.scale.x = 0.05;
   marker_3.scale.y = 0.05;
@@ -179,29 +216,30 @@ double Current_x_1, Current_y_1;
   if(unfit>0 && unfit_1> 0){
   int near_pole = 0;
   double nearest_pole_x = marker_1.pose.position.x;
-  double nearest_pole_y = marker_1.pose.position.x;
+  double nearest_pole_y = marker_1.pose.position.y;
   double next_nearest_pole_x = std::min(marker_2.pose.position.x,marker_3.pose.position.x);
-  double next_nearest_pole_y = std::max(marker_2.pose.position.y,marker_3.pose.position.y);
-  if(nearest_pole_x > marker_2.pose.position.x) {
-  nearest_pole_x = marker_2.pose.position.x;
+  double next_nearest_pole_y = std::min(marker_2.pose.position.y,marker_3.pose.position.y);
+  if(nearest_pole_x > marker_2.pose.position.y) {
+   nearest_pole_x = marker_2.pose.position.x;
   nearest_pole_y = marker_2.pose.position.y;
-  next_nearest_pole_x = std::min(marker_1.pose.position.x,marker_3.pose.position.x);
-  next_nearest_pole_y = std::max(marker_1.pose.position.y,marker_3.pose.position.y);
+   next_nearest_pole_x = std::min(marker_1.pose.position.x,marker_3.pose.position.x);
+  next_nearest_pole_y = std::min(marker_1.pose.position.y,marker_3.pose.position.y);
   }
-  if(nearest_pole_x > marker_3.pose.position.x){
+  if(nearest_pole_x > marker_3.pose.position.y){
   nearest_pole_x = marker_3.pose.position.x;
   nearest_pole_y = marker_3.pose.position.y;
-  next_nearest_pole_x = std::min(marker_1.pose.position.x,marker_2.pose.position.x);
-  next_nearest_pole_y = std::max(marker_1.pose.position.y,marker_2.pose.position.y);
+   next_nearest_pole_x = std::min(marker_1.pose.position.x,marker_2.pose.position.x);
+  next_nearest_pole_y = std::min(marker_1.pose.position.y,marker_2.pose.position.y);
   }
 
-  marker_goal.header.frame_id = "map";
-  marker_goal.ns = "poles";
+  marker_goal.header.frame_id = "odom";
+  marker_goal.ns = "poles_g";
   marker_goal.id = 3;
   marker_goal.type = visualization_msgs::Marker::CYLINDER;
   marker_goal.action = visualization_msgs::Marker::ADD;
   marker_goal.pose.position.x = (nearest_pole_x + next_nearest_pole_x)/2;
   marker_goal.pose.position.y = (nearest_pole_y + next_nearest_pole_y)/2;
+  marker_goal.pose.position.z = 0.75;
   marker_goal.pose.orientation.w = 1.0;
   marker_goal.scale.x = 0.05;
   marker_goal.scale.y = 0.05;
@@ -213,6 +251,7 @@ double Current_x_1, Current_y_1;
   goal_pt.position.y = (nearest_pole_y + next_nearest_pole_y)/2;
   goal_found = true; 
   }
+}
   return goal_pt;
 }
 
@@ -244,6 +283,8 @@ int main(int argc, char** argv)
   double total_angular_rotation = 0;
   geometry_msgs::Pose waypoint;
 
+  tf2_ros::TransformListener tfListener(tfBuffer);
+
   while (ros::ok()){
   ros::spinOnce();
 
@@ -252,8 +293,7 @@ int main(int argc, char** argv)
  /*  if(s == 0){
    Pole_detection(scan_msg_main);
    s = s + 1;
-   } 
-*/
+   } */ 
 
   if(pole_detect == false){ // teach-in row transition
 
@@ -277,7 +317,7 @@ int main(int argc, char** argv)
   ros::Duration(2.0).sleep();
   pole_detect = true;
   }
-  } // teach-in row transition end
+  } // teach-in row transition end */
 
   if(pole_detect == true){
   waypoint = Pole_detection(scan_msg_main); // pole detection
@@ -286,7 +326,7 @@ int main(int argc, char** argv)
   if(goal_found == true){
   double goal_range = sqrt(pow((waypoint.position.y - thorvald_estimated_pose.pose.pose.position.y),2) + pow((waypoint.position.x - thorvald_estimated_pose.pose.pose.position.x),2));
   double goal_bearing = atan2((waypoint.position.y-thorvald_estimated_pose.pose.pose.position.y),(waypoint.position.x - thorvald_estimated_pose.pose.pose.position.x)) - yaw;
-  std::cout << waypoint.position.x << "\n" << waypoint.position.y << "\n" << goal_range << "\n" << goal_bearing << std::endl;
+  //std::cout << waypoint.position.x << "\n" << waypoint.position.y << "\n" << goal_range << "\n" << goal_bearing << std::endl;
   angular_velocity = pure_pursuit(goal_range, goal_bearing); //pure pursuit controller
 
    if(goal_range < 0.05 && goal_bearing < 0.1){
@@ -296,8 +336,8 @@ int main(int argc, char** argv)
    else{
    est_twist.linear.x = 0.1; 
    est_twist.angular.z = angular_velocity;
-    // est_twist.linear.x = 0.0; 
-    // est_twist.angular.z = 0.0;
+   //est_twist.linear.x = 0.0; 
+   //est_twist.angular.z = 0.0;
    }
 
   // publish the markers
