@@ -345,7 +345,7 @@ int main(int argc, char** argv)
 
    goal_range = sqrt(pow((waypoint.position.y - thorvald_estimated_pose.pose.pose.position.y),2) + pow((waypoint.position.x - thorvald_estimated_pose.pose.pose.position.x),2));
    goal_bearing = atan2((waypoint.position.y-thorvald_estimated_pose.pose.pose.position.y),(waypoint.position.x - thorvald_estimated_pose.pose.pose.position.x)) - yaw;
-   std::cout << "goal_range"  << goal_range << "\n" << "goal_bearing" << goal_bearing  << "\n" << std::endl;
+   // std::cout << "goal_range"  << goal_range << "\n" << "goal_bearing" << goal_bearing  << "\n" << std::endl;
    angular_velocity = pure_pursuit(goal_range, goal_bearing); //pure pursuit controller
 
    est_twist.linear.x = 0.1; 
