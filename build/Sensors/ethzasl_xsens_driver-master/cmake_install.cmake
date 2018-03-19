@@ -1,8 +1,8 @@
-# Install script for directory: /home/vignesh/laptop_ws/src/Sensors/ethzasl_xsens_driver-master
+# Install script for directory: /home/vigneshnuc/laptop_ws/src/Sensors/ethzasl_xsens_driver-master
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/vignesh/laptop_ws/install")
+  set(CMAKE_INSTALL_PREFIX "/home/vigneshnuc/laptop_ws/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,29 +33,29 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/vignesh/laptop_ws/build/Sensors/ethzasl_xsens_driver-master/catkin_generated/installspace/xsens_driver.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/vigneshnuc/laptop_ws/build/Sensors/ethzasl_xsens_driver-master/catkin_generated/installspace/xsens_driver.pc")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/xsens_driver/cmake" TYPE FILE FILES
-    "/home/vignesh/laptop_ws/build/Sensors/ethzasl_xsens_driver-master/catkin_generated/installspace/xsens_driverConfig.cmake"
-    "/home/vignesh/laptop_ws/build/Sensors/ethzasl_xsens_driver-master/catkin_generated/installspace/xsens_driverConfig-version.cmake"
+    "/home/vigneshnuc/laptop_ws/build/Sensors/ethzasl_xsens_driver-master/catkin_generated/installspace/xsens_driverConfig.cmake"
+    "/home/vigneshnuc/laptop_ws/build/Sensors/ethzasl_xsens_driver-master/catkin_generated/installspace/xsens_driverConfig-version.cmake"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/xsens_driver" TYPE FILE FILES "/home/vignesh/laptop_ws/src/Sensors/ethzasl_xsens_driver-master/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/xsens_driver" TYPE FILE FILES "/home/vigneshnuc/laptop_ws/src/Sensors/ethzasl_xsens_driver-master/package.xml")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/xsens_driver" TYPE PROGRAM FILES
-    "/home/vignesh/laptop_ws/src/Sensors/ethzasl_xsens_driver-master/nodes/mtnode.py"
-    "/home/vignesh/laptop_ws/src/Sensors/ethzasl_xsens_driver-master/nodes/mtdef.py"
-    "/home/vignesh/laptop_ws/src/Sensors/ethzasl_xsens_driver-master/nodes/mtdevice.py"
+    "/home/vigneshnuc/laptop_ws/src/Sensors/ethzasl_xsens_driver-master/nodes/mtnode.py"
+    "/home/vigneshnuc/laptop_ws/src/Sensors/ethzasl_xsens_driver-master/nodes/mtdef.py"
+    "/home/vigneshnuc/laptop_ws/src/Sensors/ethzasl_xsens_driver-master/nodes/mtdevice.py"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/xsens_driver" TYPE DIRECTORY FILES "/home/vignesh/laptop_ws/src/Sensors/ethzasl_xsens_driver-master/launch")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/xsens_driver" TYPE DIRECTORY FILES "/home/vigneshnuc/laptop_ws/src/Sensors/ethzasl_xsens_driver-master/launch")
 endif()
 

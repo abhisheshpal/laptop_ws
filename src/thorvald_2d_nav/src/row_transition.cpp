@@ -237,7 +237,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_goal.id = 3;
   marker_goal.type = visualization_msgs::Marker::CYLINDER;
   marker_goal.action = visualization_msgs::Marker::ADD;
-  marker_goal.pose.position.x = (nearest_pole_x + next_nearest_pole_x)/2;
+  marker_goal.pose.position.x = ((nearest_pole_x + next_nearest_pole_x)/2) + 1.5;
   marker_goal.pose.position.y = (nearest_pole_y + next_nearest_pole_y)/2;
   marker_goal.pose.position.z = 0.75;
   marker_goal.pose.orientation.w = 1.0;
@@ -247,7 +247,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_goal.color.a = 1.0; // Don't forget to set the alpha!
   marker_goal.color.g = 1.0;
 
-  goal_pt.position.x = (nearest_pole_x + next_nearest_pole_x)/2;
+  goal_pt.position.x = ((nearest_pole_x + next_nearest_pole_x)/2)+1.5;
   goal_pt.position.y = (nearest_pole_y + next_nearest_pole_y)/2;
   goal_found = true; 
   }
@@ -279,9 +279,10 @@ int main(int argc, char** argv)
 
   ros::Rate r(1.0);
   double linear_velocity = 0.5;
-  double angular_velocity = 0.4;
-  double total_angular_rotation = 0;
+  double angular_velocity = 0.156;
+  double total_angular_rotation = 0, total_angular_rotation_1 = 0;
   geometry_msgs::Pose waypoint;
+  double goal_range = 999, goal_bearing = 999;
 
   tf2_ros::TransformListener tfListener(tfBuffer);
 
@@ -306,17 +307,19 @@ int main(int argc, char** argv)
   if(((thorvald_estimated_pose.pose.pose.position.x - thorvald_position_x) < 4.0)){
   est_twist.linear.x = linear_velocity;
   }
-  else if(((thorvald_estimated_pose.pose.pose.position.y - thorvald_position_y) < 1.4 && total_angular_rotation < 4.0)){
+  else if(((thorvald_estimated_pose.pose.pose.position.y - thorvald_position_y) < 1.5 && total_angular_rotation < 4.0)){
   est_twist.linear.x = 0.1; 
   est_twist.angular.z = angular_velocity;
   total_angular_rotation = total_angular_rotation + angular_velocity;
+  // ROS_INFO("angle obtained");
   }
   else{
-  // est_twist.linear.x = 0.0; 
-  // est_twist.angular.z = 0.0;
+   est_twist.linear.x = 0.0; 
+   est_twist.angular.z = 0.0;
   ros::Duration(2.0).sleep();
   pole_detect = true;
   }
+
   } // teach-in row transition end */
 
   if(pole_detect == true){
@@ -324,20 +327,31 @@ int main(int argc, char** argv)
   } 
 
   if(goal_found == true){
-  double goal_range = sqrt(pow((waypoint.position.y - thorvald_estimated_pose.pose.pose.position.y),2) + pow((waypoint.position.x - thorvald_estimated_pose.pose.pose.position.x),2));
-  double goal_bearing = atan2((waypoint.position.y-thorvald_estimated_pose.pose.pose.position.y),(waypoint.position.x - thorvald_estimated_pose.pose.pose.position.x)) - yaw;
-  //std::cout << waypoint.position.x << "\n" << waypoint.position.y << "\n" << goal_range << "\n" << goal_bearing << std::endl;
-  angular_velocity = pure_pursuit(goal_range, goal_bearing); //pure pursuit controller
 
-   if(goal_range < 0.05 && goal_bearing < 0.1){
+   if(goal_range < 0.4 && goal_bearing < 0.5){
+
+   if(total_angular_rotation_1==3){
    est_twist.linear.x = 0.0; 
    est_twist.angular.z = 0.0;
+   }
+   else{
+   est_twist.angular.z = 0.15;
+   est_twist.linear.x = 0.00001; 
+   total_angular_rotation_1 = total_angular_rotation_1 + 1;
+   } 
+
    } 
    else{
+
+   goal_range = sqrt(pow((waypoint.position.y - thorvald_estimated_pose.pose.pose.position.y),2) + pow((waypoint.position.x - thorvald_estimated_pose.pose.pose.position.x),2));
+   goal_bearing = atan2((waypoint.position.y-thorvald_estimated_pose.pose.pose.position.y),(waypoint.position.x - thorvald_estimated_pose.pose.pose.position.x)) - yaw;
+   std::cout << "goal_range"  << goal_range << "\n" << "goal_bearing" << goal_bearing  << "\n" << std::endl;
+   angular_velocity = pure_pursuit(goal_range, goal_bearing); //pure pursuit controller
+
    est_twist.linear.x = 0.1; 
    est_twist.angular.z = angular_velocity;
-   //est_twist.linear.x = 0.0; 
-   //est_twist.angular.z = 0.0;
+//   est_twist.linear.x = 0.0; 
+//   est_twist.angular.z = 0.0;
    }
 
   // publish the markers
@@ -351,9 +365,9 @@ int main(int argc, char** argv)
   vis_pub_2.publish(marker_2);
   vis_pub_3.publish(marker_3);
   vis_pub_4.publish(marker_goal);
-  // }
+  // } 
 
-  } // goal check
+  } // goal check 
 
   twist_gazebo.publish(est_twist);
 
