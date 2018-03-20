@@ -21,11 +21,11 @@ nav_msgs::Odometry thorvald_estimated_pose;
 geometry_msgs::Point line[2], max_line, min_line, mini_goal_pts;
 int Total_Points = 15;
 geometry_msgs::Pose Points[20];
-double yaw;
 geometry_msgs::Twist est_twist;
 double counter_line = 0, counter_1 = 0, line_count = 0;
-double position_error, angular_error;
+double yaw, position_error, angular_error, q_x , q_y;
 int c = 1;
+double K_d = 0.01, K_p = 0.01;
 bool mini_goal = false;
 thorvald_2d_nav::sub_goal goal_count; 
 thorvald_2d_nav::landmarks landmarks_pose;
@@ -82,18 +82,16 @@ counter_line = 1;
 
 double control_law(double v){
 
-  double K_d = 0.1, K_p = 0.1;
-
   // calculation of error
-  double q_x =  pow((mini_goal_pts.x-thorvald_estimated_pose.pose.pose.position.x),2);
-  double q_y =  pow((mini_goal_pts.y-thorvald_estimated_pose.pose.pose.position.y),2);
-  position_error = sqrt(q_x + q_y);
-  angular_error = (mini_goal_pts.y-thorvald_estimated_pose.pose.pose.position.y/mini_goal_pts.x-thorvald_estimated_pose.pose.pose.position.x) - yaw;
+  q_x =  mini_goal_pts.x-thorvald_estimated_pose.pose.pose.position.x;
+  q_y =  mini_goal_pts.y-thorvald_estimated_pose.pose.pose.position.y;
+  position_error = sqrt(pow(q_x,2) + pow(q_y,2));
+  angular_error = atan2(q_y,q_x)- yaw;
 
   // control law
   double robotlength = 1.1;
-  double omega = atan(2*robotlength*sin(angular_error))/position_error;
-// double omega = v * pow(cos(angular_error),3) * (-(K_d*tan(angular_error)) - (K_p*position_error));
+//  double omega = atan(2*robotlength*sin(angular_error))/position_error;
+  double omega = v * pow(cos(angular_error),3) * (-(K_d*tan(angular_error)) - (K_p*position_error));
 
   if (omega > 3.14) 
   {
@@ -104,8 +102,8 @@ double control_law(double v){
   omega += 3.14;
   }
 
-  if((position_error <= 0.2)){
-   ROS_INFO("New Mini-Goal Initiated");
+  if((position_error <= 0.1) && (omega <= 0.1)&& (c<=Total_Points)){
+   // ROS_INFO("New Mini-Goal Initiated");
    // ros::Duration(0.01).sleep();
    mini_goal_pts.x = Points[c].position.x;
    mini_goal_pts.y = Points[c].position.y;
@@ -141,13 +139,13 @@ int main(int argc, char** argv)
    line_count = landmarks_pose.landmark_check;
 
     for(int i=1;i<=Total_Points;i++){
-    Points[i].position.x = (thorvald_estimated_pose.pose.pose.position.x *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.x*0.7) *(float(i)/Total_Points));
-    Points[i].position.y = (thorvald_estimated_pose.pose.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.y*0.7) *(float(i)/Total_Points));
+    Points[i].position.x = (thorvald_estimated_pose.pose.pose.position.x *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.x*0.8) *(float(i)/Total_Points));
+    Points[i].position.y = (thorvald_estimated_pose.pose.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.y*0.8) *(float(i)/Total_Points));
       // std::cout << "Points["<<i<<"].position.x" << Points[i].position.x  << std::endl;
     }
 
-  mini_goal_pts.x = Points[c].position.x;
-  mini_goal_pts.y = Points[c].position.y;
+  mini_goal_pts.x = Points[1].position.x;
+  mini_goal_pts.y = Points[1].position.y;
   mini_goal = true;
   counter_1 = 0;
   ROS_INFO("Assigned new Sub-goal");
@@ -158,8 +156,7 @@ int main(int argc, char** argv)
 
    angular_velocity = control_law(linear_velocity); // control law
 
-   std::cout << "angular_velocity:" << angular_velocity << "\n" << "Points[c].position.x:" << mini_goal_pts.x << "\n" << std::endl;
-
+   std::cout << "angular_velocity:" << angular_velocity << "\n" << "mini_goal_pts.x:" << mini_goal_pts.x << "\n"  << "thorvald_estimated_pose.pose.pose.position.x:" << thorvald_estimated_pose.pose.pose.position.x << "\n" << std::endl;
    // std::cout << "landmarks_pose.pt_6.x:" << landmarks_pose.pt_6.x <<"\n" << "thorvald_estimated_pose.pose.pose.position.x:" << thorvald_estimated_pose.pose.pose.position.x <<"\n"<< std::endl;
 
    if((Points[Total_Points].position.x - thorvald_estimated_pose.pose.pose.position.x) <= 0.10){
@@ -173,8 +170,8 @@ int main(int argc, char** argv)
    c = 1;
    }
    else{
-   est_twist.linear.x = 0.1;
-   // est_twist.angular.z = angular_velocity;
+   est_twist.linear.x = 0.05;
+   est_twist.angular.z = angular_velocity;
     } 
    }// final min-goal check
 

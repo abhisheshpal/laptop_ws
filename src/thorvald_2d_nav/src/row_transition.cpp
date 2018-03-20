@@ -12,6 +12,9 @@
 #include <geometry_msgs/TransformStamped.h>
 #include <visualization_msgs/Marker.h>
 
+// ROS message includes
+#include <thorvald_2d_nav/sub_goal.h>
+
 #include "tf2_ros/message_filter.h"
 #include "tf2_ros/transform_listener.h"
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
@@ -29,10 +32,10 @@ double min_range = 5.0;
 sensor_msgs::LaserScan scan_msg_main;
 size_t num_ranges;
 bool goal_found = false;
-bool pole_detect = false;
 double sum_x_1 = 0, sum_y_1 = 0;
 int k = 0, q = 0, unfit = 0, unfit_1 = 0;
 double current_range_1, current_range_2, current_range_3, angle_1, angle_2, angle_3;
+int end_row = 0;
 
 // Pole Markers
 visualization_msgs::Marker marker_1;
@@ -262,6 +265,14 @@ double steeringAngle = atan(2*robotlength*sin(obs_bearing))/obs_range;
 return steeringAngle;
 }
 
+bool change_row(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
+   {
+     end_row = end_row + req.counter;
+     ROS_INFO("transition service on time");
+     return true;
+   }
+
+
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "row_transition");
@@ -277,19 +288,23 @@ int main(int argc, char** argv)
   ros::Publisher vis_pub_3 = n.advertise<visualization_msgs::Marker>( "pole_marker_3", 1 );
   ros::Publisher vis_pub_4 = n.advertise<visualization_msgs::Marker>( "goal_marker", 1 );
 
+  // Service Servers
+  ros::ServiceServer service = n.advertiseService("/row_transition_mode", change_row);
+
   ros::Rate r(1.0);
   double linear_velocity = 0.5;
   double angular_velocity = 0.156;
   double total_angular_rotation = 0, total_angular_rotation_1 = 0;
   geometry_msgs::Pose waypoint;
-  double goal_range = 999, goal_bearing = 999;
+  double goal_range = 999, goal_bearing = 999, a = 0;
+  bool pole_detect = false, teach_1 = false; 
 
   tf2_ros::TransformListener tfListener(tfBuffer);
 
   while (ros::ok()){
   ros::spinOnce();
 
-  if (scan_msg_main.ranges.size() > 0){ // scan check  
+  if ((scan_msg_main.ranges.size() > 0) && (end_row>0)){ // scan check  
 
  /*  if(s == 0){
    Pole_detection(scan_msg_main);
@@ -298,25 +313,26 @@ int main(int argc, char** argv)
 
   if(pole_detect == false){ // teach-in row transition
 
-  if(int a = 0){
+  if(a == 0){
   thorvald_position_x = thorvald_estimated_pose.pose.pose.position.x;
   thorvald_position_y = thorvald_estimated_pose.pose.pose.position.y;
-  a++;
-  } 
- 
-  if(((thorvald_estimated_pose.pose.pose.position.x - thorvald_position_x) < 4.0)){
   est_twist.linear.x = linear_velocity;
-  }
-  else if(((thorvald_estimated_pose.pose.pose.position.y - thorvald_position_y) < 1.5 && total_angular_rotation < 4.0)){
+  a+=1;
+  } 
+
+  if((fabs(thorvald_estimated_pose.pose.pose.position.x - thorvald_position_x) > 4.0)){
+  teach_1 = true;}
+
+  if( (fabs(thorvald_estimated_pose.pose.pose.position.y - thorvald_position_y) < 1.5) && (total_angular_rotation < 4.5) && (teach_1 == true) ){
   est_twist.linear.x = 0.1; 
   est_twist.angular.z = angular_velocity;
   total_angular_rotation = total_angular_rotation + angular_velocity;
-  // ROS_INFO("angle obtained");
   }
-  else{
+
+  if(total_angular_rotation > 4.0){
    est_twist.linear.x = 0.0; 
    est_twist.angular.z = 0.0;
-  ros::Duration(2.0).sleep();
+  ros::Duration(1.0).sleep();
   pole_detect = true;
   }
 
@@ -328,7 +344,7 @@ int main(int argc, char** argv)
 
   if(goal_found == true){
 
-   if(goal_range < 0.4 && goal_bearing < 0.5){
+   if(goal_range < 0.1 && goal_bearing < 0.5){
 
    if(total_angular_rotation_1==3){
    est_twist.linear.x = 0.0; 

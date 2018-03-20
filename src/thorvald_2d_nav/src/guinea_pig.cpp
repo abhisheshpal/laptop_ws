@@ -39,6 +39,7 @@ int end_line = 0, finale_1 = 0;
 double yaw;
 int line_pt = 0;
 nav_msgs::Odometry thorvald_estimated_pose;
+bool line_found_1 = false, line_found_2 = false;
 
 thorvald_2d_nav::scan_detected_line measurement_points;
 thorvald_2d_nav::landmarks landmarks_pos;
@@ -95,7 +96,7 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
 	 x_1[i_1] = scan_msg_main.ranges[i_1]*cos(angle_1[i_1]);
 	 y_1[i_1] = scan_msg_main.ranges[i_1]*sin(angle_1[i_1]);
                 
-          if(!std::isnan(x_1[i_1]) && !std::isnan(y_1[i_1]) && (scan_msg_main.ranges[i_1] < 4.0)){
+          if(!std::isnan(x_1[i_1]) && !std::isnan(y_1[i_1]) && (scan_msg_main.ranges[i_1] < 5.0)){
            count_i_1[l_1] = i_1;
            l_1= l_1 + 1;
           } // storing the ith value with pre-conditions
@@ -152,11 +153,13 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
             measurement_points.bearing[2] = angle_1[bIndex_1];
 
             final_count_2 = final_count_1;
+            line_found_1 = true;
            }                 
           } // max inliers selection end
 
         // Assigning variables to zero to start over
         p_1 = 0;
+        final_count_2 = 0;
 
         } //check for aIndex and bIndex values end
 }
@@ -169,7 +172,7 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 	x_2[i_2] = scan_msg_main.ranges[i_2]*cos(angle_2[i_2]);
 	y_2[i_2] = scan_msg_main.ranges[i_2]*sin(angle_2[i_2]);
 
-          if(!std::isnan(x_2[i_2]) && !std::isnan(y_2[i_2]) && (scan_msg_main.ranges[i_2] < 4.0)){
+          if(!std::isnan(x_2[i_2]) && !std::isnan(y_2[i_2]) && (scan_msg_main.ranges[i_2] < 5.0)){
            count_i_2[l_2] = i_2;
            l_2 = l_2 + 1;                
           } // storing the ith value with pre-conditions
@@ -209,7 +212,6 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
         l_2 = 0;
 
         if(final_count_4 > d){ // selecting the inliers with max of points    
-
          if(final_count_4 > final_count_5 && (fabs(y_2[aIndex_2]) < 1.0) && (fabs(y_2[bIndex_2]) < 1.0)){
 
             final_Index_2[1].real_x = x_2[aIndex_2];
@@ -223,23 +225,24 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
             measurement_points.bearing[4] = angle_2[bIndex_2];
 
             final_count_5 = final_count_4;
-           }
-            
-          } // max inliers selection end
+            line_found_2 = true;
+          }            
+        } // max inliers selection end
 
         // Assigning variables to zero to start over
         p_2 = 0;
+        final_count_5 = 0;
         } //check for aIndex and bIndex values end
 }
 
 
 bool add(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
    {
-     finale_1 = end_line;
      end_line = end_line + req.counter;
-     // ROS_INFO("service on time");
      if(end_line > finale_1){
      finale = 0; 
+     ROS_INFO("service on time");
+     finale_1 = end_line;
      }
  
      return true;
@@ -265,28 +268,58 @@ int main(int argc, char** argv)
 
         // Service Servers
         ros::ServiceServer service = n.advertiseService("/sub_goal_check", add);
-        landmarks_pos.landmark_check = 0; 
+
+        // Service Client
+        ros::ServiceClient client = n.serviceClient<thorvald_2d_nav::sub_goal>("/row_transition_mode");
 
         tf2_ros::Buffer tfBuffer;
         tf2_ros::TransformListener tfListener(tfBuffer);
         geometry_msgs::TransformStamped transformStamped;
-        double prev_max_line_1 = 0, prev_max_line_2 = 0;
+        double prev_max_line_1 = 0, prev_max_line_2 = 0, row_end = 0;
+        landmarks_pos.landmark_check = 0; 
+        geometry_msgs::PoseStamped left_line_1, left_line_1_transformed, left_line_2, left_line_2_transformed;
+        geometry_msgs::PoseStamped right_line_1, right_line_1_transformed, right_line_2, right_line_2_transformed;
+        thorvald_2d_nav::sub_goal end_row;
 
         while (ros::ok()){
 	ros::spinOnce();
-
+        
+        line_detect:
         if(scan_msg_main.ranges.size() > 0 && (finale == 0)){ // check for new lines
-         for (k=0; k <= 10000; k++){ // Number of iterations
+
+        // end of row detection
+        if(thorvald_estimated_pose.pose.pose.position.x > 7.0){ 
+        ROS_INFO("Reached End of Row"); 
+        finale = 1;
+        end_row.request.counter = 1;
+        if (client.call(end_row)) goto line_publish;
+        // ROS_INFO("client request");
+        }
+ 
+        ROS_INFO("Line Detection starts");
+          line_detect_1:
+          for (k=0; k <= 5000; k++){ // Number of iterations
           Line_detection_1(scan_msg_main, final_Index_1);
+          }
+          line_detect_2:
+          for (k=0; k <= 5000; k++){ // Number of iterations
           Line_detection_2(scan_msg_main, final_Index_2);
           }
+
+        if((line_found_1==false) || (fabs(final_Index_1[2].real_x - final_Index_1[1].real_x)< 1.0)){
+        ROS_INFO("Line 1 has to be re-detected!");
+        goto line_detect_1;
+        }
+
+        if((line_found_2==false) || (fabs(final_Index_2[2].real_x - final_Index_2[1].real_x)< 1.0)){
+        ROS_INFO("Line 2 has to be re-detected!");
+        goto line_detect_2;
+        }
+
         ROS_INFO("New Line Detected");
+        line_found_1 = false;
+        line_found_2 = false;
 
-        final_count_2 = 0;
-        final_count_5 = 0;
-
-        geometry_msgs::PoseStamped left_line_1, left_line_1_transformed, left_line_2, left_line_2_transformed;
-        geometry_msgs::PoseStamped right_line_1, right_line_1_transformed, right_line_2, right_line_2_transformed;
         left_line_1.header.frame_id = "hokuyo";
         left_line_1.pose.position.x = final_Index_1[1].real_x;
         left_line_1.pose.position.y = final_Index_1[1].real_y;
@@ -321,6 +354,18 @@ int main(int argc, char** argv)
         max_line[2].x = std::max(right_line_1_transformed.pose.position.x,right_line_2_transformed.pose.position.x);
         min_line[1].x = std::min(left_line_1_transformed.pose.position.x,left_line_2_transformed.pose.position.x);
         min_line[2].x = std::min(right_line_1_transformed.pose.position.x,right_line_2_transformed.pose.position.x);
+
+        if(((max_line[1].x - min_line[1].x)< 1.0) && ((max_line[2].x - min_line[2].x)< 1.0)){
+        if(row_end <= 3){
+        ROS_INFO("Trajectory Re-calculated!"); 
+        row_end = row_end + 1;
+        goto line_detect; }
+        if(row_end > 3){
+        ROS_INFO("Reached End of Row"); 
+        finale = 1;
+        goto line_publish;
+        }
+        }
 
         prev_max_line_1 = max_line[1].x;
         prev_max_line_2 = max_line[2].x;
@@ -378,7 +423,7 @@ int main(int argc, char** argv)
         if(pt_3.x != 0 && pt_3.y != 0){
          final_line.points.push_back(pt_3); } 
         }
-         // std::cout << "pt_1[2].x:" << ptt_1[2].x << "\n" << "pt_1[2].y :" << ptt_1[2].y  << "\n" << std::endl;
+
         } //line_pt else end
 
         landmarks_pos.pt_1.x = left_line_1_transformed.pose.position.x;
@@ -435,6 +480,7 @@ int main(int argc, char** argv)
       
         }// check for new lines
 
+        line_publish:
         line_strip_1.header.stamp = ros::Time::now();
         line_strip_2.header.stamp = ros::Time::now();
         final_line.header.stamp = ros::Time::now();
