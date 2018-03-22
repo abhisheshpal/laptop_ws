@@ -44,6 +44,7 @@ struct GetStateRequest_
 
 
 
+
   typedef boost::shared_ptr< ::robot_localization::GetStateRequest_<ContainerAllocator> > Ptr;
   typedef boost::shared_ptr< ::robot_localization::GetStateRequest_<ContainerAllocator> const> ConstPtr;
 

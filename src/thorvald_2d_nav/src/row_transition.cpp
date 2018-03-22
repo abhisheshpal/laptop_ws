@@ -339,41 +339,7 @@ int main(int argc, char** argv)
 
   if ((scan_msg_main.ranges.size() > 0) && (end_row>0)){ // scan check  
 
- /*  if(s == 0){
-   Pole_detection(scan_msg_main);
-   s = s + 1;
-   } */ 
-
- /* if(pole_detect == false){ // teach-in row transition
-
-  if(a == 0){
-  thorvald_position_x = thorvald_estimated_pose.pose.pose.position.x;
-  thorvald_position_y = thorvald_estimated_pose.pose.pose.position.y;
-  a+=1;
-  } 
-
-
-
-  while((fabs(thorvald_estimated_pose.pose.pose.position.x - thorvald_position_x) < 5.0)){
-  est_twist.linear.x = linear_velocity;
-  teach_1 = false;}
-
-  if( (fabs(thorvald_estimated_pose.pose.pose.position.y - thorvald_position_y) < 1.5) && (total_angular_rotation <= 5.0) && (teach_1 == true) ){
-  est_twist.linear.x = 0.1; 
-  est_twist.angular.z = angular_velocity;
-  total_angular_rotation = total_angular_rotation + angular_velocity;
-  }
-
-  if(total_angular_rotation > 5.0){
-   est_twist.linear.x = 0.0; 
-   est_twist.angular.z = 0.0;
-  ros::Duration(1.0).sleep();
-  pole_detect = true;
-  }
-
-  } // teach-in row transition end */
-
-   Pole_detection(scan_msg_main); // pole detection
+  Pole_detection(scan_msg_main); // pole detection
 
   if(goal_found == true){
 
@@ -386,7 +352,7 @@ int main(int argc, char** argv)
    est_twist.linear.x = 0.0; 
    est_twist.angular.z = 0.0;
     if(turn_90==true){
-    est_twist.angular.z = 1.5; 
+    est_twist.angular.z = 1.8; 
     turn_90=false;  
     }
     

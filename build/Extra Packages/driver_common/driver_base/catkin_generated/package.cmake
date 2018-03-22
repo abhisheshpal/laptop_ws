@@ -10,4 +10,7 @@ set(driver_base_EXEC_DEPENDS "message_runtime" "roscpp" "self_test" "diagnostic_
 set(driver_base_RUN_DEPENDS "message_runtime" "roscpp" "self_test" "diagnostic_updater" "dynamic_reconfigure" "std_msgs")
 set(driver_base_TEST_DEPENDS )
 set(driver_base_DOC_DEPENDS )
+set(driver_base_URL_WEBSITE "http://www.ros.org/wiki/driver_base")
+set(driver_base_URL_BUGTRACKER "https://github.com/ros-drivers/driver_common/issues")
+set(driver_base_URL_REPOSITORY "https://github.com/ros-drivers/driver_common")
 set(driver_base_DEPRECATED "")

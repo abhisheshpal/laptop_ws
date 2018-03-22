@@ -10,4 +10,7 @@ set(rosserial_arduino_EXEC_DEPENDS "arduino-core" "rospy" "rosserial_msgs" "ross
 set(rosserial_arduino_RUN_DEPENDS "arduino-core" "rospy" "rosserial_msgs" "rosserial_client" "message_runtime")
 set(rosserial_arduino_TEST_DEPENDS )
 set(rosserial_arduino_DOC_DEPENDS )
+set(rosserial_arduino_URL_WEBSITE "http://ros.org/wiki/rosserial_arduino")
+set(rosserial_arduino_URL_BUGTRACKER "")
+set(rosserial_arduino_URL_REPOSITORY "")
 set(rosserial_arduino_DEPRECATED "")

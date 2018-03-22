@@ -90,7 +90,7 @@ serial__test__timer_EXTERNAL_OBJECTS =
 
 /home/vigneshnuc/laptop_ws/devel/lib/serial/serial-test-timer: Extra\ Packages/serial/tests/CMakeFiles/serial-test-timer.dir/unit/unix_timer_tests.cc.o
 /home/vigneshnuc/laptop_ws/devel/lib/serial/serial-test-timer: Extra\ Packages/serial/tests/CMakeFiles/serial-test-timer.dir/build.make
-/home/vigneshnuc/laptop_ws/devel/lib/serial/serial-test-timer: gtest/libgtest.so
+/home/vigneshnuc/laptop_ws/devel/lib/serial/serial-test-timer: gtest/gtest/libgtest.so
 /home/vigneshnuc/laptop_ws/devel/lib/serial/serial-test-timer: /home/vigneshnuc/laptop_ws/devel/lib/libserial.so
 /home/vigneshnuc/laptop_ws/devel/lib/serial/serial-test-timer: Extra\ Packages/serial/tests/CMakeFiles/serial-test-timer.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/vigneshnuc/laptop_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable /home/vigneshnuc/laptop_ws/devel/lib/serial/serial-test-timer"

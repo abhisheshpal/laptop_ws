@@ -16,7 +16,7 @@ echo_and_run() { echo "+ $@" ; "$@" ; }
 
 echo_and_run cd "/home/vigneshnuc/laptop_ws/src/Extra Packages/rosserial/rosserial_xbee"
 
-# snsure that Python install destination exists
+# ensure that Python install destination exists
 echo_and_run mkdir -p "$DESTDIR/home/vigneshnuc/laptop_ws/install/lib/python2.7/dist-packages"
 
 # Note that PYTHONPATH is pulled from the environment to support installing

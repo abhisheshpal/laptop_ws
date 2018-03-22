@@ -5,4 +5,4 @@ Description: Description of thorvald_2d_nav
 Version: 0.0.0
 Cflags: -I/home/vigneshnuc/laptop_ws/install/include
 Libs: -L/home/vigneshnuc/laptop_ws/install/lib 
-Requires: actionlib_msgs
+Requires: actionlib_msgs move_base roscpp rospy geometry_msgs sensor_msgs std_msgs actionlib_msgs tf visualization_msgs message_generation nav_msgs std_srvs

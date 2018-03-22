@@ -10,4 +10,7 @@ set(ros_csv_extraction_EXEC_DEPENDS "rospy" "rosbag" "cv_bridge" "std_msgs" "sen
 set(ros_csv_extraction_RUN_DEPENDS "rospy" "rosbag" "cv_bridge" "std_msgs" "sensor_msgs" "geometry_msgs" "nav_msgs")
 set(ros_csv_extraction_TEST_DEPENDS )
 set(ros_csv_extraction_DOC_DEPENDS )
+set(ros_csv_extraction_URL_WEBSITE "")
+set(ros_csv_extraction_URL_BUGTRACKER "")
+set(ros_csv_extraction_URL_REPOSITORY "")
 set(ros_csv_extraction_DEPRECATED "")

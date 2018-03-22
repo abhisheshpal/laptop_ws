@@ -112,9 +112,23 @@ add_message_files(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+ INCLUDE_DIRS include
 #  LIBRARIES thorvald_2dnav
- CATKIN_DEPENDS actionlib_msgs
+ CATKIN_DEPENDS 
+  actionlib_msgs
+  move_base
+  roscpp
+  rospy
+  geometry_msgs
+  sensor_msgs
+  std_msgs
+  actionlib_msgs
+  tf
+  visualization_msgs
+  message_generation
+  nav_msgs
+  std_srvs
+
 #  DEPENDS system_lib
 )
 
@@ -125,6 +139,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
+include_directories(include/${PROJECT_NAME})
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )

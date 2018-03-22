@@ -10,4 +10,7 @@ set(rosserial_mbed_EXEC_DEPENDS "rospy" "rosserial_msgs" "rosserial_client" "mes
 set(rosserial_mbed_RUN_DEPENDS "rospy" "rosserial_msgs" "rosserial_client" "message_runtime")
 set(rosserial_mbed_TEST_DEPENDS )
 set(rosserial_mbed_DOC_DEPENDS )
+set(rosserial_mbed_URL_WEBSITE "http://ros.org/wiki/rosserial_mbed")
+set(rosserial_mbed_URL_BUGTRACKER "")
+set(rosserial_mbed_URL_REPOSITORY "")
 set(rosserial_mbed_DEPRECATED "")

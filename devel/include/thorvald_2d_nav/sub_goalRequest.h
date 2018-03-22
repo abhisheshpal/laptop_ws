@@ -39,6 +39,7 @@ struct sub_goalRequest_
 
 
 
+
   typedef boost::shared_ptr< ::thorvald_2d_nav::sub_goalRequest_<ContainerAllocator> > Ptr;
   typedef boost::shared_ptr< ::thorvald_2d_nav::sub_goalRequest_<ContainerAllocator> const> ConstPtr;
 

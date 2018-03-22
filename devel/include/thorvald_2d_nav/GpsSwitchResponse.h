@@ -39,6 +39,7 @@ struct GpsSwitchResponse_
 
 
 
+
   typedef boost::shared_ptr< ::thorvald_2d_nav::GpsSwitchResponse_<ContainerAllocator> > Ptr;
   typedef boost::shared_ptr< ::thorvald_2d_nav::GpsSwitchResponse_<ContainerAllocator> const> ConstPtr;
 

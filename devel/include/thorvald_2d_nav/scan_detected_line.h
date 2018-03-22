@@ -56,6 +56,7 @@ struct scan_detected_line_
 
 
 
+
   typedef boost::shared_ptr< ::thorvald_2d_nav::scan_detected_line_<ContainerAllocator> > Ptr;
   typedef boost::shared_ptr< ::thorvald_2d_nav::scan_detected_line_<ContainerAllocator> const> ConstPtr;
 

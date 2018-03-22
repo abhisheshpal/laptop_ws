@@ -10,4 +10,7 @@ set(rosserial_test_EXEC_DEPENDS "roscpp" "gtest" "rosserial_client" "rosserial_m
 set(rosserial_test_RUN_DEPENDS "roscpp" "gtest" "rosserial_client" "rosserial_msgs" "rosserial_python" "rosserial_server" "rostest" "std_msgs")
 set(rosserial_test_TEST_DEPENDS )
 set(rosserial_test_DOC_DEPENDS )
+set(rosserial_test_URL_WEBSITE "")
+set(rosserial_test_URL_BUGTRACKER "")
+set(rosserial_test_URL_REPOSITORY "")
 set(rosserial_test_DEPRECATED "")

@@ -10,4 +10,7 @@ set(rosserial_xbee_EXEC_DEPENDS "rospy" "rosserial_msgs" "diagnostic_msgs" "pyth
 set(rosserial_xbee_RUN_DEPENDS "rospy" "rosserial_msgs" "diagnostic_msgs" "python-serial" "rosserial_python")
 set(rosserial_xbee_TEST_DEPENDS )
 set(rosserial_xbee_DOC_DEPENDS )
+set(rosserial_xbee_URL_WEBSITE "http://ros.org/wiki/rosserial_xbee")
+set(rosserial_xbee_URL_BUGTRACKER "")
+set(rosserial_xbee_URL_REPOSITORY "")
 set(rosserial_xbee_DEPRECATED "")

@@ -147,10 +147,10 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
             final_Index_1[2].real_x = x_1[bIndex_1];
             final_Index_1[2].real_y = y_1[bIndex_1];
 
-            measurement_points.range[1] = scan_msg_main.ranges[aIndex_1];
-            measurement_points.bearing[1] = angle_1[aIndex_1];
-            measurement_points.range[2] = scan_msg_main.ranges[bIndex_1];
-            measurement_points.bearing[2] = angle_1[bIndex_1];
+            measurement_points.range[0] = scan_msg_main.ranges[aIndex_1];
+            measurement_points.bearing[0] = angle_1[aIndex_1];
+            measurement_points.range[1] = scan_msg_main.ranges[bIndex_1];
+            measurement_points.bearing[1] = angle_1[bIndex_1];
 
             final_count_2 = final_count_1;
             line_found_1 = true;
@@ -219,10 +219,10 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
             final_Index_2[2].real_x = x_2[bIndex_2];
             final_Index_2[2].real_y = y_2[bIndex_2];
 
-            measurement_points.range[3] = scan_msg_main.ranges[aIndex_2];
-            measurement_points.bearing[3] = angle_2[aIndex_2];
-            measurement_points.range[4] = scan_msg_main.ranges[bIndex_2];
-            measurement_points.bearing[4] = angle_2[bIndex_2];
+            measurement_points.range[2] = scan_msg_main.ranges[aIndex_2];
+            measurement_points.bearing[2] = angle_2[aIndex_2];
+            measurement_points.range[3] = scan_msg_main.ranges[bIndex_2];
+            measurement_points.bearing[3] = angle_2[bIndex_2];
 
             final_count_5 = final_count_4;
             line_found_2 = true;

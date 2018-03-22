@@ -10,4 +10,7 @@ set(rosserial_server_EXEC_DEPENDS "rosserial_msgs" "rosserial_python" "std_msgs"
 set(rosserial_server_RUN_DEPENDS "rosserial_msgs" "rosserial_python" "std_msgs" "roscpp" "topic_tools")
 set(rosserial_server_TEST_DEPENDS )
 set(rosserial_server_DOC_DEPENDS )
+set(rosserial_server_URL_WEBSITE "")
+set(rosserial_server_URL_BUGTRACKER "")
+set(rosserial_server_URL_REPOSITORY "")
 set(rosserial_server_DEPRECATED "")

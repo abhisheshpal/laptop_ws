@@ -79,6 +79,7 @@ struct Event_
 
 
 
+
   typedef boost::shared_ptr< ::trigger_sync::Event_<ContainerAllocator> > Ptr;
   typedef boost::shared_ptr< ::trigger_sync::Event_<ContainerAllocator> const> ConstPtr;
 

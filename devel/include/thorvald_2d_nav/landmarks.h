@@ -81,6 +81,7 @@ struct landmarks_
 
 
 
+
   typedef boost::shared_ptr< ::thorvald_2d_nav::landmarks_<ContainerAllocator> > Ptr;
   typedef boost::shared_ptr< ::thorvald_2d_nav::landmarks_<ContainerAllocator> const> ConstPtr;
 

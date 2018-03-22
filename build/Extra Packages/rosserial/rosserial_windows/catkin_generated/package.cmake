@@ -10,4 +10,7 @@ set(rosserial_windows_EXEC_DEPENDS "rospy" "rosserial_msgs" "rosserial_client" "
 set(rosserial_windows_RUN_DEPENDS "rospy" "rosserial_msgs" "rosserial_client" "message_runtime")
 set(rosserial_windows_TEST_DEPENDS )
 set(rosserial_windows_DOC_DEPENDS )
+set(rosserial_windows_URL_WEBSITE "http://ros.org/wiki/rosserial_windows")
+set(rosserial_windows_URL_BUGTRACKER "")
+set(rosserial_windows_URL_REPOSITORY "")
 set(rosserial_windows_DEPRECATED "")

@@ -42,27 +42,6 @@ yaw = tf::getYaw(quat);
 
 }
 
-/*//line points 
-void finallineCallback (const visualization_msgs::Marker::ConstPtr& line_msg)
-{
-
-if (line_msg->points.size() > 0){        
-line[1].x = line_msg->points[0].x;
-line[1].y = line_msg->points[0].y;
-
-line[2].x = line_msg->points[1].x;
-line[2].y = line_msg->points[1].y;
-
-if(counter_line == 0){
-mini_goal = true;
-ROS_INFO("Assigned new Sub-goal");
-}
-counter_line = 1;
-}
-
-}*/
-
-
 //line points 
 void landmarksposeCallback (const thorvald_2d_nav::landmarks::ConstPtr& landmarks_msg)
 {
@@ -119,10 +98,11 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "thorvald_control_modes");
   ros::NodeHandle n;
 
+  // Subscribers
   ros::Subscriber landmarks_sub = n.subscribe("landmark_points", 100, landmarksposeCallback);
   ros::Subscriber pose_sub = n.subscribe("/thorvald_ii/odom", 100, robotposeCallback);
-  // ros::Subscriber finalline_sub = n.subscribe("/final_line", 100, finallineCallback);
 
+  // Publishers
   ros::Publisher twist_gazebo = n.advertise<geometry_msgs::Twist>( "/nav_vel", 100);
 
   // Service Client
@@ -170,7 +150,7 @@ int main(int argc, char** argv)
    c = 1;
    }
    else{
-   est_twist.linear.x = 0.1;
+   est_twist.linear.x = 0.0;
    // est_twist.angular.z = angular_velocity;
     } 
    }// final min-goal check
