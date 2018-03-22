@@ -286,7 +286,7 @@ int main(int argc, char** argv)
         
         line_detect:
         if(scan_msg_main.ranges.size() > 0 && (finale == 0)){ // check for new lines
-
+std::cout << thorvald_estimated_pose.pose.pose.position.x << std::endl;
         // end of row detection
         if(thorvald_estimated_pose.pose.pose.position.x > 7.0){ 
         ROS_INFO("Reached End of Row"); 
@@ -468,7 +468,7 @@ int main(int argc, char** argv)
         final_line.header.frame_id = "/map";
         final_line.action = visualization_msgs::Marker::ADD;
         final_line.pose.position.z = 0.0;
-        final_line.pose.orientation.w = 0.05;
+        final_line.pose.orientation.w = 1.0;
         final_line.type = visualization_msgs::Marker::LINE_STRIP;
         final_line.lifetime = ros::Duration(0.1);
         final_line.id = 3;

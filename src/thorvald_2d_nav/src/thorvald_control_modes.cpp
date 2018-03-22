@@ -156,7 +156,7 @@ int main(int argc, char** argv)
 
    angular_velocity = control_law(linear_velocity); // control law
 
-   std::cout << "angular_velocity:" << angular_velocity << "\n" << "mini_goal_pts.x:" << mini_goal_pts.x << "\n"  << "thorvald_estimated_pose.pose.pose.position.x:" << thorvald_estimated_pose.pose.pose.position.x << "\n" << std::endl;
+  // std::cout << "angular_velocity:" << angular_velocity << "\n" << "mini_goal_pts.x:" << mini_goal_pts.x << "\n"  << "thorvald_estimated_pose.pose.pose.position.x:" << thorvald_estimated_pose.pose.pose.position.x << "\n" << std::endl;
    // std::cout << "landmarks_pose.pt_6.x:" << landmarks_pose.pt_6.x <<"\n" << "thorvald_estimated_pose.pose.pose.position.x:" << thorvald_estimated_pose.pose.pose.position.x <<"\n"<< std::endl;
 
    if((Points[Total_Points].position.x - thorvald_estimated_pose.pose.pose.position.x) <= 0.10){
@@ -170,8 +170,8 @@ int main(int argc, char** argv)
    c = 1;
    }
    else{
-   est_twist.linear.x = 0.05;
-   est_twist.angular.z = angular_velocity;
+   est_twist.linear.x = 0.1;
+   // est_twist.angular.z = angular_velocity;
     } 
    }// final min-goal check
 
