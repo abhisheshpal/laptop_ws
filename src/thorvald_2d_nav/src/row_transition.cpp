@@ -351,9 +351,9 @@ int main(int argc, char** argv)
    if(goal_range < 0.5){
    est_twist.linear.x = 0.0; 
    est_twist.angular.z = 0.0;
-    if(turn_90==true){
-    est_twist.angular.z = 1.8; 
-    turn_90=false;  
+    if(yaw<=1.57){
+    est_twist.angular.z = 0.15; 
+    // turn_90=false;  
     }
     
    } 
