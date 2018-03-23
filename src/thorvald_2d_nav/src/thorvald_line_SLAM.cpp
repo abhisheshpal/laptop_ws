@@ -33,19 +33,13 @@ void landmarksposeCallback (const thorvald_2d_nav::landmarks::ConstPtr& landmark
 {
 
 if (landmarks_msg->landmark_check > 0){        
-landmarks_pose.pt_1.x = landmarks_msg->pt_1.x;
-landmarks_pose.pt_1.y = landmarks_msg->pt_1.y;
-landmarks_pose.pt_2.x = landmarks_msg->pt_2.x;
-landmarks_pose.pt_2.y = landmarks_msg->pt_2.y;
-landmarks_pose.pt_3.x = landmarks_msg->pt_3.x;
-landmarks_pose.pt_3.y = landmarks_msg->pt_3.y;
-landmarks_pose.pt_4.x = landmarks_msg->pt_4.x;
-landmarks_pose.pt_4.y = landmarks_msg->pt_4.y;
-landmarks_pose.pt_5.x = landmarks_msg->pt_5.x;
-landmarks_pose.pt_5.y = landmarks_msg->pt_5.y;
-landmarks_pose.pt_6.x = landmarks_msg->pt_6.x;
-landmarks_pose.pt_6.y = landmarks_msg->pt_6.y;
-landmarks_pose.landmark_check = landmarks_msg->landmark_check;
+landmarks_pose.pt_1 = landmarks_msg->pt_1;
+landmarks_pose.pt_2 = landmarks_msg->pt_2;
+landmarks_pose.pt_3 = landmarks_msg->pt_3;
+landmarks_pose.pt_4 = landmarks_msg->pt_4;
+landmarks_pose.pt_5 = landmarks_msg->pt_5;
+landmarks_pose.pt_6 = landmarks_msg->pt_6;
+landmarks_pose.landmark_check = landmarks_msg->landmark_check; 
 
 // calculation of estimated range and bearing
 line_pho(0,0) = sqrt(pow(landmarks_pose.pt_1.x,2) + pow(landmarks_pose.pt_1.y,2));
@@ -192,7 +186,7 @@ int main(int argc, char** argv)
    ros::spinOnce();	
 
    current_time = ros::Time::now();
-   double dt = (current_time - last_time).toSec();
+   dt = (current_time - last_time).toSec();
 
    // prediction step
    prediction_step(mu, cov, line_local, line_local_fixed, dt);

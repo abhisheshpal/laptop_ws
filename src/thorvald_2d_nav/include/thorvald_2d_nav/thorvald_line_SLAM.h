@@ -33,6 +33,10 @@ thorvald_2d_nav::sub_goal goal_count;
 geometry_msgs::Twist twist_msg;
 double measured_points_range[4], measured_points_bearing[4];
 int total_landmarks = 4; 
+double d = 0.5; // distance between two wheels
+double lambda_x, lambda_y, q, dt;
+bool landmarks_observed = false;
+ros::Time current_time, last_time;
 
 // Initialization for localization
 double yaw, motion_noise = 0.00001, measurement_moise = 0.0001, sub_goal_thershold = 0.05;
@@ -52,12 +56,6 @@ MatrixXd mapSigma    = INF*MatrixXd::Identity((2*total_landmarks), (2*total_land
 MatrixXd cov = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3));
 MatrixXd R = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3)); // Motion Noise
 MatrixXd Q = MatrixXd::Identity(8,8)* measurement_moise; // Measurement Noise
-
-
-double d = 0.5; // distance between two wheels
-double lambda_x, lambda_y, q;
-bool landmarks_observed = false;
-ros::Time current_time, last_time;
 
 //initialize velocity variables
 double vx = 0.0;
