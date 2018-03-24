@@ -141,17 +141,26 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
 
         if(final_count_1 > d){ // selecting the inliers with max of points    
 
-     if((final_count_1 > final_count_2) && (fabs(thorvald_estimated_pose.pose.pose.position.y-y_1[aIndex_1]) < 1.0) && (fabs(thorvald_estimated_pose.pose.pose.position.y-y_1[bIndex_1]) < 1.0)){
-            final_Index_1[1].real_x = x_1[aIndex_1];
-            final_Index_1[1].real_y = y_1[aIndex_1];
-            final_Index_1[2].real_x = x_1[bIndex_1];
-            final_Index_1[2].real_y = y_1[bIndex_1];
-
-            measurement_points.range[0] = scan_msg_main.ranges[aIndex_1];
+     if((final_count_1 > final_count_2) && (fabs(y_1[aIndex_1]) < 1.0) && (fabs(y_1[bIndex_1]) < 1.0)){
+           
+            measurement_points.range[0] = scan_msg_main.ranges[aIndex_1];        
             measurement_points.bearing[0] = angle_1[aIndex_1];
             measurement_points.range[1] = scan_msg_main.ranges[bIndex_1];
             measurement_points.bearing[1] = angle_1[bIndex_1];
 
+            if(measurement_points.range[0]<measurement_points.range[1]){
+            final_Index_1[1].real_x = x_1[aIndex_1];
+            final_Index_1[1].real_y = y_1[aIndex_1];
+            final_Index_1[2].real_x = x_1[bIndex_1];
+            final_Index_1[2].real_y = y_1[bIndex_1];
+            }
+            else{
+            final_Index_1[1].real_x = x_1[bIndex_1];
+            final_Index_1[1].real_y = y_1[bIndex_1];
+            final_Index_1[2].real_x = x_1[aIndex_1]; 
+            final_Index_1[2].real_y = y_1[aIndex_1];
+            }
+             
             final_count_2 = final_count_1;
             line_found_1 = true;
            }                 
@@ -212,18 +221,25 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
         l_2 = 0;
 
         if(final_count_4 > d){ // selecting the inliers with max of points    
-         if(final_count_4 > final_count_5 && (fabs(thorvald_estimated_pose.pose.pose.position.y -y_2[aIndex_2]) < 1.0) && (fabs(thorvald_estimated_pose.pose.pose.position.y -y_2[bIndex_2]) < 1.0)){
-
-            final_Index_2[1].real_x = x_2[aIndex_2];
-            final_Index_2[1].real_y = y_2[aIndex_2];
-            final_Index_2[2].real_x = x_2[bIndex_2];
-            final_Index_2[2].real_y = y_2[bIndex_2];
-
+         if(final_count_4 > final_count_5 && (fabs(y_2[aIndex_2]) < 1.5) && (fabs(y_2[bIndex_2]) < 1.5)){
+           
             measurement_points.range[2] = scan_msg_main.ranges[aIndex_2];
-            measurement_points.bearing[2] = angle_2[aIndex_2];
-            measurement_points.range[3] = scan_msg_main.ranges[bIndex_2];
+            measurement_points.range[3] = scan_msg_main.ranges[bIndex_2];             
+            measurement_points.bearing[2] = angle_2[aIndex_2];       
             measurement_points.bearing[3] = angle_2[bIndex_2];
 
+            if(measurement_points.range[2]<measurement_points.range[3]){ 
+            final_Index_2[1].real_x = x_2[aIndex_2];
+            final_Index_2[2].real_x = x_2[bIndex_2];
+            final_Index_2[1].real_y = y_2[aIndex_2];
+            final_Index_2[2].real_y = y_2[bIndex_2];
+            }
+            else{
+            final_Index_2[1].real_x = x_2[bIndex_2];
+            final_Index_2[2].real_x = x_2[aIndex_2];
+            final_Index_2[1].real_y = y_2[bIndex_2];              
+            final_Index_2[2].real_y = y_2[aIndex_2];             
+            }
             final_count_5 = final_count_4;
             line_found_2 = true;
           }            
@@ -326,6 +342,12 @@ int main(int argc, char** argv)
           Line_detection_2(scan_msg_main, final_Index_2);
           }
 
+              std::cout << " measurement_points.range[0]:" <<  measurement_points.range[0] << "\n" << std::endl;
+              std::cout << " measurement_points.range[1]:" <<  measurement_points.range[1] << "\n" << std::endl;
+
+              std::cout << " final_Index_1[2].real_x:" <<  final_Index_1[2].real_x << "\n" << std::endl;
+              std::cout << " final_Index_1[1].real_x:" <<  final_Index_1[1].real_x << "\n" << std::endl;
+
         if((line_found_1==false) || (fabs(final_Index_1[2].real_x - final_Index_1[1].real_x)< 1.0)){
         ROS_INFO("Line 1 has to be re-detected!");
         goto line_detect_1;
@@ -369,23 +391,7 @@ int main(int argc, char** argv)
         tf2::doTransform(right_line_2, right_line_2_transformed, transformStamped);
 
        // Create the vertices for the points and lines
-        geometry_msgs::Point pt_1[2], pt_2[2], pt_3, max_line[2], min_line[2];
-        max_line[1].x = std::max(left_line_1_transformed.pose.position.x,left_line_2_transformed.pose.position.x);
-        max_line[2].x = std::max(right_line_1_transformed.pose.position.x,right_line_2_transformed.pose.position.x);
-        min_line[1].x = std::min(left_line_1_transformed.pose.position.x,left_line_2_transformed.pose.position.x);
-        min_line[2].x = std::min(right_line_1_transformed.pose.position.x,right_line_2_transformed.pose.position.x);
-
-        if(((max_line[1].x - min_line[1].x)< 1.0) && ((max_line[2].x - min_line[2].x)< 1.0)){
-        if(row_end <= 3){
-        ROS_INFO("Trajectory Re-calculated!"); 
-        row_end = row_end + 1;
-        goto line_detect; }
-        if(row_end > 3){
-        ROS_INFO("Reached End of Row"); 
-        finale = 1;
-        goto line_publish;
-        }
-        }
+        geometry_msgs::Point pt_1[2], pt_2[2], pt_3[2];
 
         if(line_pt == 0){
 
@@ -399,48 +405,31 @@ int main(int argc, char** argv)
         pt_2[2].x = right_line_2_transformed.pose.position.x; 
         pt_2[2].y = right_line_2_transformed.pose.position.y; 
 
+        pt_3[1].x = (left_line_1_transformed.pose.position.x + right_line_1_transformed.pose.position.x)/2;
+        pt_3[1].y = (left_line_1_transformed.pose.position.y + right_line_1_transformed.pose.position.y)/2;
+        pt_3[2].x = (left_line_2_transformed.pose.position.x + right_line_2_transformed.pose.position.x)/2;
+        pt_3[2].y = (left_line_2_transformed.pose.position.y + right_line_2_transformed.pose.position.y)/2; 
+
          for(int q_1 = 1; q_1 <= 2; q_1++){
-          line_strip_1.points.push_back(pt_1[q_1]); 
+          line_strip_1.points.push_back(pt_1[q_1]);
+          line_strip_2.points.push_back(pt_2[q_1]); 
+          final_line.points.push_back(pt_3[q_1]); 
          }// for loop end for storing points
-
-         for(int q_2 = 1; q_2 <= 2; q_2++){
-          if(pt_2[q_2].x != 0 && pt_2[q_2].y != 0){
-          line_strip_2.points.push_back(pt_2[q_2]); }
-         }// for loop end for storing points
-
-         if(((max_line[1].x - min_line[1].x)< 1.0) && ((max_line[2].x - min_line[2].x)< 1.0)){
-        ROS_INFO("Trajectory not generated in a right manner!"); }
-         else{
-          pt_3.x = (min_line[1].x + min_line[2].x)/2; 
-          pt_3.y = (left_line_1_transformed.pose.position.y + right_line_1_transformed.pose.position.y)/2;
-         if(pt_3.x != 0 && pt_3.y != 0) final_line.points.push_back(pt_3);   
-          pt_3.x = (max_line[1].x + max_line[2].x)/2; 
-          pt_3.y = (left_line_2_transformed.pose.position.y + right_line_2_transformed.pose.position.y)/2; 
-         if(pt_3.x != 0 && pt_3.y != 0) final_line.points.push_back(pt_3);  
-        } // pt_3
 
         line_pt = 1;
         } // line_pt
 
-        else{
-        pt_1[1].x = max_line[1].x; 
-        pt_1[1].y = left_line_1_transformed.pose.position.y;
-        line_strip_1.points.push_back(pt_1[1]); 
-
-        pt_2[1].x = max_line[2].x; 
-        pt_2[1].y = right_line_1_transformed.pose.position.y; 
-        line_strip_2.points.push_back(pt_2[1]); 
-
-        if ( ((max_line[1].x - min_line[1].x)< 1.5) && ((max_line[2].x - min_line[2].x)< 1.5)){
-        ROS_INFO("Trajectory not generated in a right manner!"); 
-        }
         else{ 
-        pt_3.x = (max_line[1].x + max_line[2].x)/2; 
-        pt_3.y = (left_line_2_transformed.pose.position.y + right_line_2_transformed.pose.position.y)/2; 
-        if(pt_3.x != 0 && pt_3.y != 0){
-         final_line.points.push_back(pt_3); } 
-        }
-
+        pt_1[1].x = left_line_2_transformed.pose.position.x; 
+        pt_1[1].y = left_line_2_transformed.pose.position.y;  
+        pt_2[1].x = right_line_2_transformed.pose.position.x; 
+        pt_2[1].y = right_line_2_transformed.pose.position.y; 
+        pt_3[1].x = (left_line_2_transformed.pose.position.x + right_line_2_transformed.pose.position.x)/2;
+        pt_3[1].y = (left_line_2_transformed.pose.position.y + right_line_2_transformed.pose.position.y)/2;
+ 
+        line_strip_1.points.push_back(pt_1[1]);
+        line_strip_2.points.push_back(pt_2[1]); 
+        final_line.points.push_back(pt_3[1]); 
         } //line_pt else end
 
         landmarks_pos.pt_1.x = left_line_1_transformed.pose.position.x;
@@ -453,9 +442,9 @@ int main(int argc, char** argv)
         landmarks_pos.pt_4.x = right_line_2_transformed.pose.position.x;
         landmarks_pos.pt_4.y = right_line_2_transformed.pose.position.y;
 
-        landmarks_pos.pt_5.x = (min_line[1].x + min_line[2].x)/2;
+        landmarks_pos.pt_5.x = (left_line_1_transformed.pose.position.x + right_line_1_transformed.pose.position.x)/2;
         landmarks_pos.pt_5.y = (left_line_1_transformed.pose.position.y + right_line_1_transformed.pose.position.y)/2;
-        landmarks_pos.pt_6.x = (max_line[1].x + max_line[2].x)/2;
+        landmarks_pos.pt_6.x = (left_line_2_transformed.pose.position.x + right_line_2_transformed.pose.position.x)/2;
         landmarks_pos.pt_6.y = (left_line_2_transformed.pose.position.y + right_line_2_transformed.pose.position.y)/2;
         landmarks_pos.landmark_check = landmarks_pos.landmark_check + 1;
        
