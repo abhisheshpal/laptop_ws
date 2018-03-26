@@ -236,7 +236,7 @@ std::cout << "1:" << std::fmax(marker_2.pose.position.y, marker_3.pose.position.
    next_nearest_pole_y = std::fmin(marker_1.pose.position.y,marker_3.pose.position.y);
    farthest_pole_x = marker_3.pose.position.x;
    farthest_pole_y = std::fmax(marker_1.pose.position.y,marker_3.pose.position.y);
-std::cout << "2:" << std::fmax(marker_1.pose.position.y,marker_3.pose.position.y) << std::endl;
+// std::cout << "2:" << std::fmax(marker_1.pose.position.y,marker_3.pose.position.y) << std::endl;
   }
   else{
   nearest_pole_x = marker_3.pose.position.x;
@@ -245,7 +245,7 @@ std::cout << "2:" << std::fmax(marker_1.pose.position.y,marker_3.pose.position.y
   next_nearest_pole_y = std::fmin(marker_1.pose.position.y,marker_2.pose.position.y);
   farthest_pole_x = marker_1.pose.position.x;
   farthest_pole_y = std::fmax(marker_1.pose.position.y,marker_2.pose.position.y);
-std::cout << "3:" << std::fmax(marker_1.pose.position.y,marker_2.pose.position.y) << std::endl;
+// std::cout << "3:" << std::fmax(marker_1.pose.position.y,marker_2.pose.position.y) << std::endl;
   }
 }
 
@@ -332,14 +332,14 @@ int main(int argc, char** argv)
   double total_angular_rotation = 0, total_angular_rotation_1 = 0;
   double goal_range, goal_bearing, a = 0;
   bool pole_detect = false, turn_90 = false; 
-  int goal_transit = 1;
+  int goal_transit = 1, c = 0;
 
   tf2_ros::TransformListener tfListener(tfBuffer);
 
   while (ros::ok()){
   ros::spinOnce();
 
-  if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0)){ // scan check  
+  if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0) && (goal_transit<3)){ // scan check  
 
   Pole_detection(scan_msg_main); // pole detection
 
@@ -352,8 +352,10 @@ int main(int argc, char** argv)
    if(goal_range < 0.1){
    est_twist.linear.x = 0.0; 
    est_twist.angular.z = 0.0;
-    if(yaw<=(goal_transit*1.52)){
+
+    if(yaw<=(goal_transit*1.50)){
     est_twist.angular.z = 0.15; 
+     // std::cout << "current_yaw" << yaw << "\n"<< std::endl;
     turn_90=false;  
     }
     else{
@@ -367,12 +369,21 @@ int main(int argc, char** argv)
    est_twist.angular.z = angular_velocity;
    }
 
+
    // Service for end of row transition
-   if ((turn_90 = true) && (goal_transit==2) && (yaw >= 2.99)){
+   if ((turn_90 = true) && (goal_transit==2) && (yaw >= 3.0)){
+     std::cout << "final_yaw" << yaw << "\n"<< std::endl;
      end_row_transit.request.counter = 1;
      if (client.call(end_row_transit)){ 
      ROS_INFO("End of the row transition");
+     goal_transit = 3;
      } 
+   }
+
+   if((c == 0) && (yaw >= 3.0)){
+   est_twist.angular.z = 0.20;
+   ROS_INFO("Passed it");
+   c=c+1;
    }
 
   // publish the markers

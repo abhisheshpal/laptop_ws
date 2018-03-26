@@ -81,7 +81,7 @@ double control_law(double v){
   omega += 3.14;
   }
 
-  if((position_error <= 0.1) && (omega <= 0.1)&& (c<=Total_Points)){
+  if((fabs(position_error) <= 0.1) && (c<=Total_Points)){
    // ROS_INFO("New Mini-Goal Initiated");
    // ros::Duration(0.01).sleep();
    mini_goal_pts.x = Points[c].position.x;
@@ -139,7 +139,7 @@ int main(int argc, char** argv)
   // std::cout << "angular_velocity:" << angular_velocity << "\n" << "mini_goal_pts.x:" << mini_goal_pts.x << "\n"  << "thorvald_estimated_pose.pose.pose.position.x:" << thorvald_estimated_pose.pose.pose.position.x << "\n" << std::endl;
    // std::cout << "landmarks_pose.pt_6.x:" << landmarks_pose.pt_6.x <<"\n" << "thorvald_estimated_pose.pose.pose.position.x:" << thorvald_estimated_pose.pose.pose.position.x <<"\n"<< std::endl;
 
-   if((Points[Total_Points].position.x - thorvald_estimated_pose.pose.pose.position.x) <= 0.10){
+   if(fabs(Points[Total_Points].position.x - thorvald_estimated_pose.pose.pose.position.x) <= 0.10){
    linear_velocity = 0;
    angular_velocity = 0;
    counter_1 = 1;

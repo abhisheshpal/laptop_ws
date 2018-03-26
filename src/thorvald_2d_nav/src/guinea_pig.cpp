@@ -39,7 +39,7 @@ int end_line = 0, end_row = 0, finale_1 = 0, finale_2 = 0;
 double yaw, row_no = 1;
 int line_pt = 0;
 nav_msgs::Odometry thorvald_estimated_pose;
-bool line_found_1 = false, line_found_2 = false;
+bool line_found_1 = false, line_found_2 = false, new_row = false;
 
 thorvald_2d_nav::scan_detected_line measurement_points;
 thorvald_2d_nav::landmarks landmarks_pos;
@@ -141,13 +141,13 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
 
         if(final_count_1 > d){ // selecting the inliers with max of points    
 
-     if((final_count_1 > final_count_2) && (fabs(y_1[aIndex_1]) < 1.0) && (fabs(y_1[bIndex_1]) < 1.0)){
+         if((final_count_1 > final_count_2) && (fabs(fabs(thorvald_estimated_pose.pose.pose.position.y) - fabs(y_1[aIndex_1])) < 1.5) && (fabs(fabs(thorvald_estimated_pose.pose.pose.position.y) - fabs(y_1[bIndex_1])) < 1.5)){
            
             measurement_points.range[0] = scan_msg_main.ranges[aIndex_1];        
             measurement_points.bearing[0] = angle_1[aIndex_1];
             measurement_points.range[1] = scan_msg_main.ranges[bIndex_1];
             measurement_points.bearing[1] = angle_1[bIndex_1];
-
+             // std::cout << "measurement_points.range[0]:" << measurement_points.range[0] << "\n"<< "measurement_points.range[1]:" << measurement_points.range[1]<< "\n" << std::endl;
             if(measurement_points.range[0]<measurement_points.range[1]){
             final_Index_1[1].real_x = x_1[aIndex_1];
             final_Index_1[1].real_y = y_1[aIndex_1];
@@ -221,7 +221,7 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
         l_2 = 0;
 
         if(final_count_4 > d){ // selecting the inliers with max of points    
-         if(final_count_4 > final_count_5 && (fabs(y_2[aIndex_2]) < 1.5) && (fabs(y_2[bIndex_2]) < 1.5)){
+         if(final_count_4 > final_count_5 && (fabs(fabs(thorvald_estimated_pose.pose.pose.position.y)-fabs(y_2[aIndex_2])) < 1.5) && (fabs(fabs(thorvald_estimated_pose.pose.pose.position.y)-fabs(y_2[bIndex_2])) < 1.5)){
            
             measurement_points.range[2] = scan_msg_main.ranges[aIndex_2];
             measurement_points.range[3] = scan_msg_main.ranges[bIndex_2];             
@@ -257,7 +257,7 @@ bool add(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Res
      end_line = end_line + req.counter;
      if(end_line > finale_1){
      finale = 0; 
-     ROS_INFO("End of line reached");
+     ROS_INFO("End of previous line reached");
      finale_1 = end_line;
      }
  
@@ -271,9 +271,9 @@ bool row_transition(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::su
      if(end_row > finale_2){
      finale = 0; 
      ROS_INFO("New Row Starts!");
-     finale_2 = end_line;
+     finale_2 = end_row;
+     new_row = true;
      }
- 
      return true;
    }
 
@@ -311,6 +311,7 @@ int main(int argc, char** argv)
         geometry_msgs::PoseStamped right_line_1, right_line_1_transformed, right_line_2, right_line_2_transformed;
         thorvald_2d_nav::sub_goal end_row_check;
         int end_row_reach = 0;
+        double min_range_view = 4.0, max_range = 30.0;
 
         while (ros::ok()){
 	ros::spinOnce();
@@ -319,16 +320,23 @@ int main(int argc, char** argv)
         if(scan_msg_main.ranges.size() > 0 && (finale == 0)){ // check for new lines
 
         // end of row detection
-        for (int l=320; l <= 760; l++){ // Number of iterations
-        if((3.0 - scan_msg_main.ranges[l]) > 0){end_row_reach += 1;}
+        for (int l=360; l <= 720; ++l){ // Number of iterations
+         if((scan_msg_main.ranges[l]) > min_range_view && (scan_msg_main.ranges[l]) < max_range){
+         end_row_reach = end_row_reach + 1;
+         }
         }
-        
+
         if(end_row_reach==0){
         finale = 1;
         end_row_check.request.counter = 1;
         if (client.call(end_row_check)){ 
         ROS_INFO("Reached End of Row");
         goto line_publish;}
+        }
+      
+        // re-direct for deleting old markers
+        if(new_row==true){
+        goto delete_old_markers;
         }
 
         ROS_INFO("Line Detection starts");
@@ -342,12 +350,8 @@ int main(int argc, char** argv)
           Line_detection_2(scan_msg_main, final_Index_2);
           }
 
-              std::cout << " measurement_points.range[0]:" <<  measurement_points.range[0] << "\n" << std::endl;
-              std::cout << " measurement_points.range[1]:" <<  measurement_points.range[1] << "\n" << std::endl;
-
-              std::cout << " final_Index_1[2].real_x:" <<  final_Index_1[2].real_x << "\n" << std::endl;
-              std::cout << " final_Index_1[1].real_x:" <<  final_Index_1[1].real_x << "\n" << std::endl;
-
+             std::cout << "final_Index_1[2].real_x:" << final_Index_1[2].real_x << "\n" << "final_Index_1[1].real_x:" << final_Index_1[1].real_x << "\n" << std::endl;
+             std::cout << "final_Index_2[2].real_x:" << final_Index_2[2].real_x << "\n" << "final_Index_2[1].real_x:" << final_Index_2[1].real_x << "\n" << std::endl;
         if((line_found_1==false) || (fabs(final_Index_1[2].real_x - final_Index_1[1].real_x)< 1.0)){
         ROS_INFO("Line 1 has to be re-detected!");
         goto line_detect_1;
@@ -361,6 +365,7 @@ int main(int argc, char** argv)
         ROS_INFO("New Line Detected");
         line_found_1 = false;
         line_found_2 = false;
+        end_row_reach = 0;
 
         left_line_1.header.frame_id = "hokuyo";
         left_line_1.pose.position.x = final_Index_1[1].real_x;
@@ -490,11 +495,31 @@ int main(int argc, char** argv)
         line_strip_2.header.stamp = ros::Time::now();
         final_line.header.stamp = ros::Time::now();
 
+        delete_old_markers:
+        if(new_row == true){
+        visualization_msgs::Marker empty_line_strip_1, empty_line_strip_2, empty_final_line;
+        thorvald_2d_nav::scan_detected_line empty_measurement_points; 
+        thorvald_2d_nav::landmarks empty_landmarks_pos;
+        line_strip_1 = empty_line_strip_1;
+        line_strip_2 = empty_line_strip_2;
+        final_line = empty_final_line;
+        measurement_points = empty_measurement_points;
+        landmarks_pos = empty_landmarks_pos;
+        marker_pub_1.publish(line_strip_1);
+        marker_pub_2.publish(empty_line_strip_2);
+        marker_pub_3.publish(empty_final_line);
+        point_pub.publish(empty_measurement_points);
+        landmarks_pub.publish(empty_landmarks_pos);
+        new_row = false;
+        }
+        else{
         marker_pub_1.publish(line_strip_1);
         marker_pub_2.publish(line_strip_2);
         marker_pub_3.publish(final_line);
         point_pub.publish(measurement_points);
         landmarks_pub.publish(landmarks_pos);
+        }      
+ 
         r.sleep();
 	} // node shutdown
   return 0;
