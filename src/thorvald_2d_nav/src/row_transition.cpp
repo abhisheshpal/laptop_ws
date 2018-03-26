@@ -26,7 +26,7 @@ double thorvald_position_x, thorvald_position_y;
 geometry_msgs::Pose goal_pt[2];
 tf2_ros::Buffer tfBuffer;
 geometry_msgs::TransformStamped transformStamped;
-thorvald_2d_nav::sub_goal end_row_transit;
+thorvald_2d_nav::sub_goal end_row_transit, end_row_transit_1;
 
 // Parameters for pole detection
 double min_range = 3.0;
@@ -157,7 +157,7 @@ pole_3.pose.position.x = current_range_3*cos(angle_3);
 pole_3.pose.position.y = current_range_3*sin(angle_3);
 
  try{
-   transformStamped = tfBuffer.lookupTransform("odom", "hokuyo", ros::Time(0));
+   transformStamped = tfBuffer.lookupTransform("map", "hokuyo", ros::Time(0));
  }
  catch (tf2::TransformException &ex){
    ROS_WARN("%s",ex.what());
@@ -170,7 +170,7 @@ tf2::doTransform(pole_2, pole_2_transformed, transformStamped);
 tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
 
  // std::cout << initial_count_1 << "\n" << k << "\n" << q << "\n" << unfit_1 << std::endl;
-  marker_1.header.frame_id = "odom";
+  marker_1.header.frame_id = "map";
   marker_1.ns = "poles_1";
   marker_1.id = 1;
   marker_1.type = visualization_msgs::Marker::CYLINDER;
@@ -186,7 +186,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_1.color.b = 1.0;
 
   if(q>5){
-  marker_2.header.frame_id = "odom";
+  marker_2.header.frame_id = "map";
   marker_2.ns = "poles_2";
   marker_2.id = 2;
   marker_2.type = visualization_msgs::Marker::CYLINDER;
@@ -202,7 +202,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_2.color.b = 1.0;
   }
 
-  marker_3.header.frame_id = "odom";
+  marker_3.header.frame_id = "map";
   marker_3.ns = "poles_3";
   marker_3.id = 3;
   marker_3.type = visualization_msgs::Marker::CYLINDER;
@@ -216,8 +216,8 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_3.scale.z = 0.2;
   marker_3.color.a = 1.0; // Don't forget to set the alpha!
   marker_3.color.b = 1.0;
-  // std::cout << marker_1.pose.position.x << "\n" << marker_2.pose.position.x << "\n" << marker_3.pose.position.x << "\n" << std::endl;
-  if(unfit>0 && unfit_1> 0){
+  
+ if(unfit>0 && unfit_1> 0){
 
   if((marker_1.pose.position.y < marker_2.pose.position.y)&&(marker_1.pose.position.y < marker_3.pose.position.y)){
   nearest_pole_x = marker_1.pose.position.x;
@@ -226,7 +226,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   next_nearest_pole_y = std::fmin(marker_2.pose.position.y, marker_3.pose.position.y);
   farthest_pole_x = marker_3.pose.position.x;
   farthest_pole_y = std::fmax(marker_2.pose.position.y, marker_3.pose.position.y);
-std::cout << "1:" << std::fmax(marker_2.pose.position.y, marker_3.pose.position.y)  << std::endl;
+// std::cout << "1:" << std::fmax(marker_2.pose.position.y, marker_3.pose.position.y)  << std::endl;
   }
   else{
   if(marker_2.pose.position.y < marker_3.pose.position.y) {
@@ -325,10 +325,11 @@ int main(int argc, char** argv)
   ros::ServiceServer service = n.advertiseService("/row_transition_mode", change_row);
 
   // Service Client
-  ros::ServiceClient client = n.serviceClient<thorvald_2d_nav::sub_goal>("/row_transition_end");
+  ros::ServiceClient client = n.serviceClient<thorvald_2d_nav::sub_goal>("/row_transition_end_1");
+  ros::ServiceClient client1 = n.serviceClient<thorvald_2d_nav::sub_goal>("/row_transition_end_2");
 
   ros::Rate r(1.0);
-  double linear_velocity = 0.5, angular_velocity;
+  double linear_velocity = 0.5, angular_velocity = 0.0;
   double total_angular_rotation = 0, total_angular_rotation_1 = 0;
   double goal_range, goal_bearing, a = 0;
   bool pole_detect = false, turn_90 = false; 
@@ -354,13 +355,16 @@ int main(int argc, char** argv)
    est_twist.angular.z = 0.0;
 
     if(yaw<=(goal_transit*1.50)){
-    est_twist.angular.z = 0.15; 
-     // std::cout << "current_yaw" << yaw << "\n"<< std::endl;
+    est_twist.angular.z = 0.20; 
     turn_90=false;  
+    }
+    else if((yaw>=3.0)&&(yaw<=3.14)){ 
+    est_twist.angular.z = 3.14-yaw; 
     }
     else{
     turn_90 = true;
     goal_transit = 2;
+    est_twist.angular.z = 0.0;
     }
     
    } 
@@ -370,22 +374,27 @@ int main(int argc, char** argv)
    }
 
 
+//    std::cout << "current_yaw" << yaw << "\n"<< std::endl;
    // Service for end of row transition
-   if ((turn_90 = true) && (goal_transit==2) && (yaw >= 3.0)){
+   if ((turn_90 = true) && (goal_transit==2) && (yaw >= 3.12)){
      std::cout << "final_yaw" << yaw << "\n"<< std::endl;
      end_row_transit.request.counter = 1;
+     end_row_transit_1.request.counter = 1;
      if (client.call(end_row_transit)){ 
      ROS_INFO("End of the row transition");
      goal_transit = 3;
      } 
+     if (client.call(end_row_transit_1)){ 
+     goal_transit = 3;
+     } 
    }
 
-   if((c == 0) && (yaw >= 3.0)){
-   est_twist.angular.z = 0.20;
+ /*  if((c == 0) && (yaw >= 3.0)){
+   est_twist.angular.z = 0.1;
    ROS_INFO("Passed it");
    c=c+1;
-   }
-
+   }*/
+  
   // publish the markers
   marker_1.header.stamp = ros::Time::now();
   marker_2.header.stamp = ros::Time::now();
@@ -399,7 +408,7 @@ int main(int argc, char** argv)
   vis_pub_4.publish(marker_goal_1);
   vis_pub_5.publish(marker_goal_2);
 
-  } // goal check 
+  } // goal check
 
   twist_gazebo.publish(est_twist);
 
