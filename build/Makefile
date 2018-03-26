@@ -4287,17 +4287,17 @@ rplidarNodeClient/fast:
 .PHONY : rplidarNodeClient/fast
 
 #=============================================================================
-# Target rules for targets named row_transition
+# Target rules for targets named thorvald_row_transition
 
 # Build rule for target.
-row_transition: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 row_transition
-.PHONY : row_transition
+thorvald_row_transition: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 thorvald_row_transition
+.PHONY : thorvald_row_transition
 
 # fast build rule for target.
-row_transition/fast:
-	$(MAKE) -f thorvald_2d_nav/CMakeFiles/row_transition.dir/build.make thorvald_2d_nav/CMakeFiles/row_transition.dir/build
-.PHONY : row_transition/fast
+thorvald_row_transition/fast:
+	$(MAKE) -f thorvald_2d_nav/CMakeFiles/thorvald_row_transition.dir/build.make thorvald_2d_nav/CMakeFiles/thorvald_row_transition.dir/build
+.PHONY : thorvald_row_transition/fast
 
 #=============================================================================
 # Target rules for targets named gazebo_line
@@ -5084,7 +5084,7 @@ help:
 	@echo "... local_clock_syncroniser"
 	@echo "... rplidarNode"
 	@echo "... rplidarNodeClient"
-	@echo "... row_transition"
+	@echo "... thorvald_row_transition"
 	@echo "... gazebo_line"
 	@echo "... guinea_pig"
 	@echo "... laser_points"

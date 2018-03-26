@@ -1,36 +1,7 @@
-#include <ros/ros.h>
-#include <sensor_msgs/LaserScan.h>
-#include <geometry_msgs/Point.h>
-#include <vector>
-#include <algorithm>
-#include <std_msgs/String.h>
-#include <iostream>
-#include <tf/tf.h>
-#include <cmath>
-#include <visualization_msgs/Marker.h>
-#include <nav_msgs/Odometry.h>
-#include <geometry_msgs/Twist.h>
-#include <geometry_msgs/Pose.h>
-#include <std_msgs/Float64MultiArray.h>
+#include "thorvald_control_modes.h"
 
-// ROS message includes
-#include <thorvald_2d_nav/sub_goal.h>
-#include <thorvald_2d_nav/landmarks.h>
-
-nav_msgs::Odometry thorvald_estimated_pose;
-geometry_msgs::Point line[2], max_line, min_line, mini_goal_pts;
-int Total_Points = 15;
-geometry_msgs::Pose Points[20];
-geometry_msgs::Twist est_twist;
-double counter_line = 0, counter_1 = 0, line_count = 0;
-double yaw, position_error, angular_error, q_x , q_y;
-int c = 1;
-double K_d = 0.00000000001, K_p = 0.01;
-bool mini_goal = false;
-thorvald_2d_nav::sub_goal goal_count; 
-thorvald_2d_nav::landmarks landmarks_pose;
-int row_no = 0;
-bool next_row_check = true;
+// dummy variables
+int counter_line = 0, counter_1 = 0, line_count = 0, c = 1;
 
 // Thorvald Estimated Pose data
 void robotposeCallback (const nav_msgs::Odometry::ConstPtr& pose_msg)
@@ -63,11 +34,25 @@ bool row_transition(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::su
    {
      row_no = row_no + req.counter;
      next_row_check = true;
-     ROS_INFO("new row check");
      return true;
    }
 
 double control_law(double v){
+
+  if((landmarks_pose.landmark_check > line_count) || (next_row_check == true)){
+   line_count = landmarks_pose.landmark_check;
+
+    for(int i=1;i<=Total_Points;i++){
+    Points[i].position.x = (thorvald_estimated_pose.pose.pose.position.x *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.x*0.7) *(float(i)/Total_Points));
+    Points[i].position.y = (thorvald_estimated_pose.pose.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.y*0.7) *(float(i)/Total_Points));
+    }
+
+  mini_goal_pts.x = Points[1].position.x;
+  mini_goal_pts.y = Points[1].position.y;
+  mini_goal = true;
+  ROS_INFO("Assigned new Sub-goal");
+  next_row_check = false;
+  }
 
   // calculation of error
   q_x =  mini_goal_pts.x-thorvald_estimated_pose.pose.pose.position.x;
@@ -80,14 +65,10 @@ double control_law(double v){
 //  double omega = atan(2*robotlength*sin(angular_error))/position_error;
   double omega = v * pow(cos(angular_error),3) * (-(K_d*tan(angular_error)) - (K_p*position_error));
 
-  if (omega > 3.14) 
-  {
-  omega -= 3.14;
-  }
-  if (omega < -3.14)
-  {
-  omega += 3.14;
-  }
+  if (omega > M_PI){
+  omega -= M_PI;}
+  if (omega < -M_PI){
+  omega += M_PI;}
 
   if((fabs(position_error) <= 0.1) && (c<=Total_Points)){
    // ROS_INFO("New Mini-Goal Initiated");
@@ -125,39 +106,20 @@ int main(int argc, char** argv)
 
   ros::spinOnce();	
 
-  if((landmarks_pose.landmark_check > line_count) || (next_row_check == true)){
-   line_count = landmarks_pose.landmark_check;
-
-    for(int i=1;i<=Total_Points;i++){
-    Points[i].position.x = (thorvald_estimated_pose.pose.pose.position.x *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.x*0.7) *(float(i)/Total_Points));
-    Points[i].position.y = (thorvald_estimated_pose.pose.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.y*0.7) *(float(i)/Total_Points));
-      // std::cout << "Points["<<i<<"].position.x" << Points[i].position.x  << std::endl;
-    }
-
-  mini_goal_pts.x = Points[1].position.x;
-  mini_goal_pts.y = Points[1].position.y;
-  mini_goal = true;
-  counter_1 = 0;
-  ROS_INFO("Assigned new Sub-goal");
-  next_row_check = false;
-  }
-
   if(counter_line > 0){ // generated line check
-   if(mini_goal==true){ // final min-goal check
 
    angular_velocity = control_law(linear_velocity); // control law
 
-  // std::cout << "angular_velocity:" << angular_velocity << "\n" << "mini_goal_pts.x:" << mini_goal_pts.x << "\n"  << "thorvald_estimated_pose.pose.pose.position.x:" << thorvald_estimated_pose.pose.pose.position.x << "\n" << std::endl;
    // std::cout << "landmarks_pose.pt_6.x:" << landmarks_pose.pt_6.x <<"\n" << "thorvald_estimated_pose.pose.pose.position.x:" << thorvald_estimated_pose.pose.pose.position.x <<"\n"<< std::endl;
 
-   if(fabs(Points[Total_Points].position.x - thorvald_estimated_pose.pose.pose.position.x) <= 0.20){
+   if(mini_goal==true){ // final min-goal check
 
+   if(fabs(Points[Total_Points].position.x - thorvald_estimated_pose.pose.pose.position.x) <= 0.20){
    counter_1 = 1;
    mini_goal = false;
    est_twist.linear.x = 0;
    est_twist.angular.z = 0;
    ROS_INFO("Final Mini-Goal Reached");
-   c = 1;
    }
    else{
    est_twist.linear.x = 0.08;
@@ -168,7 +130,6 @@ int main(int argc, char** argv)
    if(counter_1 == 1){
    goal_count.request.counter = 1;
    if (client.call(goal_count)){
-   // ROS_INFO("client request");
    counter_1 = 2;
    }}
 

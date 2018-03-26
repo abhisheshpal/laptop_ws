@@ -141,7 +141,7 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
 
         if(final_count_1 > d){ // selecting the inliers with max of points    
 
-         if((final_count_1 > final_count_2) && (fabs(fabs(thorvald_estimated_pose.pose.pose.position.y) - fabs(y_1[aIndex_1])) < 1.2) && (fabs(fabs(thorvald_estimated_pose.pose.pose.position.y) - fabs(y_1[bIndex_1])) < 1.2)){
+         if((final_count_1 > final_count_2) && (fabs(fabs(thorvald_estimated_pose.pose.pose.position.y) - fabs(y_1[aIndex_1])) < 1.0) && (fabs(fabs(thorvald_estimated_pose.pose.pose.position.y) - fabs(y_1[bIndex_1])) < 1.0)){
            
             measurement_points.range[0] = scan_msg_main.ranges[aIndex_1];        
             measurement_points.bearing[0] = angle_1[aIndex_1];
@@ -221,7 +221,7 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
         l_2 = 0;
 
         if(final_count_4 > d){ // selecting the inliers with max of points    
-         if(final_count_4 > final_count_5 && (fabs(fabs(thorvald_estimated_pose.pose.pose.position.y)-fabs(y_2[aIndex_2])) < 1.2) && (fabs(fabs(thorvald_estimated_pose.pose.pose.position.y)-fabs(y_2[bIndex_2])) < 1.2)){
+         if(final_count_4 > final_count_5 && (fabs(fabs(thorvald_estimated_pose.pose.pose.position.y)-fabs(y_2[aIndex_2])) < 1.0) && (fabs(fabs(thorvald_estimated_pose.pose.pose.position.y)-fabs(y_2[bIndex_2])) < 1.0)){
            
             measurement_points.range[2] = scan_msg_main.ranges[aIndex_2];
             measurement_points.range[3] = scan_msg_main.ranges[bIndex_2];             
