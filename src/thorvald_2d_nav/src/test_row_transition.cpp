@@ -27,15 +27,15 @@ void Pole_detection(sensor_msgs::LaserScan scan_msg_poles){
 
 if(goal_found == false){
 
-double thershold = 0.1;
+double thershold = 0.2;
 int initial_count_1 = 0;
 double x[num_ranges], y[num_ranges], angle[num_ranges];
 double range_1[num_ranges], count_angle_1[num_ranges];
-double array_1[num_ranges], array_2[num_ranges];; 
+double array_1[num_ranges], array_2[num_ranges], array_3[num_ranges]; 
 double Current_x_1, Current_y_1;
- 
+
 //---------------------- FIRST MARKER ---------------------------//
-	for (int i = (num_ranges/4); i < num_ranges; i++){
+	for (int i = 1; i < (num_ranges); i++){
            if((scan_msg_poles.ranges[i] < min_range)){
             initial_count_1 = initial_count_1 + 1;
             angle[initial_count_1] = scan_msg_poles.angle_min+i*scan_msg_poles.angle_increment;
@@ -63,41 +63,65 @@ double Current_x_1, Current_y_1;
             array_1[unfit] = count_angle_1[j];
           }         
         }
-
+// ROS_INFO("HERE");
 //---------------------- SECOND MARKER ---------------------------//
   if(unfit>0){
-  double sum_i[num_ranges];
+  double sum_q[num_ranges];
   int random_count_2 = rand()% (unfit);
   double current_itr_2 = array_1[random_count_2];
   current_range_2 = scan_msg_poles.ranges[current_itr_2];
   angle_2 = scan_msg_poles.angle_min + current_itr_2*scan_msg_poles.angle_increment;
   for (int p = 1 ; p <= (unfit); p++){
-   double itr_loop = array_1[p];
-   double obst_dist_2 = (current_range_2 - scan_msg_poles.ranges[itr_loop]); // error calculation
+   double itr_loop_2 = array_1[p];
+   double obst_dist_2 = (current_range_2 - scan_msg_poles.ranges[itr_loop_2]); // error calculation
    if (thershold > fabs(obst_dist_2)){
    q = q + 1;
-   sum_i[q] = array_1[p];
+   sum_q[q] = array_1[p];
 
    }
    else{
     unfit_1 = unfit_1 + 1;
-    array_2[unfit_1] = itr_loop; 
+    array_2[unfit_1] = itr_loop_2; 
     }         
    }  
   } 
 
 //---------------------- THIRD MARKER ---------------------------//
   if(unfit_1>0){
+  double sum_n[num_ranges];
   int random_count_3 = rand()% (unfit_1);
   double current_itr_3 = array_2[random_count_3];
   current_range_3 = scan_msg_poles.ranges[current_itr_3];
-  angle_3 = (scan_msg_poles.angle_min + current_itr_3*scan_msg_poles.angle_increment);
+  angle_3 = scan_msg_poles.angle_min + current_itr_3*scan_msg_poles.angle_increment;
+  for (int m = 1 ; m <= (unfit_1); m++){
+   double itr_loop_3 = array_2[m];
+   double obst_dist_3 = (current_range_3 - scan_msg_poles.ranges[itr_loop_3]); // error calculation
+   if (thershold > fabs(obst_dist_3)){
+   n = n + 1;
+   sum_n[n] = array_2[m];
+
+   }
+   else{
+    unfit_2 = unfit_2 + 1;
+    array_3[unfit_2] = itr_loop_3; 
+    }         
+   }  
+  } 
+
+
+//---------------------- FOURTH MARKER ---------------------------//
+  if(unfit_2>0){
+  int random_count_4 = rand()% (unfit_2);
+  double current_itr_4 = array_3[random_count_4];
+  current_range_4 = scan_msg_poles.ranges[current_itr_4];
+  angle_4 = (scan_msg_poles.angle_min + current_itr_4*scan_msg_poles.angle_increment);
 }   
 
 //---------------------- GOAL ---------------------------// 
 geometry_msgs::PoseStamped pole_1, pole_1_transformed;
 geometry_msgs::PoseStamped pole_2, pole_2_transformed;
 geometry_msgs::PoseStamped pole_3, pole_3_transformed;
+geometry_msgs::PoseStamped pole_4, pole_4_transformed;
 pole_1.header.frame_id = "hokuyo";
 pole_1.pose.position.x = sum_x_1/(k);
 pole_1.pose.position.y = sum_y_1/(k);
@@ -109,6 +133,10 @@ pole_2.pose.position.y = current_range_2*sin(angle_2);
 pole_3.header.frame_id = "hokuyo";
 pole_3.pose.position.x = current_range_3*cos(angle_3);
 pole_3.pose.position.y = current_range_3*sin(angle_3);
+
+pole_4.header.frame_id = "hokuyo";
+pole_4.pose.position.x = current_range_4*cos(angle_4);
+pole_4.pose.position.y = current_range_4*sin(angle_4);
 
  try{
    transformStamped = tfBuffer.lookupTransform("map", "hokuyo", ros::Time(0));
@@ -122,6 +150,7 @@ pole_3.pose.position.y = current_range_3*sin(angle_3);
 tf2::doTransform(pole_1, pole_1_transformed, transformStamped);
 tf2::doTransform(pole_2, pole_2_transformed, transformStamped);
 tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
+tf2::doTransform(pole_4, pole_4_transformed, transformStamped);
 
  // std::cout << initial_count_1 << "\n" << k << "\n" << q << "\n" << unfit_1 << std::endl;
   marker_1.header.frame_id = "map";
@@ -170,6 +199,21 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_3.scale.z = 0.2;
   marker_3.color.a = 1.0; // Don't forget to set the alpha!
   marker_3.color.b = 1.0;
+
+  marker_4.header.frame_id = "map";
+  marker_4.ns = "poles_3";
+  marker_4.id = 3;
+  marker_4.type = visualization_msgs::Marker::CYLINDER;
+  marker_4.action = visualization_msgs::Marker::ADD;
+  marker_4.pose.position.x = pole_4_transformed.pose.position.x;
+  marker_4.pose.position.y = pole_4_transformed.pose.position.y;
+  marker_4.pose.position.z = 0.75;
+  marker_4.pose.orientation.w = 1.0;
+  marker_4.scale.x = 0.05;
+  marker_4.scale.y = 0.05;
+  marker_4.scale.z = 0.2;
+  marker_4.color.a = 1.0; // Don't forget to set the alpha!
+  marker_4.color.b = 1.0;
   
  if(unfit>0 && unfit_1> 0){
 
@@ -267,8 +311,9 @@ int main(int argc, char** argv)
   ros::Publisher vis_pub_1 = n.advertise<visualization_msgs::Marker>( "pole_marker_1", 1 );
   ros::Publisher vis_pub_2 = n.advertise<visualization_msgs::Marker>( "pole_marker_2", 1 );
   ros::Publisher vis_pub_3 = n.advertise<visualization_msgs::Marker>( "pole_marker_3", 1 );
-  ros::Publisher vis_pub_4 = n.advertise<visualization_msgs::Marker>( "goal_marker_1", 1 );
-  ros::Publisher vis_pub_5 = n.advertise<visualization_msgs::Marker>( "goal_marker_2", 1 );
+  ros::Publisher vis_pub_4 = n.advertise<visualization_msgs::Marker>( "pole_marker_4", 1 );
+  ros::Publisher vis_pub_5 = n.advertise<visualization_msgs::Marker>( "goal_marker_1", 1 );
+  ros::Publisher vis_pub_6 = n.advertise<visualization_msgs::Marker>( "goal_marker_2", 1 );
 
   // Service Servers
   ros::ServiceServer service = n.advertiseService("/row_transition_mode", change_row);
@@ -288,7 +333,7 @@ int main(int argc, char** argv)
 
   Pole_detection(scan_msg_main); // pole detection
 
-  if(goal_found == true){
+/*  if(goal_found == true){
    goal_range = sqrt(pow((goal_pt[goal_transit].position.y - thorvald_pose.pose.pose.position.y),2) + pow((goal_pt[goal_transit].position.x - thorvald_pose.pose.pose.position.x),2));
    goal_bearing = atan2((goal_pt[goal_transit].position.y-thorvald_pose.pose.pose.position.y),(goal_pt[goal_transit].position.x - thorvald_pose.pose.pose.position.x)) - yaw;
 
@@ -331,19 +376,23 @@ int main(int argc, char** argv)
      } 
    }
 
+
+  } // goal check */
+
   // publish the markers
   marker_1.header.stamp = ros::Time::now();
   marker_2.header.stamp = ros::Time::now();
   marker_3.header.stamp = ros::Time::now();
+  marker_4.header.stamp = ros::Time::now();
   marker_goal_1.header.stamp = ros::Time::now();
   marker_goal_2.header.stamp = ros::Time::now();
 
   vis_pub_1.publish(marker_1);
   vis_pub_2.publish(marker_2);
   vis_pub_3.publish(marker_3);
-  vis_pub_4.publish(marker_goal_1);
-  vis_pub_5.publish(marker_goal_2);
-  } // goal check
+  vis_pub_4.publish(marker_3);
+  vis_pub_5.publish(marker_goal_1);
+  vis_pub_6.publish(marker_goal_2);
 
   twist_gazebo.publish(est_twist);
   } // scan check
