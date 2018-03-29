@@ -298,12 +298,6 @@ UBUNTU:BOOL=TRUE
 UBUNTU_XENIAL:BOOL=TRUE
 
 //Path to a file.
-_CATKIN_GTEST_INCLUDE:FILEPATH=/usr/include/gtest/gtest.h
-
-//Path to a file.
-_CATKIN_GTEST_SRC:FILEPATH=/usr/src/gtest/src/gtest.cc
-
-//Path to a file.
 _file_name:FILEPATH=/home/vigneshnuc/laptop_ws/src/robot_localization-kinetic-devel/test/test_ros_robot_localization_listener.test
 
 //Path to a file.

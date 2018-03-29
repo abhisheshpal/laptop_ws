@@ -522,12 +522,9 @@
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/edit_cache.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/install/local.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/install/strip.dir
+/home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/test_control_modes.dir
+/home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/test_RANSAC.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/thorvald_row_transition.dir
-/home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/gazebo_line.dir
-/home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/guinea_pig.dir
-/home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/laser_points.dir
-/home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/fake_lines.dir
-/home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/lab_rat.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/thorvald_laserscan.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_genpy.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_generate_messages_py.dir
@@ -536,6 +533,7 @@
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/list_install_components.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/move_base_msgs_generate_messages_py.dir
+/home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/test_row_transition.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_generate_messages_lisp.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/visualization_msgs_generate_messages_cpp.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_genlisp.dir

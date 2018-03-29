@@ -4287,6 +4287,32 @@ rplidarNodeClient/fast:
 .PHONY : rplidarNodeClient/fast
 
 #=============================================================================
+# Target rules for targets named test_control_modes
+
+# Build rule for target.
+test_control_modes: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_control_modes
+.PHONY : test_control_modes
+
+# fast build rule for target.
+test_control_modes/fast:
+	$(MAKE) -f thorvald_2d_nav/CMakeFiles/test_control_modes.dir/build.make thorvald_2d_nav/CMakeFiles/test_control_modes.dir/build
+.PHONY : test_control_modes/fast
+
+#=============================================================================
+# Target rules for targets named test_RANSAC
+
+# Build rule for target.
+test_RANSAC: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_RANSAC
+.PHONY : test_RANSAC
+
+# fast build rule for target.
+test_RANSAC/fast:
+	$(MAKE) -f thorvald_2d_nav/CMakeFiles/test_RANSAC.dir/build.make thorvald_2d_nav/CMakeFiles/test_RANSAC.dir/build
+.PHONY : test_RANSAC/fast
+
+#=============================================================================
 # Target rules for targets named thorvald_row_transition
 
 # Build rule for target.
@@ -4298,71 +4324,6 @@ thorvald_row_transition: cmake_check_build_system
 thorvald_row_transition/fast:
 	$(MAKE) -f thorvald_2d_nav/CMakeFiles/thorvald_row_transition.dir/build.make thorvald_2d_nav/CMakeFiles/thorvald_row_transition.dir/build
 .PHONY : thorvald_row_transition/fast
-
-#=============================================================================
-# Target rules for targets named gazebo_line
-
-# Build rule for target.
-gazebo_line: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 gazebo_line
-.PHONY : gazebo_line
-
-# fast build rule for target.
-gazebo_line/fast:
-	$(MAKE) -f thorvald_2d_nav/CMakeFiles/gazebo_line.dir/build.make thorvald_2d_nav/CMakeFiles/gazebo_line.dir/build
-.PHONY : gazebo_line/fast
-
-#=============================================================================
-# Target rules for targets named guinea_pig
-
-# Build rule for target.
-guinea_pig: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 guinea_pig
-.PHONY : guinea_pig
-
-# fast build rule for target.
-guinea_pig/fast:
-	$(MAKE) -f thorvald_2d_nav/CMakeFiles/guinea_pig.dir/build.make thorvald_2d_nav/CMakeFiles/guinea_pig.dir/build
-.PHONY : guinea_pig/fast
-
-#=============================================================================
-# Target rules for targets named laser_points
-
-# Build rule for target.
-laser_points: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 laser_points
-.PHONY : laser_points
-
-# fast build rule for target.
-laser_points/fast:
-	$(MAKE) -f thorvald_2d_nav/CMakeFiles/laser_points.dir/build.make thorvald_2d_nav/CMakeFiles/laser_points.dir/build
-.PHONY : laser_points/fast
-
-#=============================================================================
-# Target rules for targets named fake_lines
-
-# Build rule for target.
-fake_lines: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 fake_lines
-.PHONY : fake_lines
-
-# fast build rule for target.
-fake_lines/fast:
-	$(MAKE) -f thorvald_2d_nav/CMakeFiles/fake_lines.dir/build.make thorvald_2d_nav/CMakeFiles/fake_lines.dir/build
-.PHONY : fake_lines/fast
-
-#=============================================================================
-# Target rules for targets named lab_rat
-
-# Build rule for target.
-lab_rat: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 lab_rat
-.PHONY : lab_rat
-
-# fast build rule for target.
-lab_rat/fast:
-	$(MAKE) -f thorvald_2d_nav/CMakeFiles/lab_rat.dir/build.make thorvald_2d_nav/CMakeFiles/lab_rat.dir/build
-.PHONY : lab_rat/fast
 
 #=============================================================================
 # Target rules for targets named thorvald_laserscan
@@ -4441,6 +4402,19 @@ move_base_msgs_generate_messages_py: cmake_check_build_system
 move_base_msgs_generate_messages_py/fast:
 	$(MAKE) -f thorvald_2d_nav/CMakeFiles/move_base_msgs_generate_messages_py.dir/build.make thorvald_2d_nav/CMakeFiles/move_base_msgs_generate_messages_py.dir/build
 .PHONY : move_base_msgs_generate_messages_py/fast
+
+#=============================================================================
+# Target rules for targets named test_row_transition
+
+# Build rule for target.
+test_row_transition: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_row_transition
+.PHONY : test_row_transition
+
+# fast build rule for target.
+test_row_transition/fast:
+	$(MAKE) -f thorvald_2d_nav/CMakeFiles/test_row_transition.dir/build.make thorvald_2d_nav/CMakeFiles/test_row_transition.dir/build
+.PHONY : test_row_transition/fast
 
 #=============================================================================
 # Target rules for targets named thorvald_2d_nav_generate_messages_lisp
@@ -5084,18 +5058,16 @@ help:
 	@echo "... local_clock_syncroniser"
 	@echo "... rplidarNode"
 	@echo "... rplidarNodeClient"
+	@echo "... test_control_modes"
+	@echo "... test_RANSAC"
 	@echo "... thorvald_row_transition"
-	@echo "... gazebo_line"
-	@echo "... guinea_pig"
-	@echo "... laser_points"
-	@echo "... fake_lines"
-	@echo "... lab_rat"
 	@echo "... thorvald_laserscan"
 	@echo "... thorvald_2d_nav_genpy"
 	@echo "... thorvald_2d_nav_generate_messages_py"
 	@echo "... thorvald_2d_nav_gennodejs"
 	@echo "... visualization_msgs_generate_messages_nodejs"
 	@echo "... move_base_msgs_generate_messages_py"
+	@echo "... test_row_transition"
 	@echo "... thorvald_2d_nav_generate_messages_lisp"
 	@echo "... visualization_msgs_generate_messages_cpp"
 	@echo "... thorvald_2d_nav_genlisp"

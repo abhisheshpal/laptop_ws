@@ -161,14 +161,23 @@ include_directories(/usr/include/eigen3)
  add_executable(thorvald_RANSAC src/thorvald_RANSAC.cpp)
  target_link_libraries(thorvald_RANSAC ${catkin_LIBRARIES})
 
- add_executable(lab_rat src/lab_rat.cpp)
- target_link_libraries(lab_rat ${catkin_LIBRARIES})
-
  add_executable(thorvald_control_modes src/thorvald_control_modes.cpp)
  target_link_libraries(thorvald_control_modes ${catkin_LIBRARIES})
 
  add_executable(thorvald_line_SLAM src/thorvald_line_SLAM.cpp)
  target_link_libraries(thorvald_line_SLAM ${catkin_LIBRARIES})
+
+ add_executable(thorvald_row_transition src/thorvald_row_transition.cpp)
+ target_link_libraries(thorvald_row_transition ${catkin_LIBRARIES})
+
+ add_executable(test_RANSAC src/test_RANSAC.cpp)
+ target_link_libraries(test_RANSAC ${catkin_LIBRARIES})
+
+ add_executable(test_row_transition src/test_row_transition.cpp)
+ target_link_libraries(test_row_transition ${catkin_LIBRARIES})
+
+ add_executable(test_control_modes src/test_control_modes.cpp)
+ target_link_libraries(test_control_modes ${catkin_LIBRARIES})
 
  #add_executable(gps_switch_server src/gps_server.cpp)
  #target_link_libraries(gps_switch_server ${catkin_LIBRARIES})
@@ -176,20 +185,16 @@ include_directories(/usr/include/eigen3)
  #add_executable(gps_switch_client src/gps_client.cpp)
  #target_link_libraries(gps_switch_client ${catkin_LIBRARIES})
 
- add_executable(fake_lines src/fake_line.cpp)
- target_link_libraries(fake_lines ${catkin_LIBRARIES})
+ #add_executable(fake_lines src/fake_line.cpp)
+ #target_link_libraries(fake_lines ${catkin_LIBRARIES})
 
- add_executable(laser_points src/laser_points_count.cpp)
- target_link_libraries(laser_points ${catkin_LIBRARIES})
+ #add_executable(laser_points src/laser_points_count.cpp)
+ #target_link_libraries(laser_points ${catkin_LIBRARIES})
 
- add_executable(guinea_pig src/guinea_pig.cpp)
- target_link_libraries(guinea_pig ${catkin_LIBRARIES})
+ #add_executable(gazebo_line src/gazebo_line.cpp)
+ #target_link_libraries(gazebo_line ${catkin_LIBRARIES})
 
- add_executable(gazebo_line src/gazebo_line.cpp)
- target_link_libraries(gazebo_line ${catkin_LIBRARIES})
 
- add_executable(thorvald_row_transition src/thorvald_row_transition.cpp)
- target_link_libraries(thorvald_row_transition ${catkin_LIBRARIES})
 
 ## Declare a C++ executable
 # add_executable(thorvald_2dnav_node src/thorvald_2dnav_node.cpp)
@@ -200,14 +205,18 @@ add_dependencies(thorvald_laserscan ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${cat
 add_dependencies(thorvald_RANSAC ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(thorvald_line_SLAM ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(thorvald_control_modes ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(lab_rat ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(thorvald_row_transition ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_dependencies(test_row_transition ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(test_RANSAC ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(test_control_modes ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+#add_dependencies(gazebo_line ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 #add_dependencies(gps_switch_server ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 #add_dependencies(gps_switch_client ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(fake_lines ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(laser_points ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(guinea_pig ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(gazebo_line ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(thorvald_row_transition ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+#add_dependencies(fake_lines ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+#add_dependencies(laser_points ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(thorvald_2dnav_node
 #   ${catkin_LIBRARIES}
@@ -263,3 +272,4 @@ add_dependencies(thorvald_row_transition ${${thorvald_2d_nav}_EXPORTED_TARGETS} 
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+

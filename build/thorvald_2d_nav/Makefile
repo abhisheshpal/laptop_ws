@@ -166,6 +166,36 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+thorvald_2d_nav/CMakeFiles/test_control_modes.dir/rule:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/test_control_modes.dir/rule
+.PHONY : thorvald_2d_nav/CMakeFiles/test_control_modes.dir/rule
+
+# Convenience name for target.
+test_control_modes: thorvald_2d_nav/CMakeFiles/test_control_modes.dir/rule
+
+.PHONY : test_control_modes
+
+# fast build rule for target.
+test_control_modes/fast:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_control_modes.dir/build.make thorvald_2d_nav/CMakeFiles/test_control_modes.dir/build
+.PHONY : test_control_modes/fast
+
+# Convenience name for target.
+thorvald_2d_nav/CMakeFiles/test_RANSAC.dir/rule:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/test_RANSAC.dir/rule
+.PHONY : thorvald_2d_nav/CMakeFiles/test_RANSAC.dir/rule
+
+# Convenience name for target.
+test_RANSAC: thorvald_2d_nav/CMakeFiles/test_RANSAC.dir/rule
+
+.PHONY : test_RANSAC
+
+# fast build rule for target.
+test_RANSAC/fast:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_RANSAC.dir/build.make thorvald_2d_nav/CMakeFiles/test_RANSAC.dir/build
+.PHONY : test_RANSAC/fast
+
+# Convenience name for target.
 thorvald_2d_nav/CMakeFiles/thorvald_row_transition.dir/rule:
 	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/thorvald_row_transition.dir/rule
 .PHONY : thorvald_2d_nav/CMakeFiles/thorvald_row_transition.dir/rule
@@ -179,81 +209,6 @@ thorvald_row_transition: thorvald_2d_nav/CMakeFiles/thorvald_row_transition.dir/
 thorvald_row_transition/fast:
 	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/thorvald_row_transition.dir/build.make thorvald_2d_nav/CMakeFiles/thorvald_row_transition.dir/build
 .PHONY : thorvald_row_transition/fast
-
-# Convenience name for target.
-thorvald_2d_nav/CMakeFiles/gazebo_line.dir/rule:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/gazebo_line.dir/rule
-.PHONY : thorvald_2d_nav/CMakeFiles/gazebo_line.dir/rule
-
-# Convenience name for target.
-gazebo_line: thorvald_2d_nav/CMakeFiles/gazebo_line.dir/rule
-
-.PHONY : gazebo_line
-
-# fast build rule for target.
-gazebo_line/fast:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/gazebo_line.dir/build.make thorvald_2d_nav/CMakeFiles/gazebo_line.dir/build
-.PHONY : gazebo_line/fast
-
-# Convenience name for target.
-thorvald_2d_nav/CMakeFiles/guinea_pig.dir/rule:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/guinea_pig.dir/rule
-.PHONY : thorvald_2d_nav/CMakeFiles/guinea_pig.dir/rule
-
-# Convenience name for target.
-guinea_pig: thorvald_2d_nav/CMakeFiles/guinea_pig.dir/rule
-
-.PHONY : guinea_pig
-
-# fast build rule for target.
-guinea_pig/fast:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/guinea_pig.dir/build.make thorvald_2d_nav/CMakeFiles/guinea_pig.dir/build
-.PHONY : guinea_pig/fast
-
-# Convenience name for target.
-thorvald_2d_nav/CMakeFiles/laser_points.dir/rule:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/laser_points.dir/rule
-.PHONY : thorvald_2d_nav/CMakeFiles/laser_points.dir/rule
-
-# Convenience name for target.
-laser_points: thorvald_2d_nav/CMakeFiles/laser_points.dir/rule
-
-.PHONY : laser_points
-
-# fast build rule for target.
-laser_points/fast:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/laser_points.dir/build.make thorvald_2d_nav/CMakeFiles/laser_points.dir/build
-.PHONY : laser_points/fast
-
-# Convenience name for target.
-thorvald_2d_nav/CMakeFiles/fake_lines.dir/rule:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/fake_lines.dir/rule
-.PHONY : thorvald_2d_nav/CMakeFiles/fake_lines.dir/rule
-
-# Convenience name for target.
-fake_lines: thorvald_2d_nav/CMakeFiles/fake_lines.dir/rule
-
-.PHONY : fake_lines
-
-# fast build rule for target.
-fake_lines/fast:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fake_lines.dir/build.make thorvald_2d_nav/CMakeFiles/fake_lines.dir/build
-.PHONY : fake_lines/fast
-
-# Convenience name for target.
-thorvald_2d_nav/CMakeFiles/lab_rat.dir/rule:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/lab_rat.dir/rule
-.PHONY : thorvald_2d_nav/CMakeFiles/lab_rat.dir/rule
-
-# Convenience name for target.
-lab_rat: thorvald_2d_nav/CMakeFiles/lab_rat.dir/rule
-
-.PHONY : lab_rat
-
-# fast build rule for target.
-lab_rat/fast:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/lab_rat.dir/build.make thorvald_2d_nav/CMakeFiles/lab_rat.dir/build
-.PHONY : lab_rat/fast
 
 # Convenience name for target.
 thorvald_2d_nav/CMakeFiles/thorvald_laserscan.dir/rule:
@@ -344,6 +299,21 @@ move_base_msgs_generate_messages_py: thorvald_2d_nav/CMakeFiles/move_base_msgs_g
 move_base_msgs_generate_messages_py/fast:
 	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/move_base_msgs_generate_messages_py.dir/build.make thorvald_2d_nav/CMakeFiles/move_base_msgs_generate_messages_py.dir/build
 .PHONY : move_base_msgs_generate_messages_py/fast
+
+# Convenience name for target.
+thorvald_2d_nav/CMakeFiles/test_row_transition.dir/rule:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/test_row_transition.dir/rule
+.PHONY : thorvald_2d_nav/CMakeFiles/test_row_transition.dir/rule
+
+# Convenience name for target.
+test_row_transition: thorvald_2d_nav/CMakeFiles/test_row_transition.dir/rule
+
+.PHONY : test_row_transition
+
+# fast build rule for target.
+test_row_transition/fast:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_row_transition.dir/build.make thorvald_2d_nav/CMakeFiles/test_row_transition.dir/build
+.PHONY : test_row_transition/fast
 
 # Convenience name for target.
 thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_generate_messages_lisp.dir/rule:
@@ -705,140 +675,86 @@ thorvald_2d_nav_geneus/fast:
 	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_geneus.dir/build.make thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_geneus.dir/build
 .PHONY : thorvald_2d_nav_geneus/fast
 
-src/fake_line.o: src/fake_line.cpp.o
+src/test_RANSAC.o: src/test_RANSAC.cpp.o
 
-.PHONY : src/fake_line.o
-
-# target to build an object file
-src/fake_line.cpp.o:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fake_lines.dir/build.make thorvald_2d_nav/CMakeFiles/fake_lines.dir/src/fake_line.cpp.o
-.PHONY : src/fake_line.cpp.o
-
-src/fake_line.i: src/fake_line.cpp.i
-
-.PHONY : src/fake_line.i
-
-# target to preprocess a source file
-src/fake_line.cpp.i:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fake_lines.dir/build.make thorvald_2d_nav/CMakeFiles/fake_lines.dir/src/fake_line.cpp.i
-.PHONY : src/fake_line.cpp.i
-
-src/fake_line.s: src/fake_line.cpp.s
-
-.PHONY : src/fake_line.s
-
-# target to generate assembly for a file
-src/fake_line.cpp.s:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fake_lines.dir/build.make thorvald_2d_nav/CMakeFiles/fake_lines.dir/src/fake_line.cpp.s
-.PHONY : src/fake_line.cpp.s
-
-src/gazebo_line.o: src/gazebo_line.cpp.o
-
-.PHONY : src/gazebo_line.o
+.PHONY : src/test_RANSAC.o
 
 # target to build an object file
-src/gazebo_line.cpp.o:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/gazebo_line.dir/build.make thorvald_2d_nav/CMakeFiles/gazebo_line.dir/src/gazebo_line.cpp.o
-.PHONY : src/gazebo_line.cpp.o
+src/test_RANSAC.cpp.o:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_RANSAC.dir/build.make thorvald_2d_nav/CMakeFiles/test_RANSAC.dir/src/test_RANSAC.cpp.o
+.PHONY : src/test_RANSAC.cpp.o
 
-src/gazebo_line.i: src/gazebo_line.cpp.i
+src/test_RANSAC.i: src/test_RANSAC.cpp.i
 
-.PHONY : src/gazebo_line.i
+.PHONY : src/test_RANSAC.i
 
 # target to preprocess a source file
-src/gazebo_line.cpp.i:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/gazebo_line.dir/build.make thorvald_2d_nav/CMakeFiles/gazebo_line.dir/src/gazebo_line.cpp.i
-.PHONY : src/gazebo_line.cpp.i
+src/test_RANSAC.cpp.i:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_RANSAC.dir/build.make thorvald_2d_nav/CMakeFiles/test_RANSAC.dir/src/test_RANSAC.cpp.i
+.PHONY : src/test_RANSAC.cpp.i
 
-src/gazebo_line.s: src/gazebo_line.cpp.s
+src/test_RANSAC.s: src/test_RANSAC.cpp.s
 
-.PHONY : src/gazebo_line.s
+.PHONY : src/test_RANSAC.s
 
 # target to generate assembly for a file
-src/gazebo_line.cpp.s:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/gazebo_line.dir/build.make thorvald_2d_nav/CMakeFiles/gazebo_line.dir/src/gazebo_line.cpp.s
-.PHONY : src/gazebo_line.cpp.s
+src/test_RANSAC.cpp.s:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_RANSAC.dir/build.make thorvald_2d_nav/CMakeFiles/test_RANSAC.dir/src/test_RANSAC.cpp.s
+.PHONY : src/test_RANSAC.cpp.s
 
-src/guinea_pig.o: src/guinea_pig.cpp.o
+src/test_control_modes.o: src/test_control_modes.cpp.o
 
-.PHONY : src/guinea_pig.o
+.PHONY : src/test_control_modes.o
 
 # target to build an object file
-src/guinea_pig.cpp.o:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/guinea_pig.dir/build.make thorvald_2d_nav/CMakeFiles/guinea_pig.dir/src/guinea_pig.cpp.o
-.PHONY : src/guinea_pig.cpp.o
+src/test_control_modes.cpp.o:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_control_modes.dir/build.make thorvald_2d_nav/CMakeFiles/test_control_modes.dir/src/test_control_modes.cpp.o
+.PHONY : src/test_control_modes.cpp.o
 
-src/guinea_pig.i: src/guinea_pig.cpp.i
+src/test_control_modes.i: src/test_control_modes.cpp.i
 
-.PHONY : src/guinea_pig.i
+.PHONY : src/test_control_modes.i
 
 # target to preprocess a source file
-src/guinea_pig.cpp.i:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/guinea_pig.dir/build.make thorvald_2d_nav/CMakeFiles/guinea_pig.dir/src/guinea_pig.cpp.i
-.PHONY : src/guinea_pig.cpp.i
+src/test_control_modes.cpp.i:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_control_modes.dir/build.make thorvald_2d_nav/CMakeFiles/test_control_modes.dir/src/test_control_modes.cpp.i
+.PHONY : src/test_control_modes.cpp.i
 
-src/guinea_pig.s: src/guinea_pig.cpp.s
+src/test_control_modes.s: src/test_control_modes.cpp.s
 
-.PHONY : src/guinea_pig.s
+.PHONY : src/test_control_modes.s
 
 # target to generate assembly for a file
-src/guinea_pig.cpp.s:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/guinea_pig.dir/build.make thorvald_2d_nav/CMakeFiles/guinea_pig.dir/src/guinea_pig.cpp.s
-.PHONY : src/guinea_pig.cpp.s
+src/test_control_modes.cpp.s:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_control_modes.dir/build.make thorvald_2d_nav/CMakeFiles/test_control_modes.dir/src/test_control_modes.cpp.s
+.PHONY : src/test_control_modes.cpp.s
 
-src/lab_rat.o: src/lab_rat.cpp.o
+src/test_row_transition.o: src/test_row_transition.cpp.o
 
-.PHONY : src/lab_rat.o
+.PHONY : src/test_row_transition.o
 
 # target to build an object file
-src/lab_rat.cpp.o:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/lab_rat.dir/build.make thorvald_2d_nav/CMakeFiles/lab_rat.dir/src/lab_rat.cpp.o
-.PHONY : src/lab_rat.cpp.o
+src/test_row_transition.cpp.o:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_row_transition.dir/build.make thorvald_2d_nav/CMakeFiles/test_row_transition.dir/src/test_row_transition.cpp.o
+.PHONY : src/test_row_transition.cpp.o
 
-src/lab_rat.i: src/lab_rat.cpp.i
+src/test_row_transition.i: src/test_row_transition.cpp.i
 
-.PHONY : src/lab_rat.i
-
-# target to preprocess a source file
-src/lab_rat.cpp.i:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/lab_rat.dir/build.make thorvald_2d_nav/CMakeFiles/lab_rat.dir/src/lab_rat.cpp.i
-.PHONY : src/lab_rat.cpp.i
-
-src/lab_rat.s: src/lab_rat.cpp.s
-
-.PHONY : src/lab_rat.s
-
-# target to generate assembly for a file
-src/lab_rat.cpp.s:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/lab_rat.dir/build.make thorvald_2d_nav/CMakeFiles/lab_rat.dir/src/lab_rat.cpp.s
-.PHONY : src/lab_rat.cpp.s
-
-src/laser_points_count.o: src/laser_points_count.cpp.o
-
-.PHONY : src/laser_points_count.o
-
-# target to build an object file
-src/laser_points_count.cpp.o:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/laser_points.dir/build.make thorvald_2d_nav/CMakeFiles/laser_points.dir/src/laser_points_count.cpp.o
-.PHONY : src/laser_points_count.cpp.o
-
-src/laser_points_count.i: src/laser_points_count.cpp.i
-
-.PHONY : src/laser_points_count.i
+.PHONY : src/test_row_transition.i
 
 # target to preprocess a source file
-src/laser_points_count.cpp.i:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/laser_points.dir/build.make thorvald_2d_nav/CMakeFiles/laser_points.dir/src/laser_points_count.cpp.i
-.PHONY : src/laser_points_count.cpp.i
+src/test_row_transition.cpp.i:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_row_transition.dir/build.make thorvald_2d_nav/CMakeFiles/test_row_transition.dir/src/test_row_transition.cpp.i
+.PHONY : src/test_row_transition.cpp.i
 
-src/laser_points_count.s: src/laser_points_count.cpp.s
+src/test_row_transition.s: src/test_row_transition.cpp.s
 
-.PHONY : src/laser_points_count.s
+.PHONY : src/test_row_transition.s
 
 # target to generate assembly for a file
-src/laser_points_count.cpp.s:
-	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/laser_points.dir/build.make thorvald_2d_nav/CMakeFiles/laser_points.dir/src/laser_points_count.cpp.s
-.PHONY : src/laser_points_count.cpp.s
+src/test_row_transition.cpp.s:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_row_transition.dir/build.make thorvald_2d_nav/CMakeFiles/test_row_transition.dir/src/test_row_transition.cpp.s
+.PHONY : src/test_row_transition.cpp.s
 
 src/thorvald_RANSAC.o: src/thorvald_RANSAC.cpp.o
 
@@ -985,12 +901,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... install/local"
 	@echo "... install/strip"
+	@echo "... test_control_modes"
+	@echo "... test_RANSAC"
 	@echo "... thorvald_row_transition"
-	@echo "... gazebo_line"
-	@echo "... guinea_pig"
-	@echo "... laser_points"
-	@echo "... fake_lines"
-	@echo "... lab_rat"
 	@echo "... thorvald_laserscan"
 	@echo "... thorvald_2d_nav_genpy"
 	@echo "... thorvald_2d_nav_generate_messages_py"
@@ -999,6 +912,7 @@ help:
 	@echo "... list_install_components"
 	@echo "... visualization_msgs_generate_messages_nodejs"
 	@echo "... move_base_msgs_generate_messages_py"
+	@echo "... test_row_transition"
 	@echo "... thorvald_2d_nav_generate_messages_lisp"
 	@echo "... visualization_msgs_generate_messages_cpp"
 	@echo "... thorvald_2d_nav_genlisp"
@@ -1024,21 +938,15 @@ help:
 	@echo "... _thorvald_2d_nav_generate_messages_check_deps_scan_detected_line"
 	@echo "... move_base_msgs_generate_messages_nodejs"
 	@echo "... thorvald_2d_nav_geneus"
-	@echo "... src/fake_line.o"
-	@echo "... src/fake_line.i"
-	@echo "... src/fake_line.s"
-	@echo "... src/gazebo_line.o"
-	@echo "... src/gazebo_line.i"
-	@echo "... src/gazebo_line.s"
-	@echo "... src/guinea_pig.o"
-	@echo "... src/guinea_pig.i"
-	@echo "... src/guinea_pig.s"
-	@echo "... src/lab_rat.o"
-	@echo "... src/lab_rat.i"
-	@echo "... src/lab_rat.s"
-	@echo "... src/laser_points_count.o"
-	@echo "... src/laser_points_count.i"
-	@echo "... src/laser_points_count.s"
+	@echo "... src/test_RANSAC.o"
+	@echo "... src/test_RANSAC.i"
+	@echo "... src/test_RANSAC.s"
+	@echo "... src/test_control_modes.o"
+	@echo "... src/test_control_modes.i"
+	@echo "... src/test_control_modes.s"
+	@echo "... src/test_row_transition.o"
+	@echo "... src/test_row_transition.i"
+	@echo "... src/test_row_transition.s"
 	@echo "... src/thorvald_RANSAC.o"
 	@echo "... src/thorvald_RANSAC.i"
 	@echo "... src/thorvald_RANSAC.s"

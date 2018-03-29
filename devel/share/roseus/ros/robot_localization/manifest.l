@@ -17,5 +17,6 @@
 (ros::load-ros-package "std_msgs")
 (ros::load-ros-package "std_srvs")
 (ros::load-ros-package "tf2_msgs")
+(ros::load-ros-package "topic_tools")
 (ros::load-ros-package "uuid_msgs")
 (ros::load-ros-package "robot_localization")

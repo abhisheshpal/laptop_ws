@@ -58,6 +58,8 @@ odometry_package/CMakeFiles/odometry_package_node.dir/src/odometry_package_node.
 odometry_package/CMakeFiles/odometry_package_node.dir/src/odometry_package_node.cpp.o: /opt/ros/kinetic/include/ros/single_subscriber_publisher.h
 odometry_package/CMakeFiles/odometry_package_node.dir/src/odometry_package_node.cpp.o: /opt/ros/kinetic/include/ros/spinner.h
 odometry_package/CMakeFiles/odometry_package_node.dir/src/odometry_package_node.cpp.o: /opt/ros/kinetic/include/ros/static_assert.h
+odometry_package/CMakeFiles/odometry_package_node.dir/src/odometry_package_node.cpp.o: /opt/ros/kinetic/include/ros/steady_timer.h
+odometry_package/CMakeFiles/odometry_package_node.dir/src/odometry_package_node.cpp.o: /opt/ros/kinetic/include/ros/steady_timer_options.h
 odometry_package/CMakeFiles/odometry_package_node.dir/src/odometry_package_node.cpp.o: /opt/ros/kinetic/include/ros/subscribe_options.h
 odometry_package/CMakeFiles/odometry_package_node.dir/src/odometry_package_node.cpp.o: /opt/ros/kinetic/include/ros/subscriber.h
 odometry_package/CMakeFiles/odometry_package_node.dir/src/odometry_package_node.cpp.o: /opt/ros/kinetic/include/ros/subscription_callback_helper.h
