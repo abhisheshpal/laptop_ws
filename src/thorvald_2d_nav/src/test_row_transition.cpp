@@ -23,7 +23,7 @@ yaw = tf::getYaw(quat);
 }
 
 // Pole detection
-void Pole_detection(sensor_msgs::LaserScan scan_msg_poles){
+void Pole_detection(sensor_msgs::LaserScan scan_msg_poles, double itr_begin, double itr_end){
 
 if(goal_found == false){
 
@@ -36,7 +36,7 @@ double Current_x_1, Current_y_1;
 double sum_k[num_ranges];
 
 //---------------------- FIRST MARKER ---------------------------//
-	for (int i = 1; i < (num_ranges); i++){
+	for (int i = itr_begin; i < (itr_end); i++){
            if((scan_msg_poles.ranges[i] < min_range)){
             initial_count_1 = initial_count_1 + 1;
             angle[initial_count_1] = scan_msg_poles.angle_min+i*scan_msg_poles.angle_increment;
@@ -91,7 +91,7 @@ double sum_k[num_ranges];
   } 
 
 //---------------------- THIRD MARKER ---------------------------//
-  if(unfit_1>0){
+/*  if(unfit_1>0){
   double sum_n[num_ranges];
   int random_count_3 = rand()% (unfit_1);
   double current_itr_3 = array_2[random_count_3];
@@ -114,20 +114,20 @@ double sum_k[num_ranges];
    }  
   } 
 
-    //  std::cout << "unfit_2" << "\n" << unfit_2 << "\n" << std::endl;
+    //  std::cout << "unfit_2" << "\n" << unfit_2 << "\n" << std::endl; */
 //---------------------- FOURTH MARKER ---------------------------//
-  if(unfit_2>0){
-  int random_count_4 = rand()% (unfit_2);
-  double current_itr_4 = array_3[random_count_4];
-  current_range_4 = scan_msg_poles.ranges[current_itr_4];
-  angle_4 = (scan_msg_poles.angle_min + current_itr_4*scan_msg_poles.angle_increment);
+  if(unfit_1>0){
+  int random_count_3 = rand()% (unfit_1);
+  double current_itr_3 = array_2[random_count_3];
+  current_range_3 = scan_msg_poles.ranges[current_itr_3];
+  angle_3 = (scan_msg_poles.angle_min + current_itr_3*scan_msg_poles.angle_increment);
 }   
 
 //---------------------- GOAL ---------------------------// 
 geometry_msgs::PoseStamped pole_1, pole_1_transformed;
 geometry_msgs::PoseStamped pole_2, pole_2_transformed;
 geometry_msgs::PoseStamped pole_3, pole_3_transformed;
-geometry_msgs::PoseStamped pole_4, pole_4_transformed;
+// geometry_msgs::PoseStamped pole_4, pole_4_transformed;
 pole_1.header.frame_id = "hokuyo";
 pole_1.pose.position.x = current_range_1*cos(angle_1);
 pole_1.pose.position.y = current_range_1*sin(angle_1);
@@ -140,9 +140,9 @@ pole_3.header.frame_id = "hokuyo";
 pole_3.pose.position.x = current_range_3*cos(angle_3);
 pole_3.pose.position.y = current_range_3*sin(angle_3);
 
-pole_4.header.frame_id = "hokuyo";
-pole_4.pose.position.x = current_range_4*cos(angle_4);
-pole_4.pose.position.y = current_range_4*sin(angle_4);
+//pole_4.header.frame_id = "hokuyo";
+//pole_4.pose.position.x = current_range_4*cos(angle_4);
+//pole_4.pose.position.y = current_range_4*sin(angle_4);
 
  try{
    transformStamped = tfBuffer.lookupTransform("map", "hokuyo", ros::Time(0));
@@ -156,7 +156,7 @@ pole_4.pose.position.y = current_range_4*sin(angle_4);
 tf2::doTransform(pole_1, pole_1_transformed, transformStamped);
 tf2::doTransform(pole_2, pole_2_transformed, transformStamped);
 tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
-tf2::doTransform(pole_4, pole_4_transformed, transformStamped);
+//tf2::doTransform(pole_4, pole_4_transformed, transformStamped);
 
  // std::cout << initial_count_1 << "\n" << k << "\n" << q << "\n" << unfit_1 << std::endl;
   marker_1.header.frame_id = "map";
@@ -206,7 +206,7 @@ tf2::doTransform(pole_4, pole_4_transformed, transformStamped);
   marker_3.color.a = 1.0; // Don't forget to set the alpha!
   marker_3.color.b = 1.0;
 
-  if(unfit_2>0){
+/*  if(unfit_2>0){
   marker_4.header.frame_id = "map";
   marker_4.ns = "poles_4";
   marker_4.id = 3;
@@ -222,6 +222,7 @@ tf2::doTransform(pole_4, pole_4_transformed, transformStamped);
   marker_4.color.a = 1.0; // Don't forget to set the alpha!
   marker_4.color.b = 1.0; 
   }
+*/
   
  if(unfit>0 && unfit_1> 0){
 
@@ -319,7 +320,7 @@ int main(int argc, char** argv)
   ros::Publisher vis_pub_1 = n.advertise<visualization_msgs::Marker>( "pole_marker_1", 1 );
   ros::Publisher vis_pub_2 = n.advertise<visualization_msgs::Marker>( "pole_marker_2", 1 );
   ros::Publisher vis_pub_3 = n.advertise<visualization_msgs::Marker>( "pole_marker_3", 1 );
-  ros::Publisher vis_pub_4 = n.advertise<visualization_msgs::Marker>( "pole_marker_4", 1 );
+//  ros::Publisher vis_pub_4 = n.advertise<visualization_msgs::Marker>( "pole_marker_4", 1 );
   ros::Publisher vis_pub_5 = n.advertise<visualization_msgs::Marker>( "goal_marker_1", 1 );
   ros::Publisher vis_pub_6 = n.advertise<visualization_msgs::Marker>( "goal_marker_2", 1 );
 
@@ -337,11 +338,22 @@ int main(int argc, char** argv)
   while (ros::ok()){
   ros::spinOnce();
 
-  if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0) && (goal_transit<3)){ // scan check  
+  if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0) && (row_transit_mode <= row_transit)){ // scan check  
 
-  Pole_detection(scan_msg_main); // pole detection
+   if(turn_right == true){
+   min_itr = 1;
+   max_itr = 760;
+   }
 
-/*  if(goal_found == true){
+   if(turn_left == true){
+   min_itr = 320;
+   max_itr = 1079;
+   ROS_INFO("Turning Left");
+   }
+
+  Pole_detection(scan_msg_main, min_itr , max_itr); // pole detection
+
+  if(goal_found == true){
    goal_range = sqrt(pow((goal_pt[goal_transit].position.y - thorvald_pose.pose.pose.position.y),2) + pow((goal_pt[goal_transit].position.x - thorvald_pose.pose.pose.position.x),2));
    goal_bearing = atan2((goal_pt[goal_transit].position.y-thorvald_pose.pose.pose.position.y),(goal_pt[goal_transit].position.x - thorvald_pose.pose.pose.position.x)) - yaw;
 
@@ -367,7 +379,7 @@ int main(int argc, char** argv)
    } 
    else{
    est_twist.linear.x = linear_velocity; 
-   est_twist.angular.z = angular_velocity;
+   est_twist.angular.z = 0;
    }
 
    // Service for end of row transition
@@ -375,30 +387,45 @@ int main(int argc, char** argv)
      // std::cout << "final_yaw" << yaw << "\n"<< std::endl;
      end_row_transit.request.counter = 1;
      end_row_transit_1.request.counter = 1;
+     est_twist.angular.z = 0;
+     row_transit = 1 + row_transit_mode;
+
+     if(turn_left==true){
+     turn_left = false;
+     turn_right = true;
+     ROS_INFO("Turning Left");
+     }
+
+     if(turn_right==true){
+     turn_right = false;
+     turn_left = true;
+     ROS_INFO("Turning Right");
+     }
+
      if (client.call(end_row_transit)){ 
      ROS_INFO("End of the row transition");
-     goal_transit = 3;
+     goal_transit = 1;
      } 
      if (client.call(end_row_transit_1)){ 
-     goal_transit = 3;
+//     goal_transit = 1;
      } 
    }
 
 
-  } // goal check */
+  } // goal check 
 
   // publish the markers
   marker_1.header.stamp = ros::Time::now();
   marker_2.header.stamp = ros::Time::now();
   marker_3.header.stamp = ros::Time::now();
-  marker_4.header.stamp = ros::Time::now();
+ // marker_4.header.stamp = ros::Time::now();
   marker_goal_1.header.stamp = ros::Time::now();
   marker_goal_2.header.stamp = ros::Time::now();
 
   vis_pub_1.publish(marker_1);
   vis_pub_2.publish(marker_2);
   vis_pub_3.publish(marker_3);
-  vis_pub_4.publish(marker_4);
+//  vis_pub_4.publish(marker_4);
   vis_pub_5.publish(marker_goal_1);
   vis_pub_6.publish(marker_goal_2);
 
