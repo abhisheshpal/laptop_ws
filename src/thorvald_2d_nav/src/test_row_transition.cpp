@@ -28,9 +28,9 @@ void Pole_detection(sensor_msgs::LaserScan scan_msg_poles, double itr_begin, dou
 if(goal_found == false){
 
 double thershold = 0.2;
-int initial_count_1 = 0;
+int initial_count_1 = 0, initial_count_2 = 0;
 double x[num_ranges], y[num_ranges], angle[num_ranges];
-double range_1[num_ranges], count_angle_1[num_ranges];
+double range_1[num_ranges], count_angle_1[num_ranges], count_angle_2[num_ranges];
 double array_1[num_ranges], array_2[num_ranges], array_3[num_ranges]; 
 double Current_x_1, Current_y_1;
 double sum_k[num_ranges];
@@ -91,43 +91,38 @@ double sum_k[num_ranges];
   } 
 
 //---------------------- THIRD MARKER ---------------------------//
-/*  if(unfit_1>0){
+
   double sum_n[num_ranges];
-  int random_count_3 = rand()% (unfit_1);
-  double current_itr_3 = array_2[random_count_3];
-  current_range_3 = scan_msg_poles.ranges[current_itr_3];
-  angle_3 = scan_msg_poles.angle_min + current_itr_3*scan_msg_poles.angle_increment;
-  for (int m = 1 ; m <= (unfit_1); m++){
-   double itr_loop_3 = array_2[m];
-   double obst_dist_3 = (current_range_3 - scan_msg_poles.ranges[itr_loop_3]); // error calculation
-   if (thershold > fabs(obst_dist_3)){
-   n = n + 1;
-   sum_n[n] = array_2[m];
 
-   }
-   else{
-       std::cout << "unfit_2" << unfit_2 << "\n" << std::endl;
-    unfit_2 = unfit_2 + 1;
-       std::cout << "unfit_2" << unfit_2 << "\n" << std::endl;
-    array_3[unfit_2] = itr_loop_3; 
-    }         
-   }  
-  } 
+	for (int r = 540; r <=840; r++){
+           if((scan_msg_poles.ranges[r] < min_range)){
+            initial_count_2 = initial_count_2 + 1;
+            count_angle_2[initial_count_2] = r;
+           }
+         } // for loop 	
 
-    //  std::cout << "unfit_2" << "\n" << unfit_2 << "\n" << std::endl; */
-//---------------------- FOURTH MARKER ---------------------------//
-  if(unfit_1>0){
-  int random_count_3 = rand()% (unfit_1);
-  double current_itr_3 = array_2[random_count_3];
-  current_range_3 = scan_msg_poles.ranges[current_itr_3];
-  angle_3 = (scan_msg_poles.angle_min + current_itr_3*scan_msg_poles.angle_increment);
-}   
+          int random_count_3 = rand()% (initial_count_2);
+          double current_itr_3 = count_angle_2[random_count_3];
+          current_range_3 = scan_msg_poles.ranges[current_itr_3];
+          angle_3 = scan_msg_poles.angle_min + current_itr_3*scan_msg_poles.angle_increment;
+
+        for (int m = 1 ; m <= (initial_count_2); m++){
+          double itr_loop_3 = count_angle_2[m];
+  	  double obst_dist_3 = (current_range_3 - scan_msg_poles.ranges[itr_loop_3]); // error calculation
+          if (thershold > fabs(obst_dist_3) ){
+	      // sum_x_1+=x[j];
+	      // sum_y_1+=y[j];
+              n = n + 1;
+              sum_n[n] = count_angle_2[m];
+          }       
+        }
+
 
 //---------------------- GOAL ---------------------------// 
 geometry_msgs::PoseStamped pole_1, pole_1_transformed;
 geometry_msgs::PoseStamped pole_2, pole_2_transformed;
 geometry_msgs::PoseStamped pole_3, pole_3_transformed;
-// geometry_msgs::PoseStamped pole_4, pole_4_transformed;
+
 pole_1.header.frame_id = "hokuyo";
 pole_1.pose.position.x = current_range_1*cos(angle_1);
 pole_1.pose.position.y = current_range_1*sin(angle_1);
@@ -139,10 +134,6 @@ pole_2.pose.position.y = current_range_2*sin(angle_2);
 pole_3.header.frame_id = "hokuyo";
 pole_3.pose.position.x = current_range_3*cos(angle_3);
 pole_3.pose.position.y = current_range_3*sin(angle_3);
-
-//pole_4.header.frame_id = "hokuyo";
-//pole_4.pose.position.x = current_range_4*cos(angle_4);
-//pole_4.pose.position.y = current_range_4*sin(angle_4);
 
  try{
    transformStamped = tfBuffer.lookupTransform("map", "hokuyo", ros::Time(0));
@@ -156,9 +147,7 @@ pole_3.pose.position.y = current_range_3*sin(angle_3);
 tf2::doTransform(pole_1, pole_1_transformed, transformStamped);
 tf2::doTransform(pole_2, pole_2_transformed, transformStamped);
 tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
-//tf2::doTransform(pole_4, pole_4_transformed, transformStamped);
 
- // std::cout << initial_count_1 << "\n" << k << "\n" << q << "\n" << unfit_1 << std::endl;
   marker_1.header.frame_id = "map";
   marker_1.ns = "poles_1";
   marker_1.id = 1;
@@ -205,26 +194,8 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_3.scale.z = 0.2;
   marker_3.color.a = 1.0; // Don't forget to set the alpha!
   marker_3.color.b = 1.0;
-
-/*  if(unfit_2>0){
-  marker_4.header.frame_id = "map";
-  marker_4.ns = "poles_4";
-  marker_4.id = 3;
-  marker_4.type = visualization_msgs::Marker::CYLINDER;
-  marker_4.action = visualization_msgs::Marker::ADD;
-  marker_4.pose.position.x = pole_4_transformed.pose.position.x;
-  marker_4.pose.position.y = pole_4_transformed.pose.position.y;
-  marker_4.pose.position.z = 0.75;
-  marker_4.pose.orientation.w = 1.0;
-  marker_4.scale.x = 0.05;
-  marker_4.scale.y = 0.05;
-  marker_4.scale.z = 0.2;
-  marker_4.color.a = 1.0; // Don't forget to set the alpha!
-  marker_4.color.b = 1.0; 
-  }
-*/
   
- if(unfit>0 && unfit_1> 0){
+ if(unfit>0){
 
   if((marker_1.pose.position.y < marker_2.pose.position.y)&&(marker_1.pose.position.y < marker_3.pose.position.y)){
   nearest_pole_x = marker_1.pose.position.x;
@@ -342,13 +313,12 @@ int main(int argc, char** argv)
 
    if(turn_right == true){
    min_itr = 1;
-   max_itr = 760;
+   max_itr = 540;
    }
 
    if(turn_left == true){
-   min_itr = 320;
+   min_itr = 540;
    max_itr = 1079;
-   ROS_INFO("Turning Left");
    }
 
   Pole_detection(scan_msg_main, min_itr , max_itr); // pole detection
