@@ -33,6 +33,7 @@ double x[num_ranges], y[num_ranges], angle[num_ranges];
 double range_1[num_ranges], count_angle_1[num_ranges];
 double array_1[num_ranges], array_2[num_ranges], array_3[num_ranges]; 
 double Current_x_1, Current_y_1;
+double sum_k[num_ranges];
 
 //---------------------- FIRST MARKER ---------------------------//
 	for (int i = 1; i < (num_ranges); i++){
@@ -52,18 +53,21 @@ double Current_x_1, Current_y_1;
           Current_x_1 = x[random_count_1];
           Current_y_1 = y[random_count_1];
         for (int j = 1 ; j <= (initial_count_1); j++){
-  	  double obst_dist_1 = sqrt(pow(y[j]-Current_y_1,2) + pow(x[j]-Current_x_1,2)); // error calculation
+          double itr_loop_1 = count_angle_1[j];
+  	  // double obst_dist_1 = sqrt(pow(y[j]-Current_y_1,2) + pow(x[j]-Current_x_1,2)); // error calculation
+  	  double obst_dist_1 = (current_range_1 - scan_msg_poles.ranges[itr_loop_1]); // error calculation
           if (thershold > fabs(obst_dist_1) ){
-	      sum_x_1+=x[j];
-	      sum_y_1+=y[j];
+	     // sum_x_1+=x[j];
+	     // sum_y_1+=y[j];
               k = k + 1;
+              sum_k[k] = count_angle_1[j];
           }
           else{
             unfit = unfit + 1;
-            array_1[unfit] = count_angle_1[j];
+            array_1[unfit] = itr_loop_1;
           }         
         }
-// ROS_INFO("HERE");
+
 //---------------------- SECOND MARKER ---------------------------//
   if(unfit>0){
   double sum_q[num_ranges];
@@ -102,13 +106,15 @@ double Current_x_1, Current_y_1;
 
    }
    else{
+       std::cout << "unfit_2" << unfit_2 << "\n" << std::endl;
     unfit_2 = unfit_2 + 1;
+       std::cout << "unfit_2" << unfit_2 << "\n" << std::endl;
     array_3[unfit_2] = itr_loop_3; 
     }         
    }  
   } 
 
-
+    //  std::cout << "unfit_2" << "\n" << unfit_2 << "\n" << std::endl;
 //---------------------- FOURTH MARKER ---------------------------//
   if(unfit_2>0){
   int random_count_4 = rand()% (unfit_2);
@@ -123,8 +129,8 @@ geometry_msgs::PoseStamped pole_2, pole_2_transformed;
 geometry_msgs::PoseStamped pole_3, pole_3_transformed;
 geometry_msgs::PoseStamped pole_4, pole_4_transformed;
 pole_1.header.frame_id = "hokuyo";
-pole_1.pose.position.x = sum_x_1/(k);
-pole_1.pose.position.y = sum_y_1/(k);
+pole_1.pose.position.x = current_range_1*cos(angle_1);
+pole_1.pose.position.y = current_range_1*sin(angle_1);
 
 pole_2.header.frame_id = "hokuyo";
 pole_2.pose.position.x = current_range_2*cos(angle_2);
@@ -200,8 +206,9 @@ tf2::doTransform(pole_4, pole_4_transformed, transformStamped);
   marker_3.color.a = 1.0; // Don't forget to set the alpha!
   marker_3.color.b = 1.0;
 
+  if(unfit_2>0){
   marker_4.header.frame_id = "map";
-  marker_4.ns = "poles_3";
+  marker_4.ns = "poles_4";
   marker_4.id = 3;
   marker_4.type = visualization_msgs::Marker::CYLINDER;
   marker_4.action = visualization_msgs::Marker::ADD;
@@ -213,7 +220,8 @@ tf2::doTransform(pole_4, pole_4_transformed, transformStamped);
   marker_4.scale.y = 0.05;
   marker_4.scale.z = 0.2;
   marker_4.color.a = 1.0; // Don't forget to set the alpha!
-  marker_4.color.b = 1.0;
+  marker_4.color.b = 1.0; 
+  }
   
  if(unfit>0 && unfit_1> 0){
 
@@ -390,7 +398,7 @@ int main(int argc, char** argv)
   vis_pub_1.publish(marker_1);
   vis_pub_2.publish(marker_2);
   vis_pub_3.publish(marker_3);
-  vis_pub_4.publish(marker_3);
+  vis_pub_4.publish(marker_4);
   vis_pub_5.publish(marker_goal_1);
   vis_pub_6.publish(marker_goal_2);
 
