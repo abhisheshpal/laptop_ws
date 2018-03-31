@@ -41,7 +41,7 @@ double current_range_1, current_range_2, current_range_3, current_range_4, angle
 int row_transit_mode = 0;
 double nearest_pole_x, nearest_pole_y, next_nearest_pole_x, next_nearest_pole_y, farthest_pole_x, farthest_pole_y;
 double min_itr, max_itr;
-int turn_side = 1;
+int turn_side = 1; // 1 for RIGHT, 2 for LEFT
 enum TURN {RIGHT = 1, LEFT};
 
 //Pole Markers

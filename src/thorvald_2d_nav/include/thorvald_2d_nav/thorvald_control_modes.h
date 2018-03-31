@@ -33,5 +33,5 @@ int Total_Points = 15;
 geometry_msgs::Pose Points[20];
 geometry_msgs::Twist est_twist;
 double yaw, position_error, angular_error, q_x , q_y;
-double K_d = 0.00000000001, K_p = 0.01;
+double K_d = 0.0000001, K_p = 0.01;
 bool mini_goal = false;

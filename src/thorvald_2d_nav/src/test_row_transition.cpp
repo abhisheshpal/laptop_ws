@@ -229,7 +229,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_goal_1.id = 3;
   marker_goal_1.type = visualization_msgs::Marker::CYLINDER;
   marker_goal_1.action = visualization_msgs::Marker::ADD;
-  marker_goal_1.pose.position.x = ((nearest_pole_x + next_nearest_pole_x)/2) + 2.0;
+  marker_goal_1.pose.position.x = ((nearest_pole_x + next_nearest_pole_x)/2) + 1.5;
   marker_goal_1.pose.position.y = (nearest_pole_y + next_nearest_pole_y)/2;
   marker_goal_1.pose.position.z = 0.75;
   marker_goal_1.pose.orientation.w = 1.0;
@@ -244,7 +244,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_goal_2.id = 3;
   marker_goal_2.type = visualization_msgs::Marker::CYLINDER;
   marker_goal_2.action = visualization_msgs::Marker::ADD;
-  marker_goal_2.pose.position.x = ((farthest_pole_x + next_nearest_pole_x)/2) + 2.0;
+  marker_goal_2.pose.position.x = ((farthest_pole_x + next_nearest_pole_x)/2) + 1.5;
   marker_goal_2.pose.position.y = (farthest_pole_y + next_nearest_pole_y)/2;
   marker_goal_2.pose.position.z = 0.75;
   marker_goal_2.pose.orientation.w = 1.0;
@@ -321,7 +321,7 @@ int main(int argc, char** argv)
   while (ros::ok()){
   ros::spinOnce();
 
-  if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0) && (row_transit_mode <= row_transit)){ // scan check  
+  if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0) && (row_transit_mode == row_transit)){ // scan check  
 
    if(turn_side == 1){
    min_itr = 1;
@@ -409,8 +409,7 @@ int main(int argc, char** argv)
      ROS_INFO("End of the row transition");
      goal_transit = 1;
      } 
-     if (client.call(end_row_transit_1)){ 
-     } 
+     if (client1.call(end_row_transit_1)){} 
    }
 
 

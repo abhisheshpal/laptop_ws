@@ -77,7 +77,7 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
 
         if(final_count_1 > d){ // selecting the inliers with max of points    
 
-         if((final_count_1 > final_count_2) && (fabs(fabs(thorvald_pose.pose.pose.position.y) - fabs(y_1[aIndex_1])) < 1.0) && (fabs(fabs(thorvald_pose.pose.pose.position.y) - fabs(y_1[bIndex_1])) < 1.0)){
+         if((final_count_1 > final_count_2) && (fabs(y_1[aIndex_1]) < 1.0) && (fabs(y_1[bIndex_1]) < 1.0)){
            
             measurement_points.range[0] = scan_msg_main.ranges[aIndex_1];        
             measurement_points.bearing[0] = angle_1[aIndex_1];
@@ -112,7 +112,7 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
 Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 
         // x, y, theta calculation
-	for (int i_2 = 540; i_2 <= 1079; i_2++){
+	for (int i_2 = (num_ranges/2); i_2 <= 1079; i_2++){
 	angle_2[i_2] = scan_msg_main.angle_min+i_2*scan_msg_main.angle_increment;
 	x_2[i_2] = scan_msg_main.ranges[i_2]*cos(angle_2[i_2]);
 	y_2[i_2] = scan_msg_main.ranges[i_2]*sin(angle_2[i_2]);
@@ -157,7 +157,7 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
         l_2 = 0;
 
         if(final_count_4 > d){ // selecting the inliers with max of points    
-         if(final_count_4 > final_count_5 && (fabs(fabs(thorvald_pose.pose.pose.position.y)-fabs(y_2[aIndex_2])) < 1.0) && (fabs(fabs(thorvald_pose.pose.pose.position.y)-fabs(y_2[bIndex_2])) < 1.0)){
+         if(final_count_4 > final_count_5 && (fabs(y_2[aIndex_2]) < 1.0) && (fabs(y_2[bIndex_2]) < 1.0)){
            
             measurement_points.range[2] = scan_msg_main.ranges[aIndex_2];
             measurement_points.range[3] = scan_msg_main.ranges[bIndex_2];             
@@ -176,6 +176,7 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
             final_Index_2[1].real_y = y_2[bIndex_2];              
             final_Index_2[2].real_y = y_2[aIndex_2];             
             }
+
             final_count_5 = final_count_4;
             line_found_2 = true;
           }            
@@ -238,8 +239,9 @@ int main(int argc, char** argv)
         // Service Client
         ros::ServiceClient client = n.serviceClient<thorvald_2d_nav::sub_goal>("/row_transition_mode");
 
-        tf2_ros::Buffer tfBuffer; 
         landmarks_pos.landmark_check = 0; 
+        tf::StampedTransform transform;
+        tf::TransformListener listener;
         tf2_ros::TransformListener tfListener(tfBuffer);
 
         while (ros::ok()){
@@ -263,9 +265,9 @@ int main(int argc, char** argv)
         new_row = true;
         goto line_publish;}
         }
-      
-          ROS_INFO("Line Detection starts");
 
+          ROS_INFO("Line Detection starts");
+	
           line_detect_1:
           for (k=0; k <= 5000; k++){ // Number of iterations
           Line_detection_1(scan_msg_main, final_Index_1);
@@ -273,16 +275,45 @@ int main(int argc, char** argv)
           line_detect_2:
           for (k=0; k <= 5000; k++){ // Number of iterations
           Line_detection_2(scan_msg_main, final_Index_2);
-          }
+          } 
 
-            // std::cout << "final_Index_1[2].real_x:" << final_Index_1[2].real_x << "\n" << "final_Index_1[1].real_x:" << final_Index_1[1].real_x << "\n" << std::endl;
-            // std::cout << "final_Index_2[2].real_x:" << final_Index_2[2].real_x << "\n" << "final_Index_2[1].real_x:" << final_Index_2[1].real_x << "\n" << std::endl;
-        if((line_found_1==false) || (fabs(final_Index_1[2].real_x - final_Index_1[1].real_x)< 1.0)){
+          try{
+          transformStamped = tfBuffer.lookupTransform("map", "hokuyo", ros::Time(0));
+          }
+          catch (tf2::TransformException &ex){
+          ROS_WARN("%s",ex.what());
+          ros::Duration(1.0).sleep();
+          } 
+
+
+            left_line_1.header.frame_id = "hokuyo";
+            left_line_1.pose.position.x = final_Index_1[1].real_x;
+            left_line_1.pose.position.y = final_Index_1[1].real_y;
+            left_line_2.header.frame_id = "hokuyo";
+            left_line_2.pose.position.x = final_Index_1[2].real_x;
+            left_line_2.pose.position.y = final_Index_1[2].real_y;
+
+            right_line_1.header.frame_id = "hokuyo";
+            right_line_1.pose.position.x = final_Index_2[1].real_x;
+            right_line_1.pose.position.y = final_Index_2[1].real_y;
+            right_line_2.header.frame_id = "hokuyo";
+            right_line_2.pose.position.x = final_Index_2[2].real_x;
+            right_line_2.pose.position.y = final_Index_2[2].real_y;
+
+            tf2::doTransform(left_line_1, left_line_1_transformed, transformStamped);
+            tf2::doTransform(left_line_2, left_line_2_transformed, transformStamped);
+            tf2::doTransform(right_line_1, right_line_1_transformed, transformStamped);
+            tf2::doTransform(right_line_2, right_line_2_transformed, transformStamped);
+
+             // std::cout << "left_line_1.pose.position.x :" << left_line_1.pose.position.x << "\n" << "right_line_2.pose.position.x :" << left_line_1.pose.position.x << "\n" << std::endl;
+             // std::cout << "right_line_1.pose.position.x :" << right_line_1.pose.position.x << "\n" << "right_line_2.pose.position.x :" << right_line_2.pose.position.x << "\n" << std::endl;
+
+        if((line_found_1==false) || (fabs(left_line_2.pose.position.x - left_line_1.pose.position.x)< 1.0)){
         ROS_INFO("Line 1 has to be re-detected!");
         goto line_detect_1;
         }
 
-        if((line_found_2==false) || (fabs(final_Index_2[2].real_x - final_Index_2[1].real_x)< 1.0)){
+        if((line_found_2==false) || (fabs(right_line_2.pose.position.x - right_line_1.pose.position.x)< 1.0)){
         ROS_INFO("Line 2 has to be re-detected!");
         goto line_detect_2;
         }
@@ -291,34 +322,6 @@ int main(int argc, char** argv)
         line_found_1 = false;
         line_found_2 = false;
         end_row_reach = 0;
-
-        left_line_1.header.frame_id = "hokuyo";
-        left_line_1.pose.position.x = final_Index_1[1].real_x;
-        left_line_1.pose.position.y = final_Index_1[1].real_y;
-        left_line_2.header.frame_id = "hokuyo";
-        left_line_2.pose.position.x = final_Index_1[2].real_x;
-        left_line_2.pose.position.y = final_Index_1[2].real_y;
-
-        right_line_1.header.frame_id = "hokuyo";
-        right_line_1.pose.position.x = final_Index_2[1].real_x;
-        right_line_1.pose.position.y = final_Index_2[1].real_y;
-        right_line_2.header.frame_id = "hokuyo";
-        right_line_2.pose.position.x = final_Index_2[2].real_x;
-        right_line_2.pose.position.y = final_Index_2[2].real_y;
-
-        try{
-        transformStamped = tfBuffer.lookupTransform("map", "hokuyo", ros::Time(0));
-        }
-        catch (tf2::TransformException &ex){
-        ROS_WARN("%s",ex.what());
-        ros::Duration(1.0).sleep();
-        // continue;
-        }
-
-        tf2::doTransform(left_line_1, left_line_1_transformed, transformStamped);
-        tf2::doTransform(left_line_2, left_line_2_transformed, transformStamped);
-        tf2::doTransform(right_line_1, right_line_1_transformed, transformStamped);
-        tf2::doTransform(right_line_2, right_line_2_transformed, transformStamped);
 
        // Create the vertices for the points and lines
         geometry_msgs::Point pt_1[2], pt_2[2], pt_3[2];
