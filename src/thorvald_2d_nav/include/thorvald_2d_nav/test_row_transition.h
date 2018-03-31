@@ -32,7 +32,6 @@ thorvald_2d_nav::sub_goal end_row_transit, end_row_transit_1;
 
 //Parameters for pole detection
 double min_range = 3.0;
-bool turn_left = false, turn_right = true;
 sensor_msgs::LaserScan scan_msg_main;
 size_t num_ranges;
 bool goal_found = false;
@@ -42,13 +41,15 @@ double current_range_1, current_range_2, current_range_3, current_range_4, angle
 int row_transit_mode = 0;
 double nearest_pole_x, nearest_pole_y, next_nearest_pole_x, next_nearest_pole_y, farthest_pole_x, farthest_pole_y;
 double min_itr, max_itr;
+int turn_side = 1;
+enum TURN {RIGHT = 1, LEFT};
 
 //Pole Markers
 visualization_msgs::Marker marker_1, marker_2, marker_3, marker_4;
 visualization_msgs::Marker marker_goal_1, marker_goal_2;
 
 //dummy variables
-double linear_velocity = 0.0, angular_velocity = 0.0;
+double linear_velocity = 0.4, angular_velocity = 0.0;
 double goal_range, goal_bearing, a = 0;
 bool pole_detect = false, turn_90 = false; 
 int goal_transit = 1, c = 0, row_transit = 1;

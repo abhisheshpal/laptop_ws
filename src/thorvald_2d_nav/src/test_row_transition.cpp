@@ -254,10 +254,22 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_goal_2.color.a = 1.0; // Don't forget to set the alpha!
   marker_goal_2.color.g = 1.0;
 
+  switch(turn_side){
+  case RIGHT: 
+  goal_pt[1].position.x = marker_goal_2.pose.position.x;
+  goal_pt[1].position.y = marker_goal_2.pose.position.y;
+  goal_pt[2].position.x = marker_goal_1.pose.position.x;
+  goal_pt[2].position.y = marker_goal_1.pose.position.y;
+  break;
+
+  case LEFT: 
   goal_pt[1].position.x = marker_goal_1.pose.position.x;
   goal_pt[1].position.y = marker_goal_1.pose.position.y;
   goal_pt[2].position.x = marker_goal_2.pose.position.x;
   goal_pt[2].position.y = marker_goal_2.pose.position.y;
+  break;
+ }
+
   goal_found = true; 
   }
 }
@@ -283,15 +295,15 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "test_row_transition");
   ros::NodeHandle n;
 
+  // Subscribers
   ros::Subscriber scan_sub_test = n.subscribe("scan", 100, scanCallback);
   ros::Subscriber pose_sub = n.subscribe("/thorvald_ii/odom", 100, robotposeCallback);
 
-  //publisher
+  // Publishers
   ros::Publisher twist_gazebo = n.advertise<geometry_msgs::Twist>( "/nav_vel", 100);
   ros::Publisher vis_pub_1 = n.advertise<visualization_msgs::Marker>( "pole_marker_1", 1 );
   ros::Publisher vis_pub_2 = n.advertise<visualization_msgs::Marker>( "pole_marker_2", 1 );
   ros::Publisher vis_pub_3 = n.advertise<visualization_msgs::Marker>( "pole_marker_3", 1 );
-//  ros::Publisher vis_pub_4 = n.advertise<visualization_msgs::Marker>( "pole_marker_4", 1 );
   ros::Publisher vis_pub_5 = n.advertise<visualization_msgs::Marker>( "goal_marker_1", 1 );
   ros::Publisher vis_pub_6 = n.advertise<visualization_msgs::Marker>( "goal_marker_2", 1 );
 
@@ -311,12 +323,12 @@ int main(int argc, char** argv)
 
   if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0) && (row_transit_mode <= row_transit)){ // scan check  
 
-   if(turn_right == true){
+   if(turn_side == 1){
    min_itr = 1;
    max_itr = 540;
    }
 
-   if(turn_left == true){
+   if(turn_side == 2){
    min_itr = 540;
    max_itr = 1079;
    }
@@ -328,11 +340,28 @@ int main(int argc, char** argv)
    goal_bearing = atan2((goal_pt[goal_transit].position.y-thorvald_pose.pose.pose.position.y),(goal_pt[goal_transit].position.x - thorvald_pose.pose.pose.position.x)) - yaw;
 
    angular_velocity = pure_pursuit(goal_range, goal_bearing); //pure pursuit controller
- 
-   if(goal_range < 0.1){
+
+   if(goal_range < 0.15){
     est_twist.linear.x = 0.0; 
     est_twist.angular.z = 0.0;
 
+  switch(turn_side){ 
+    case RIGHT:
+    if(yaw>=(-(goal_transit*1.50))){
+    est_twist.angular.z = -0.20; 
+    turn_90=false;  
+    }
+    else if((yaw<=-3.0)&&(yaw>=-3.14)){ 
+    est_twist.angular.z = fabs(yaw)-3.14; 
+    }
+    else{
+    turn_90 = true;
+    goal_transit = 2;
+    est_twist.angular.z = 0.0;
+    }
+    break;
+
+    case LEFT:
     if(yaw<=(goal_transit*1.50)){
     est_twist.angular.z = 0.20; 
     turn_90=false;  
@@ -345,31 +374,35 @@ int main(int argc, char** argv)
     goal_transit = 2;
     est_twist.angular.z = 0.0;
     }
-    
+    break;
+   }
+
    } 
    else{
    est_twist.linear.x = linear_velocity; 
    est_twist.angular.z = 0;
    }
 
+//  std::cout << "goal_range" << goal_range << "\n" << "yaw" << yaw << "\n" << std::endl;
+
    // Service for end of row transition
-   if ((turn_90 = true) && (goal_transit==2) && (yaw >= 3.12)){
+   if ((turn_90 = true) && (goal_transit==2) && ((yaw >= 3.12)||(yaw<=-3.12))){
      // std::cout << "final_yaw" << yaw << "\n"<< std::endl;
      end_row_transit.request.counter = 1;
      end_row_transit_1.request.counter = 1;
      est_twist.angular.z = 0;
      row_transit = 1 + row_transit_mode;
 
-     if(turn_left==true){
-     turn_left = false;
-     turn_right = true;
-     ROS_INFO("Turning Left");
-     }
+     switch(turn_side){
+      case RIGHT: 
+      turn_side = 2;
+      ROS_INFO("Turning Right");
+      break;
 
-     if(turn_right==true){
-     turn_right = false;
-     turn_left = true;
-     ROS_INFO("Turning Right");
+      case LEFT:
+      turn_side = 1;
+      ROS_INFO("Turning Left");
+      break;
      }
 
      if (client.call(end_row_transit)){ 
@@ -377,7 +410,6 @@ int main(int argc, char** argv)
      goal_transit = 1;
      } 
      if (client.call(end_row_transit_1)){ 
-//     goal_transit = 1;
      } 
    }
 
@@ -388,14 +420,12 @@ int main(int argc, char** argv)
   marker_1.header.stamp = ros::Time::now();
   marker_2.header.stamp = ros::Time::now();
   marker_3.header.stamp = ros::Time::now();
- // marker_4.header.stamp = ros::Time::now();
   marker_goal_1.header.stamp = ros::Time::now();
   marker_goal_2.header.stamp = ros::Time::now();
 
   vis_pub_1.publish(marker_1);
   vis_pub_2.publish(marker_2);
   vis_pub_3.publish(marker_3);
-//  vis_pub_4.publish(marker_4);
   vis_pub_5.publish(marker_goal_1);
   vis_pub_6.publish(marker_goal_2);
 

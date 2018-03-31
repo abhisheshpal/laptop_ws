@@ -33,7 +33,7 @@ counter_line = 1;
 bool row_transition(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
    {
      row_no = row_no + req.counter;
-     next_row_check = true;
+     next_row_check = false;
      return true;
    }
 
@@ -122,7 +122,7 @@ int main(int argc, char** argv)
    ROS_INFO("Final Mini-Goal Reached");
    }
    else{
-   est_twist.linear.x = 0.08;
+   est_twist.linear.x = 0.1;
    est_twist.angular.z = angular_velocity;
     } 
    }// final min-goal check
