@@ -321,6 +321,13 @@ int main(int argc, char** argv)
   while (ros::ok()){
   ros::spinOnce();
 
+  if(row_transit_mode == 2){
+  est_twist.linear.x = 0.0; 
+  est_twist.angular.z = 0.0;
+  twist_gazebo.publish(est_twist);
+  goto stopover;
+  }
+
   if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0) && (row_transit_mode == row_transit)){ // scan check  
 
    if(turn_side == 1){
@@ -431,6 +438,7 @@ int main(int argc, char** argv)
   twist_gazebo.publish(est_twist);
   } // scan check
 
+  stopover:
   r.sleep();
   } // node shutdown
  return 0;
