@@ -94,7 +94,7 @@ double sum_k[num_ranges];
 
   double sum_n[num_ranges];
 
-	for (int r = 540; r <=840; r++){
+	for (int r = 540; r <=1079; r++){
            if((scan_msg_poles.ranges[r] < min_range)){
             initial_count_2 = initial_count_2 + 1;
             count_angle_2[initial_count_2] = r;
@@ -194,7 +194,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_3.scale.z = 0.2;
   marker_3.color.a = 1.0; // Don't forget to set the alpha!
   marker_3.color.b = 1.0;
-  
+
  if(unfit>0){
 
   if((marker_1.pose.position.y < marker_2.pose.position.y)&&(marker_1.pose.position.y < marker_3.pose.position.y)){
@@ -321,14 +321,14 @@ int main(int argc, char** argv)
   while (ros::ok()){
   ros::spinOnce();
 
+
+  if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0) && (row_transit_mode == row_transit)){ // scan check  
+
   if(row_transit_mode == 2){
   est_twist.linear.x = 0.0; 
   est_twist.angular.z = 0.0;
-  twist_gazebo.publish(est_twist);
   goto stopover;
   }
-
-  if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0) && (row_transit_mode == row_transit)){ // scan check  
 
    if(turn_side == 1){
    min_itr = 1;
@@ -435,10 +435,10 @@ int main(int argc, char** argv)
   vis_pub_5.publish(marker_goal_1);
   vis_pub_6.publish(marker_goal_2);
 
+  stopover:
   twist_gazebo.publish(est_twist);
   } // scan check
 
-  stopover:
   r.sleep();
   } // node shutdown
  return 0;

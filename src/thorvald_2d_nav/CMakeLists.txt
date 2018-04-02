@@ -179,6 +179,9 @@ include_directories(/usr/include/eigen3)
  add_executable(test_control_modes src/test_control_modes.cpp)
  target_link_libraries(test_control_modes ${catkin_LIBRARIES})
 
+ add_executable(test_line_SLAM src/test_line_SLAM.cpp)
+ target_link_libraries(test_line_SLAM ${catkin_LIBRARIES})
+
  #add_executable(gps_switch_server src/gps_server.cpp)
  #target_link_libraries(gps_switch_server ${catkin_LIBRARIES})
 
@@ -210,6 +213,7 @@ add_dependencies(thorvald_row_transition ${${thorvald_2d_nav}_EXPORTED_TARGETS} 
 add_dependencies(test_row_transition ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(test_RANSAC ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(test_control_modes ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(test_line_SLAM ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 #add_dependencies(gazebo_line ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 #add_dependencies(gps_switch_server ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

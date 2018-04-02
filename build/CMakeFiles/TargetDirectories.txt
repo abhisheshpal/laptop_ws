@@ -522,6 +522,7 @@
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/edit_cache.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/install/local.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/install/strip.dir
+/home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/test_control_modes.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/test_RANSAC.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/thorvald_row_transition.dir

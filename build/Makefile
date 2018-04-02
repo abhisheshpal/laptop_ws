@@ -4287,6 +4287,19 @@ rplidarNodeClient/fast:
 .PHONY : rplidarNodeClient/fast
 
 #=============================================================================
+# Target rules for targets named test_line_SLAM
+
+# Build rule for target.
+test_line_SLAM: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_line_SLAM
+.PHONY : test_line_SLAM
+
+# fast build rule for target.
+test_line_SLAM/fast:
+	$(MAKE) -f thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/build.make thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/build
+.PHONY : test_line_SLAM/fast
+
+#=============================================================================
 # Target rules for targets named test_control_modes
 
 # Build rule for target.
@@ -5058,6 +5071,7 @@ help:
 	@echo "... local_clock_syncroniser"
 	@echo "... rplidarNode"
 	@echo "... rplidarNodeClient"
+	@echo "... test_line_SLAM"
 	@echo "... test_control_modes"
 	@echo "... test_RANSAC"
 	@echo "... thorvald_row_transition"

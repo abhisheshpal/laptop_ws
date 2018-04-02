@@ -166,6 +166,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/rule:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/rule
+.PHONY : thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/rule
+
+# Convenience name for target.
+test_line_SLAM: thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/rule
+
+.PHONY : test_line_SLAM
+
+# fast build rule for target.
+test_line_SLAM/fast:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/build.make thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/build
+.PHONY : test_line_SLAM/fast
+
+# Convenience name for target.
 thorvald_2d_nav/CMakeFiles/test_control_modes.dir/rule:
 	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/test_control_modes.dir/rule
 .PHONY : thorvald_2d_nav/CMakeFiles/test_control_modes.dir/rule
@@ -729,6 +744,33 @@ src/test_control_modes.cpp.s:
 	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_control_modes.dir/build.make thorvald_2d_nav/CMakeFiles/test_control_modes.dir/src/test_control_modes.cpp.s
 .PHONY : src/test_control_modes.cpp.s
 
+src/test_line_SLAM.o: src/test_line_SLAM.cpp.o
+
+.PHONY : src/test_line_SLAM.o
+
+# target to build an object file
+src/test_line_SLAM.cpp.o:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/build.make thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/src/test_line_SLAM.cpp.o
+.PHONY : src/test_line_SLAM.cpp.o
+
+src/test_line_SLAM.i: src/test_line_SLAM.cpp.i
+
+.PHONY : src/test_line_SLAM.i
+
+# target to preprocess a source file
+src/test_line_SLAM.cpp.i:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/build.make thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/src/test_line_SLAM.cpp.i
+.PHONY : src/test_line_SLAM.cpp.i
+
+src/test_line_SLAM.s: src/test_line_SLAM.cpp.s
+
+.PHONY : src/test_line_SLAM.s
+
+# target to generate assembly for a file
+src/test_line_SLAM.cpp.s:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/build.make thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/src/test_line_SLAM.cpp.s
+.PHONY : src/test_line_SLAM.cpp.s
+
 src/test_row_transition.o: src/test_row_transition.cpp.o
 
 .PHONY : src/test_row_transition.o
@@ -901,6 +943,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... install/local"
 	@echo "... install/strip"
+	@echo "... test_line_SLAM"
 	@echo "... test_control_modes"
 	@echo "... test_RANSAC"
 	@echo "... thorvald_row_transition"
@@ -944,6 +987,9 @@ help:
 	@echo "... src/test_control_modes.o"
 	@echo "... src/test_control_modes.i"
 	@echo "... src/test_control_modes.s"
+	@echo "... src/test_line_SLAM.o"
+	@echo "... src/test_line_SLAM.i"
+	@echo "... src/test_line_SLAM.s"
 	@echo "... src/test_row_transition.o"
 	@echo "... src/test_row_transition.i"
 	@echo "... src/test_row_transition.s"

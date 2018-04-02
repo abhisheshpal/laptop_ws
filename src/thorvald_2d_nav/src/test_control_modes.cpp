@@ -39,6 +39,21 @@ bool row_transition(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::su
 
 double control_law(double v){
 
+  if((landmarks_pose.landmark_check > line_count) || (next_row_check == true)){
+   line_count = landmarks_pose.landmark_check;
+
+    for(int i=1;i<=Total_Points;i++){
+    Points[i].position.x = (thorvald_estimated_pose.pose.pose.position.x *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.x*0.75) *(float(i)/Total_Points));
+    Points[i].position.y = (thorvald_estimated_pose.pose.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.y*0.75) *(float(i)/Total_Points));
+    }
+
+  mini_goal_pts.x = Points[1].position.x;
+  mini_goal_pts.y = Points[1].position.y;
+  mini_goal = true;
+  ROS_INFO("Assigned new Sub-goal");
+  next_row_check = false;
+  }
+
   // calculation of error
   q_x =  mini_goal_pts.x-thorvald_estimated_pose.pose.pose.position.x;
   q_y =  mini_goal_pts.y-thorvald_estimated_pose.pose.pose.position.y;
@@ -93,26 +108,11 @@ int main(int argc, char** argv)
 
   if(counter_line > 0){ // generated line check
 
-  if((landmarks_pose.landmark_check > line_count) || (next_row_check == true)){
-   line_count = landmarks_pose.landmark_check;
-
-    for(int i=1;i<=Total_Points;i++){
-    Points[i].position.x = (thorvald_estimated_pose.pose.pose.position.x *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.x*0.9) *(float(i)/Total_Points));
-    Points[i].position.y = (thorvald_estimated_pose.pose.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.y*0.9) *(float(i)/Total_Points));
-    }
-
-  mini_goal_pts.x = Points[1].position.x;
-  mini_goal_pts.y = Points[1].position.y;
-  mini_goal = true;
-  ROS_INFO("Assigned new Sub-goal");
-  next_row_check = false;
-  }
+   angular_velocity = control_law(linear_velocity); // control law
 
    if(mini_goal==true){ // final min-goal check
 
-   angular_velocity = control_law(linear_velocity); // control law
-
-   if(fabs(Points[Total_Points].position.x - thorvald_estimated_pose.pose.pose.position.x) <= 0.30){
+   if(fabs(Points[Total_Points].position.x - thorvald_estimated_pose.pose.pose.position.x) <= 0.20){
    counter_1 = 1;
    mini_goal = false;
    est_twist.linear.x = 0;
@@ -123,7 +123,7 @@ int main(int argc, char** argv)
    est_twist.linear.x = 0.2;
    est_twist.angular.z = angular_velocity;
     } 
-   }// final min-goal check
+   } // final min-goal check
 
    if(counter_1 == 1){
    goal_count.request.counter = 1;
