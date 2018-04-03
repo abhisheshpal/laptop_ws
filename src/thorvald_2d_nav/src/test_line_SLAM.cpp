@@ -1,4 +1,4 @@
-#include "thorvald_line_SLAM.h"
+#include "test_line_SLAM.h"
    
 // robot velocity data
 void odometryvelCallback (const geometry_msgs::Twist::ConstPtr& odometry_vel){
@@ -168,7 +168,7 @@ int main(int argc, char** argv)
    ros::Subscriber point_sub = n.subscribe("measurement_points", 100, linepointsCallback);
 
    // Publishers
-   ros::Publisher thorvald_pose_pub = n.advertise<geometry_msgs::Pose>("thorvald_pose", 10);
+   ros::Publisher thorvald_pose_pub = n.advertise<nav_msgs::Odometry>("thorvald_pose", 10);
 
    // Service Client
    ros::ServiceClient client = n.serviceClient<thorvald_2d_nav::sub_goal>("sub_goal_check");
@@ -195,16 +195,17 @@ int main(int argc, char** argv)
    correction_step(mu, cov, line_local, line_local_fixed, dt);
 
    // Robot pose estimation
-   thorvald_estimated_pose.position.x = mu(0,0);
-   thorvald_estimated_pose.position.y = mu(1,0);
+   thorvald_estimated_pose.pose.pose.position.x = mu(0,0);
+   thorvald_estimated_pose.pose.pose.position.y = mu(1,0);
    geometry_msgs::Quaternion q = tf::createQuaternionMsgFromYaw(mu(2,0));
-   thorvald_estimated_pose.orientation = q;
+   thorvald_estimated_pose.pose.pose.orientation = q;
+   thorvald_estimated_pose.header.stamp = ros::Time::now();
 
    // sub-goal check
    double goal = landmarks_pose.pt_6.x;
-   if ((thorvald_estimated_pose.position.x - goal) < sub_goal_thershold){  //sub-goal thershold
+   if ((thorvald_estimated_pose.pose.pose.position.x - goal) < sub_goal_thershold){  //sub-goal thershold
    goal_count.request.counter = 1;
-   ROS_INFO("client request");
+   // ROS_INFO("client request");
    }
 
   thorvald_pose_pub.publish(thorvald_estimated_pose); 

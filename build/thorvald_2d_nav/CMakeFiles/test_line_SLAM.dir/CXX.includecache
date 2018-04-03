@@ -94,7 +94,7 @@ ros/builtin_message_traits.h
 ros/message_operations.h
 -
 
-/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/include/thorvald_2d_nav/thorvald_line_SLAM.h
+/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/include/thorvald_2d_nav/test_line_SLAM.h
 ros/ros.h
 -
 sensor_msgs/LaserScan.h
@@ -137,8 +137,8 @@ thorvald_2d_nav/sub_goal.h
 -
 
 /home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/src/test_line_SLAM.cpp
-thorvald_line_SLAM.h
-/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/src/thorvald_line_SLAM.h
+test_line_SLAM.h
+/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/src/test_line_SLAM.h
 
 /opt/ros/kinetic/include/geometry_msgs/Point.h
 string

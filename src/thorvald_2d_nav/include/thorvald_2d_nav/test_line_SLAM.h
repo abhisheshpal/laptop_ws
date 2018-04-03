@@ -28,7 +28,7 @@ using namespace Eigen;
 geometry_msgs::Twist odom_vel;
 nav_msgs::Odometry robot_pose;
 thorvald_2d_nav::landmarks landmarks_pose;
-geometry_msgs::Pose thorvald_estimated_pose;
+nav_msgs::Odometry thorvald_estimated_pose;
 thorvald_2d_nav::sub_goal goal_count; 
 geometry_msgs::Twist twist_msg;
 double measured_points_range[4], measured_points_bearing[4];
@@ -58,6 +58,4 @@ MatrixXd R = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3)); // Mot
 MatrixXd Q = MatrixXd::Identity(8,8)* measurement_moise; // Measurement Noise
 
 //initialize velocity variables
-double vx = 0.0;
-double vy = 0.0;
-double vth = 0.0;
+double vx = 0.0, vy = 0.0, vth = 0.0;

@@ -31,7 +31,7 @@ geometry_msgs::TransformStamped transformStamped;
 thorvald_2d_nav::sub_goal end_row_transit, end_row_transit_1;
 
 //Parameters for pole detection
-double min_range = 3.0;
+double min_range_left = 3.0, min_range_right = 2.0;
 sensor_msgs::LaserScan scan_msg_main;
 size_t num_ranges;
 bool goal_found = false;

@@ -43,8 +43,8 @@ double control_law(double v){
    line_count = landmarks_pose.landmark_check;
 
     for(int i=1;i<=Total_Points;i++){
-    Points[i].position.x = (thorvald_estimated_pose.pose.pose.position.x *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.x*0.75) *(float(i)/Total_Points));
-    Points[i].position.y = (thorvald_estimated_pose.pose.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.y*0.75) *(float(i)/Total_Points));
+    Points[i].position.x = (thorvald_estimated_pose.pose.pose.position.x *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.x-0.9) *(float(i)/Total_Points));
+    Points[i].position.y = (thorvald_estimated_pose.pose.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.y) *(float(i)/Total_Points));
     }
 
   mini_goal_pts.x = Points[1].position.x;
@@ -112,7 +112,7 @@ int main(int argc, char** argv)
 
    if(mini_goal==true){ // final min-goal check
 
-   if(fabs(Points[Total_Points].position.x - thorvald_estimated_pose.pose.pose.position.x) <= 0.20){
+   if(fabs(Points[Total_Points].position.x - thorvald_estimated_pose.pose.pose.position.x) <= 0.30){
    counter_1 = 1;
    mini_goal = false;
    est_twist.linear.x = 0;
@@ -121,7 +121,7 @@ int main(int argc, char** argv)
    }
    else{
    est_twist.linear.x = 0.2;
-   est_twist.angular.z = angular_velocity;
+   est_twist.angular.z = 0;
     } 
    } // final min-goal check
 

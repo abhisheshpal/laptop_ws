@@ -37,7 +37,7 @@ double sum_k[num_ranges];
 
 //---------------------- FIRST MARKER ---------------------------//
 	for (int i = itr_begin; i < (itr_end); i++){
-           if((scan_msg_poles.ranges[i] < min_range)){
+           if((scan_msg_poles.ranges[i] < min_range_left)){
             initial_count_1 = initial_count_1 + 1;
             angle[initial_count_1] = scan_msg_poles.angle_min+i*scan_msg_poles.angle_increment;
             x[initial_count_1] = scan_msg_poles.ranges[i]*cos(angle[initial_count_1]);
@@ -95,7 +95,7 @@ double sum_k[num_ranges];
   double sum_n[num_ranges];
 
 	for (int r = 540; r <=1079; r++){
-           if((scan_msg_poles.ranges[r] < min_range)){
+           if((scan_msg_poles.ranges[r] < min_range_right)){
             initial_count_2 = initial_count_2 + 1;
             count_angle_2[initial_count_2] = r;
            }
