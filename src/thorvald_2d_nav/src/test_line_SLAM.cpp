@@ -7,7 +7,6 @@ odom_vel.linear = odometry_vel->linear;
 
 // robot pose data
 void odometryCallback (const nav_msgs::Odometry::ConstPtr& odometry){
-
 robot_pose.pose.pose = odometry->pose.pose;
 robot_pose.twist.twist = odometry->twist.twist;
 
@@ -65,18 +64,22 @@ bearing = -M_PI;}
 //prediction step
 void prediction_step(MatrixXd& mu1,MatrixXd& cov1,MatrixXd& line_local1,MatrixXd& line_local_fixed1,double dt){
 
-  vx = (odom_vel.linear.x + odom_vel.linear.y)/2;
+  /*vx = (odom_vel.linear.x + odom_vel.linear.y)/2;
   vy = 0.0;
-  vth = (odom_vel.linear.y - odom_vel.linear.x)/d;
+  vth = (odom_vel.linear.y - odom_vel.linear.x)/d;*/
+
+  vx = robot_pose.twist.twist.linear.x;
+  vy = robot_pose.twist.twist.linear.y;
+  // vth = robot_pose.twist.twist.angular.z;
 
   // Odometry Compensation 
-  double delta_x = (vx * cos(mu1(2,0)) - vy * sin(mu1(2,0))) * dt;
+  /*double delta_x = (vx * cos(mu1(2,0)) - vy * sin(mu1(2,0))) * dt;
   double delta_y = (vx * sin(mu1(2,0)) + vy * cos(mu1(2,0))) * dt;
-  double delta_th = vth * dt;
-
-  mu1(0,0) = mu1(0,0) + delta_x;
-  mu1(1,0) = mu1(1,0) + delta_y;
-  mu1(2,0) = mu1(2,0) + delta_th;
+  double delta_th = vth * dt; */
+  std::cout << "vth" << vth << std::endl;
+  mu1(0,0) = mu1(0,0) + (vx*dt);
+  mu1(1,0) = mu1(1,0) + (vy*dt);
+  mu1(2,0) = mu1(2,0) + (vth*dt);
   mu1(2,0)= normalizeangle(mu1(2,0));
 
   MatrixXd Gt = MatrixXd(3,3);
@@ -171,7 +174,7 @@ int main(int argc, char** argv)
    ros::Publisher thorvald_pose_pub = n.advertise<nav_msgs::Odometry>("thorvald_pose", 10);
 
    // Service Client
-   ros::ServiceClient client = n.serviceClient<thorvald_2d_nav::sub_goal>("sub_goal_check");
+   // ros::ServiceClient client = n.serviceClient<thorvald_2d_nav::sub_goal>("sub_goal_check");
 
    cov.topLeftCorner(3,3) = robSigma;
    cov.topRightCorner(3, (2*total_landmarks)) = robMapSigma;
@@ -192,7 +195,7 @@ int main(int argc, char** argv)
    prediction_step(mu, cov, line_local, line_local_fixed, dt);
  
    // correction step
-   correction_step(mu, cov, line_local, line_local_fixed, dt);
+   // correction_step(mu, cov, line_local, line_local_fixed, dt);
 
    // Robot pose estimation
    thorvald_estimated_pose.pose.pose.position.x = mu(0,0);
@@ -200,13 +203,15 @@ int main(int argc, char** argv)
    geometry_msgs::Quaternion q = tf::createQuaternionMsgFromYaw(mu(2,0));
    thorvald_estimated_pose.pose.pose.orientation = q;
    thorvald_estimated_pose.header.stamp = ros::Time::now();
+   thorvald_estimated_pose.header.frame_id = "odom";
+   thorvald_estimated_pose.child_frame_id = "base_link";
 
-   // sub-goal check
+  /* // sub-goal check
    double goal = landmarks_pose.pt_6.x;
    if ((thorvald_estimated_pose.pose.pose.position.x - goal) < sub_goal_thershold){  //sub-goal thershold
    goal_count.request.counter = 1;
    // ROS_INFO("client request");
-   }
+   } */
 
   thorvald_pose_pub.publish(thorvald_estimated_pose); 
   last_time = current_time;

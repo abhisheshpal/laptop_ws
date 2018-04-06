@@ -1,8 +1,5 @@
 #include "test_control_modes.h"
 
-// dummy variables
-int counter_line = 0, counter_1 = 0, line_count = 0, c = 1;
-
 // Thorvald Estimated Pose data
 void robotposeCallback (const nav_msgs::Odometry::ConstPtr& pose_msg)
 {
@@ -37,7 +34,7 @@ bool row_transition(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::su
      return true;
    }
 
-double control_law(double v){
+double control_law(double v, double _dt){
 
   // calculation of error
   q_x =  mini_goal_pts.x-thorvald_estimated_pose.pose.pose.position.x;
@@ -45,13 +42,23 @@ double control_law(double v){
   position_error = sqrt(pow(q_x,2) + pow(q_y,2));
   angular_error = atan2(q_y,q_x)- yaw;
 
+  if (angular_error > M_PI){
+  angular_error -= M_PI;}
+  if (angular_error < -M_PI){
+  angular_error += M_PI;}
+
   // control law
   double robotlength = 1.0;
-//  double omega = atan(2*robotlength*sin(angular_error))/position_error;
+  //  double omega = atan(2*robotlength*sin(angular_error))/position_error;
   // double omega = v * pow(cos(angular_error),3) * (-(K_d*tan(angular_error)) - (K_p*position_error));
 
-  double omega = K_p * angular_error + K_d * (angular_error - lastError);
+  _integral += angular_error * _dt;
+
+  double omega = K_p * angular_error + K_d * ((angular_error - lastError)/_dt);
   lastError = angular_error;
+
+   // std::cout << "atan2(q_y,q_x):" << atan2(q_y,q_x) << "\n" << "yaw:" << yaw << "\n" << std::endl;
+   // std::cout << "angular_error:" << angular_error << "\n" << "omega:" << omega << "\n" << std::endl;
 
   if (omega > M_PI){
   omega -= M_PI;}
@@ -88,19 +95,25 @@ int main(int argc, char** argv)
   ros::ServiceClient client = n.serviceClient<thorvald_2d_nav::sub_goal>("/sub_goal_check");
 
   ros::Rate r(1.0);
+  ros::Time current_time, last_time;
+  current_time = ros::Time::now();
+  last_time = ros::Time::now();
   double linear_velocity = 0.2, angular_velocity = 0;
 
   while (ros::ok()){
 
-  ros::spinOnce();	
+  ros::spinOnce();
 
   if(counter_line > 0){ // generated line check
+
+  current_time = ros::Time::now();	
+  double dt = (current_time - last_time).toSec();
 
   if((landmarks_pose.landmark_check > line_count) || (next_row_check == true)){
    line_count = landmarks_pose.landmark_check;
 
     for(int i=1;i<=Total_Points;i++){
-    Points[i].position.x = (thorvald_estimated_pose.pose.pose.position.x *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.x-0.9) *(float(i)/Total_Points));
+    Points[i].position.x = (thorvald_estimated_pose.pose.pose.position.x *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.x-1.0) *(float(i)/Total_Points));
     Points[i].position.y = (thorvald_estimated_pose.pose.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.y) *(float(i)/Total_Points));
     }
 
@@ -113,9 +126,9 @@ int main(int argc, char** argv)
 
    if(mini_goal==true){ // final min-goal check
 
-   angular_velocity = control_law(linear_velocity); // control law
-   
-   std::cout << "angular_velocity" << angular_velocity << "\n" << std::endl;
+   angular_velocity = control_law(linear_velocity, dt); // control law
+
+   // std::cout << "angular_velocity" << angular_velocity << "\n" << std::endl;
 
    if(fabs(Points[Total_Points].position.x - thorvald_estimated_pose.pose.pose.position.x) <= 0.30){
    counter_1 = 1;
@@ -126,7 +139,10 @@ int main(int argc, char** argv)
    }
    else{
    est_twist.linear.x = 0.2;
-   est_twist.angular.z = angular_velocity;
+   est_twist.angular.z = 0;
+     if(c>5){
+     est_twist.angular.z = angular_velocity;
+     }
     } 
    } // final min-goal check
 
@@ -137,6 +153,7 @@ int main(int argc, char** argv)
    }}
 
    twist_gazebo.publish(est_twist);
+   last_time = current_time;
   } // generated line check
  r.sleep();
  }

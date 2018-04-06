@@ -36,7 +36,8 @@ double Current_x_1, Current_y_1;
 double sum_k[num_ranges];
 
 //---------------------- FIRST MARKER ---------------------------//
-	for (int i = itr_begin; i < (itr_end); i++){
+        pole_redetect:
+	for (int i = 1; i < 540; i++){
            if((scan_msg_poles.ranges[i] < min_range_left)){
             initial_count_1 = initial_count_1 + 1;
             angle[initial_count_1] = scan_msg_poles.angle_min+i*scan_msg_poles.angle_increment;
@@ -90,10 +91,16 @@ double sum_k[num_ranges];
    }  
   } 
 
+  else{
+  ROS_INFO("Right Poles has to be re-detected");
+  goto pole_redetect;
+  }
+
 //---------------------- THIRD MARKER ---------------------------//
 
   double sum_n[num_ranges];
-
+ 
+        pole_redetect_left:
 	for (int r = 540; r <=1079; r++){
            if((scan_msg_poles.ranges[r] < min_range_right)){
             initial_count_2 = initial_count_2 + 1;
@@ -117,6 +124,10 @@ double sum_k[num_ranges];
           }       
         }
 
+if(n == 0){
+ROS_INFO("Left Pole has to be re-detected");
+goto pole_redetect_left;
+}
 
 //---------------------- GOAL ---------------------------// 
 geometry_msgs::PoseStamped pole_1, pole_1_transformed;
@@ -382,13 +393,13 @@ int main(int argc, char** argv)
     est_twist.angular.z = 0.0;
     }
     break;
-   }
-
+    }
    } 
    else{
    est_twist.linear.x = linear_velocity; 
    est_twist.angular.z = 0;
    }
+
 
 //  std::cout << "goal_range" << goal_range << "\n" << "yaw" << yaw << "\n" << std::endl;
 
