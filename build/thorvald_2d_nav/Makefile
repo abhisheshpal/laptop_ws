@@ -166,6 +166,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+thorvald_2d_nav/CMakeFiles/fastSLAM.dir/rule:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/fastSLAM.dir/rule
+.PHONY : thorvald_2d_nav/CMakeFiles/fastSLAM.dir/rule
+
+# Convenience name for target.
+fastSLAM: thorvald_2d_nav/CMakeFiles/fastSLAM.dir/rule
+
+.PHONY : fastSLAM
+
+# fast build rule for target.
+fastSLAM/fast:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fastSLAM.dir/build.make thorvald_2d_nav/CMakeFiles/fastSLAM.dir/build
+.PHONY : fastSLAM/fast
+
+# Convenience name for target.
 thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/rule:
 	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/rule
 .PHONY : thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/rule
@@ -690,6 +705,33 @@ thorvald_2d_nav_geneus/fast:
 	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_geneus.dir/build.make thorvald_2d_nav/CMakeFiles/thorvald_2d_nav_geneus.dir/build
 .PHONY : thorvald_2d_nav_geneus/fast
 
+src/fastSLAM.o: src/fastSLAM.cpp.o
+
+.PHONY : src/fastSLAM.o
+
+# target to build an object file
+src/fastSLAM.cpp.o:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fastSLAM.dir/build.make thorvald_2d_nav/CMakeFiles/fastSLAM.dir/src/fastSLAM.cpp.o
+.PHONY : src/fastSLAM.cpp.o
+
+src/fastSLAM.i: src/fastSLAM.cpp.i
+
+.PHONY : src/fastSLAM.i
+
+# target to preprocess a source file
+src/fastSLAM.cpp.i:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fastSLAM.dir/build.make thorvald_2d_nav/CMakeFiles/fastSLAM.dir/src/fastSLAM.cpp.i
+.PHONY : src/fastSLAM.cpp.i
+
+src/fastSLAM.s: src/fastSLAM.cpp.s
+
+.PHONY : src/fastSLAM.s
+
+# target to generate assembly for a file
+src/fastSLAM.cpp.s:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fastSLAM.dir/build.make thorvald_2d_nav/CMakeFiles/fastSLAM.dir/src/fastSLAM.cpp.s
+.PHONY : src/fastSLAM.cpp.s
+
 src/test_RANSAC.o: src/test_RANSAC.cpp.o
 
 .PHONY : src/test_RANSAC.o
@@ -943,6 +985,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... install/local"
 	@echo "... install/strip"
+	@echo "... fastSLAM"
 	@echo "... test_line_SLAM"
 	@echo "... test_control_modes"
 	@echo "... test_RANSAC"
@@ -981,6 +1024,9 @@ help:
 	@echo "... _thorvald_2d_nav_generate_messages_check_deps_scan_detected_line"
 	@echo "... move_base_msgs_generate_messages_nodejs"
 	@echo "... thorvald_2d_nav_geneus"
+	@echo "... src/fastSLAM.o"
+	@echo "... src/fastSLAM.i"
+	@echo "... src/fastSLAM.s"
 	@echo "... src/test_RANSAC.o"
 	@echo "... src/test_RANSAC.i"
 	@echo "... src/test_RANSAC.s"

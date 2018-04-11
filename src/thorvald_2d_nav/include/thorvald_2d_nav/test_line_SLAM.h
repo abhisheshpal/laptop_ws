@@ -39,7 +39,7 @@ bool landmarks_observed = false;
 ros::Time current_time, last_time;
 
 // Initialization for localization
-double yaw, motion_noise = 0.00001, measurement_moise = 0.0001, sub_goal_thershold = 0.05;
+double yaw, motion_noise = 0.00001, measurement_noise = 0.0001, sub_goal_thershold = 0.05;
 MatrixXd mu = MatrixXd::Zero(2*total_landmarks+3,1); // mu
 MatrixXd line_local(4,2); // line_local
 MatrixXd line_local_fixed(4,2); // line_local_fixed
@@ -55,7 +55,7 @@ MatrixXd robMapSigma = MatrixXd::Zero(3,(2*total_landmarks));
 MatrixXd mapSigma    = INF*MatrixXd::Identity((2*total_landmarks), (2*total_landmarks));
 MatrixXd cov = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3));
 MatrixXd R = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3)); // Motion Noise
-MatrixXd Q = MatrixXd::Identity(8,8)* measurement_moise; // Measurement Noise
+MatrixXd Q = MatrixXd::Identity(8,8)* measurement_noise; // Measurement Noise
 
 //initialize velocity variables
 double vx = 0.0, vy = 0.0, vth = 0.0;
