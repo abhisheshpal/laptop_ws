@@ -76,7 +76,7 @@ void prediction_step(MatrixXd& mu1,MatrixXd& cov1,MatrixXd& line_local1,MatrixXd
   /*double delta_x = (vx * cos(mu1(2,0)) - vy * sin(mu1(2,0))) * dt;
   double delta_y = (vx * sin(mu1(2,0)) + vy * cos(mu1(2,0))) * dt;
   double delta_th = vth * dt; */
-  std::cout << "vth" << vth << std::endl;
+ // std::cout << "vth" << vth << std::endl;
   mu1(0,0) = mu1(0,0) + (vx*dt);
   mu1(1,0) = mu1(1,0) + (vy*dt);
   mu1(2,0) = mu1(2,0) + (vth*dt);

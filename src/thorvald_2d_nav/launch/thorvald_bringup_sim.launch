@@ -20,7 +20,7 @@
   </include>
  
   <!-- teleop bringup -->
-<!--include file="$(find thorvald_model)/launch/gazebo_plugin_4wd.launch" /-->
+<!--include file="$(find thorvald_teleop)/launch/teleop_xbox.launch" /-->
 
   <!-- gmapping -->
   <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
@@ -28,13 +28,13 @@
     <param name="scan" value="scan"/>
   </node>
 
-<node pkg="thorvald_2d_nav" type="guinea_pig" name="guinea_pig" output="screen"/>
+<node pkg="thorvald_2d_nav" type="test_RANSAC" name="test_RANSAC" output="screen"/>
 
-<node pkg="thorvald_2d_nav" type="thorvald_control_modes" name="thorvald_control_modes" output="screen"/>
+<node pkg="thorvald_2d_nav" type="test_control_modes" name="test_control_modes" output="screen"/>
 
-<!--node pkg="thorvald_2d_nav" type="thorvald_line_SLAM" name="thorvald_line_SLAM" output="screen"/-->
+<!--node pkg="thorvald_2d_nav" type="test_line_SLAM" name="test_line_SLAM" output="screen"/-->
 
-<node pkg="thorvald_2d_nav" type="row_transition" name="row_transition" output="screen"/>
+<node pkg="thorvald_2d_nav" type="test_row_transition" name="test_row_transition" output="screen"/>
 
   <!-- twist mux bringup -->
   <include file="$(find thorvald_twist_mux)/launch/twist_mux.launch" />
