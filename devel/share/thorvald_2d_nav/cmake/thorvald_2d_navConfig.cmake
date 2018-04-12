@@ -67,14 +67,14 @@ set(thorvald_2d_nav_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(thorvald_2d_nav_SOURCE_PREFIX /home/vigneshnuc/laptop_ws/src/thorvald_2d_nav)
-  set(thorvald_2d_nav_DEVEL_PREFIX /home/vigneshnuc/laptop_ws/devel)
+  set(thorvald_2d_nav_SOURCE_PREFIX /home/vignesh/laptop_ws/src/thorvald_2d_nav)
+  set(thorvald_2d_nav_DEVEL_PREFIX /home/vignesh/laptop_ws/devel)
   set(thorvald_2d_nav_INSTALL_PREFIX "")
   set(thorvald_2d_nav_PREFIX ${thorvald_2d_nav_DEVEL_PREFIX})
 else()
   set(thorvald_2d_nav_SOURCE_PREFIX "")
   set(thorvald_2d_nav_DEVEL_PREFIX "")
-  set(thorvald_2d_nav_INSTALL_PREFIX /home/vigneshnuc/laptop_ws/install)
+  set(thorvald_2d_nav_INSTALL_PREFIX /home/vignesh/laptop_ws/install)
   set(thorvald_2d_nav_PREFIX ${thorvald_2d_nav_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(thorvald_2d_nav_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/vigneshnuc/laptop_ws/devel/include;/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/include " STREQUAL " ")
+if(NOT "/home/vignesh/laptop_ws/devel/include;/home/vignesh/laptop_ws/src/thorvald_2d_nav/include " STREQUAL " ")
   set(thorvald_2d_nav_INCLUDE_DIRS "")
-  set(_include_dirs "/home/vigneshnuc/laptop_ws/devel/include;/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/include")
+  set(_include_dirs "/home/vignesh/laptop_ws/devel/include;/home/vignesh/laptop_ws/src/thorvald_2d_nav/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -110,7 +110,7 @@ if(NOT "/home/vigneshnuc/laptop_ws/devel/include;/home/vigneshnuc/laptop_ws/src/
         message(FATAL_ERROR "Project 'thorvald_2d_nav' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'thorvald_2d_nav' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'thorvald_2d_nav' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/vignesh/laptop_ws/src/thorvald_2d_nav/${idir}'.  ${_report}")
     endif()
     _list_append_unique(thorvald_2d_nav_INCLUDE_DIRS ${include})
   endforeach()
@@ -129,7 +129,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/vigneshnuc/laptop_ws/devel/lib;/home/vigneshnuc/Thorvald/devel/lib;/home/vigneshnuc/laptop_ws/devel/lib;/opt/ros/kinetic/lib)
+    foreach(path /home/vignesh/laptop_ws/devel/lib;/home/vignesh/Thorvald/devel/lib;/home/vignesh/laptop_ws/devel/lib;/opt/ros/kinetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

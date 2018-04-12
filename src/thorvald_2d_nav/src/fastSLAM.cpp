@@ -48,22 +48,26 @@ double yaw, current_yaw = 0, motion_noise = 0.00001, measurement_noise = 0.0001,
 // MatrixXd mu = MatrixXd::Zero(2,1); // mu
 // MatrixXd sigma = MatrixXd::Zero(2,2); // mu
 
+MatrixXd H = MatrixXd::Zero(2,2); // H - Jacobian
+MatrixXd diff = MatrixXd::Zero(2,2); // error
+MatrixXd K = MatrixXd::Zero(2,2); // Kalman gain
+MatrixXd Z = MatrixXd::Zero(2,1); // Z
+MatrixXd Q_t = MatrixXd::Identity(2,2)* measurement_noise; // Measurement Noise 
+MatrixXd Q = MatrixXd::Identity(2,2)* measurement_noise; // Measurement Noise 
+MatrixXd expectedZ = MatrixXd::Zero(2,1); // expectedZ
+MatrixXd line_pho = MatrixXd::Zero(4,1); // polar co-ordinates
+MatrixXd line_theta = MatrixXd::Zero(4,1); // polar co-ordinates
+
+
 /*MatrixXd mu = MatrixXd::Zero(2*total_landmarks+3,1); // mu
 MatrixXd line_local(4,2); // line_local
 MatrixXd line_local_fixed(4,2); // line_local_fixed
-MatrixXd Z = MatrixXd::Zero(8,1); // Z
-MatrixXd expectedZ = MatrixXd::Zero(8,1); // expectedZ
-MatrixXd K = MatrixXd::Zero((2*total_landmarks+3),2); // Kalman gain
-MatrixXd diff = MatrixXd::Zero(2,2); // error
-MatrixXd H = MatrixXd::Zero(2,2); // H - Jacobian
-MatrixXd line_pho = MatrixXd::Zero(4,1); // polar co-ordinates
-MatrixXd line_theta = MatrixXd::Zero(4,1); // polar co-ordinates
 MatrixXd robSigma    = MatrixXd::Zero(3,3);
 MatrixXd robMapSigma = MatrixXd::Zero(3,(2*total_landmarks));
 MatrixXd mapSigma    = INF*MatrixXd::Identity((2*total_landmarks), (2*total_landmarks));
 MatrixXd cov = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3));
 MatrixXd R = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3)); // Motion Noise
-MatrixXd Q = MatrixXd::Identity(8,8)* measurement_noise; // Measurement Noise */
+*/
 
 // particle filter
 static const int numParticles = 100;
@@ -147,9 +151,9 @@ bearing = -M_PI;}
 }
 
 
-MatrixXd measurement_model(double struct particles_struct *particles3){
- lambda_x = particles[i].landmarks[z].mu[0] - robot_pose.pose.pose.position.x;
- lambda_y = particles[i].landmarks[z].mu[1] - robot_pose.pose.pose.position.y;
+MatrixXd measurement_model(struct particles_struct *particles3, int i, int z){
+ lambda_x = particles3[i].landmarks[z].mu(0) - robot_pose.pose.pose.position.x;
+ lambda_y = particles3[i].landmarks[z].mu(1) - robot_pose.pose.pose.position.y;
  q = pow(lambda_x,2) + pow(lambda_y,2);
 
  double expectedRange = sqrt(q);
@@ -157,10 +161,10 @@ MatrixXd measurement_model(double struct particles_struct *particles3){
  expectedZ(2*z,0) = expectedRange;
  expectedZ((2*z)+1,0) = expectedBearing;
 
- H(1,1) = (particles[i].landmarks[z].mu[0]-particles[i].pose.position.x)/expectedRange;
- H(1,2) = (particles[i].landmarks[z].mu[1]-particles[i].pose.position.y)/expectedRange;
- H(2,1) = (particles[i].pose.position.y-particles[i].landmarks[z].mu[1])/(expectedRange^2);
- H(2,2) = (particles[i].landmarks[z].mu[0]-particles[i].pose.position.x)/(expectedRange^2);
+ H(1,1) = (particles[i].landmarks[z].mu(0)-particles[i].pose.position.x)/expectedRange;
+ H(1,2) = (particles[i].landmarks[z].mu(1)-particles[i].pose.position.y)/expectedRange;
+ H(2,1) = (particles[i].pose.position.y-particles[i].landmarks[z].mu(1))/(pow(expectedRange,2));
+ H(2,2) = (particles[i].landmarks[z].mu(0)-particles[i].pose.position.x)/(pow(expectedRange,2));
  return H;
 }
 
@@ -185,8 +189,8 @@ particles[i].pose.orientation = tf::createQuaternionMsgFromYaw(0);
 particles[i].pose_history = particles[i].pose;
  for (int j = 1; j <= total_landmarks; j++){
  particles[i].landmarks[j].landmarks_observed = false;
- particles[i].landmarks[j].mu[2] = {0};
- particles[i].landmarks[j].sigma[2][2] = {};
+ // particles[i].landmarks[j].mu[2] = {0};
+ // particles[i].landmarks[j].sigma[2][2] = {};
  }
 }
 
@@ -217,19 +221,19 @@ for (int i = 1; i <= numParticles; i++){
      for (int z = 1; z <= total_landmarks; z++){
 
         // Transformation of Line from global co-ordinate into robot frame
-      if (particles[i].landmarks[j].landmarks_observed == false){
+      if (particles[i].landmarks[z].landmarks_observed == false){
         // line_local_2(z,0) =  line_pho(z,0) - (robot_pose.pose.pose.position.x * cos(line_theta(z,0))) - (robot_pose.pose.pose.position.y * sin(line_theta(z,0)));
         // line_local_2(z,1) =  line_theta(z,0) - yaw + (3.14/2);
 
-         particles[i].landmarks[z].mu[0] =  robot_pose.pose.pose.position.x + (measured_points_range[z] + cos(yaw+measured_points_bearing[z]));
-         particles[i].landmarks[z].mu[1] =  robot_pose.pose.pose.position.y + (measured_points_range[z] + sin(yaw+measured_points_bearing[z]));
-         particles[i].landmarks[j].landmarks_observed = true;
+         particles[i].landmarks[z].mu(0) =  robot_pose.pose.pose.position.x + (measured_points_range[z] + cos(yaw+measured_points_bearing[z]));
+         particles[i].landmarks[z].mu(1) =  robot_pose.pose.pose.position.y + (measured_points_range[z] + sin(yaw+measured_points_bearing[z]));
+         particles[i].landmarks[z].landmarks_observed = true;
 
          // calculate jacobian w.r.t landmark pose
-         H = measurement_model(particles);
+         H = measurement_model(particles,i,z);
 
          // initialize 2*2 EKF for current landmark
-         particles[i].landmarks[z].sigma = H\(Q_t*inv(H)).transpose();
+         particles[i].landmarks[z].sigma = H.inverse() * Q_t * (H.inverse()).transpose(); //CHECK
          particles[i].weight = 0.5;
       }
 
@@ -239,27 +243,25 @@ for (int i = 1; i <= numParticles; i++){
          Z((2*z)+1,0) = measured_points_bearing[z];
 
          // calculate jacobian w.r.t landmark pose
-         H = measurement_model(particles);
+         H = measurement_model(particles,i,z);
 
          Q = (H*particles[i].landmarks[z].sigma*H.transpose()) + Q_t;
 
          // Kalman Gain
-         K = (particles[i].landmarks[z].sigma*H.transpose()) * (inv(Q));
+         K = (particles[i].landmarks[z].sigma*H.transpose()) * (Q.inverse());
 
         // Compute the diference between the expected and recorded measurements.
          diff = Z - expectedZ;
 
 	// Finish the correction step by computing the new mu and sigma.
-        particles[i].landmarks[z].mu[0] = particles[i].landmarks[z].mu[0] + K*diff;
+        particles[i].landmarks[z].mu = particles[i].landmarks[z].mu + K*diff;
         particles[i].landmarks[z].sigma =  (MatrixXd::Identity(2,2)- K*H)*particles[i].landmarks[z].sigma ;
-        particles[i].landmarks[z].mu[1] = normalizeangle(particles[i].landmarks[z].mu[1]);
+        particles[i].landmarks[z].mu(1) = normalizeangle(particles[i].landmarks[z].mu(1));
 
         // Particle Weight
-        particles[i].weight = particles[i].weight*(1/sqrt(det(2*pi*Q))*exp((-1/2)*diff.transpose()/Q*diff));
-      }
-
-
-    
+        // particles[i].weight = particles[i].weight*(1/sqrt(det(2*M_PI*Q))*exp((-1/2)*diff.transpose()/Q*diff));
+        // particles[i].weight = particles[i].weight * (abs(pow((2*M_PI*Q),0.5)) * exp((-1/2)*diff.transpose()*Q.inverse()*diff));
+       }
       }	
 
 

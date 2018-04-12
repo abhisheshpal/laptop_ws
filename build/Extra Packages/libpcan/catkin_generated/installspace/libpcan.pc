@@ -1,8 +1,8 @@
-prefix=/home/vigneshnuc/laptop_ws/install
+prefix=/home/vignesh/laptop_ws/install
 
 Name: libpcan
 Description: Description of libpcan
 Version: 0.6.10
 Cflags: 
-Libs: -L/home/vigneshnuc/laptop_ws/install/lib 
+Libs: -L/home/vignesh/laptop_ws/install/lib 
 Requires: 

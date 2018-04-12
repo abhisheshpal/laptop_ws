@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/leica_tca1100.dir/src/leica_tca1100.cpp.o"
-  "/home/vigneshnuc/laptop_ws/devel/lib/leica_tca1100/leica_tca1100.pdb"
-  "/home/vigneshnuc/laptop_ws/devel/lib/leica_tca1100/leica_tca1100"
+  "/home/vignesh/laptop_ws/devel/lib/leica_tca1100/leica_tca1100.pdb"
+  "/home/vignesh/laptop_ws/devel/lib/leica_tca1100/leica_tca1100"
 )
 
 # Per-language clean rules from dependency scanning.
