@@ -50,6 +50,7 @@ struct GetStateResponse_
 
 
 
+
   typedef boost::shared_ptr< ::robot_localization::GetStateResponse_<ContainerAllocator> > Ptr;
   typedef boost::shared_ptr< ::robot_localization::GetStateResponse_<ContainerAllocator> const> ConstPtr;
 

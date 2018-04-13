@@ -36,6 +36,7 @@ struct SetPoseResponse_
 
 
 
+
   typedef boost::shared_ptr< ::robot_localization::SetPoseResponse_<ContainerAllocator> > Ptr;
   typedef boost::shared_ptr< ::robot_localization::SetPoseResponse_<ContainerAllocator> const> ConstPtr;
 
