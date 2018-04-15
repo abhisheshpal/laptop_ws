@@ -16,6 +16,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 #include <random>
+#include <assert.h>
 
 // ROS message includes
 #include <thorvald_2d_nav/scan_detected_line.h>
@@ -72,6 +73,8 @@ MatrixXd R = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3)); // Mot
 // particle filter
 static const int numParticles = 100;
 double noise = 0.005;
+int N = numParticles;
+VectorXf w = VectorXf::Zero(1,N);
 
 // particle structure
 struct landmarks_struct{
@@ -87,7 +90,7 @@ geometry_msgs::Pose pose_history;
 struct landmarks_struct landmarks[numParticles];
 };
 
-particles_struct particles[numParticles];
+particles_struct particles[numParticles], old_particles[numParticles];
 
 // robot velocity data
 void odometryvelCallback (const geometry_msgs::Twist::ConstPtr& odometry_vel){
@@ -179,6 +182,24 @@ double normrnd(double mean, double stdDev) {
     return mean + stdDev * u * mul;
 }
 
+void cumsum(VectorXf &w) 
+{
+    VectorXf csumVec = VectorXf(w);
+
+    for (int i=0; i< w.size(); i++) {
+        float sum =0;
+        for (int j=0; j<=i; j++) {
+	    sum+=csumVec(j);
+	}			
+	w(i) = sum;
+    }
+}
+
+double unifRand()
+{
+    return rand() / double(RAND_MAX);
+}
+
 void initializate_paramters(){
 
 for (int i = 1; i <= numParticles; i++){
@@ -263,24 +284,92 @@ for (int i = 1; i <= numParticles; i++){
         // particles[i].weight = particles[i].weight * (abs(pow((2*M_PI*Q),0.5)) * exp((-1/2)*diff.transpose()*Q.inverse()*diff));
        }
       }	
-
-
+}
 }
 
+void resample(struct particles_struct *particles4, double dt4){
+
+int Nmin = 0.75*N;
+int doresample = 1;
+// MatrixXd w= MatrixXd::Zero(1,N);
+
+for(int i=1;i<=N;i++){
+w(i)= particles4[i].weight;}
+
+double ws= w.sum(); 
+assert(ws!=0);
+
+for (int i=1;i<=N;i++){
+w(i)= w(i)/ws;}
+
+for (int i=1;i<=N;i++){
+particles4[i].weight= (particles4[i].weight/ws);}
+
+// stratified_resample 
+double Neff = 0;
+std::vector<int> keep;
+VectorXf wsqrd(w.size());
+float wsum = w.sum(); 
+
+for (int i=1;i<=w.size();i++){
+w(i)= w(i)/wsum; // normalise
+wsqrd(i) = (float)pow(w(i),2);
 }
 
-void resample(){
-N= length(particles);
-w= zeros(1,N);
-for i=1:N, w(i)= particles(i).w; end
-ws= sum(w); w= w/ws;
-for i=1:N, particles(i).w= particles(i).w / ws; end
+Neff= 1.0f/(float)wsqrd.sum(); 
 
-[keep, Neff] = stratified_resample(w);
-if Neff < Nmin & doresample==1
-    particles= particles(keep);
-for i=1:N, particles(i).w= 1/N; end
+int len= w.size();
+keep.resize(len);
+for (int i=0; i<len; i++){
+keep[i] = -1;
 }
+
+// stratified_random 
+std::vector<float> select;
+float k = 1.0/float(len);
+    //deterministic intervals
+    float temp = k/2;
+    select.push_back(temp);
+    while (temp < 1-k/2) {
+        temp = temp+k;
+        select.push_back(temp);
+    }
+
+    //dither within interval
+    std::vector<float>::iterator diter; 
+    for (diter = select.begin(); diter != select.end(); diter++) {
+        *diter = (*diter) + unifRand() * k - (k/2);
+    }
+
+    cumsum(w); 
+
+    int ctr=0;
+    for (int i=0; i<len; i++) {
+        while ((ctr<len) && (select[ctr]<w(i))) {
+            keep[ctr] = i;
+            ctr++;
+        }
+    }
+
+// straified resample ends
+for (int i=1; i<=N; i++) {
+old_particles[i] = particles[i];
+}
+
+    if ((Neff < Nmin) && (doresample == 1)) {
+        for(int i=0; i< keep.size(); i++) {
+            particles[i] = old_particles[keep[i]]; 	
+        }	
+        for (int i=0; i<N; i++) {
+            float new_w = 1.0f/(float)N;
+            assert(std::isfinite(new_w));
+            assert(N == 100);
+            particles[i].weight = new_w;
+        }
+    } 
+}
+
+
 
 int main(int argc, char** argv)
 {
