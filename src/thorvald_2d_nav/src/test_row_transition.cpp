@@ -396,7 +396,7 @@ int main(int argc, char** argv)
     }
    } 
    else{
-   est_twist.linear.x = linear_velocity; 
+   est_twist.linear.x = 0; 
    est_twist.angular.z = 0;
    }
 

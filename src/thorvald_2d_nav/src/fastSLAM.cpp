@@ -16,6 +16,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 #include <random>
+#include <assert.h>
 
 // ROS message includes
 #include <thorvald_2d_nav/scan_detected_line.h>
@@ -33,12 +34,12 @@ nav_msgs::Odometry thorvald_estimated_pose;
 thorvald_2d_nav::sub_goal goal_count; 
 geometry_msgs::Twist twist_msg;
 double measured_points_range[4], measured_points_bearing[4];
-int total_landmarks = 4; 
+static const int total_landmarks = 4; 
 double d = 0.5; // distance between two wheels
 double lambda_x, lambda_y, q, dt;
 // bool landmarks_observed = false;
 ros::Time current_time, last_time;
-double gaussnoise = 0;
+
 
 //initialize velocity variables
 double vx = 0.0, vy = 0.0, vth = 0.0;
@@ -62,17 +63,16 @@ MatrixXd line_theta = MatrixXd::Zero(4,1); // polar co-ordinates
 /*MatrixXd mu = MatrixXd::Zero(2*total_landmarks+3,1); // mu
 MatrixXd line_local(4,2); // line_local
 MatrixXd line_local_fixed(4,2); // line_local_fixed
-MatrixXd robSigma    = MatrixXd::Zero(3,3);
-MatrixXd robMapSigma = MatrixXd::Zero(3,(2*total_landmarks));
-MatrixXd mapSigma    = INF*MatrixXd::Identity((2*total_landmarks), (2*total_landmarks));
 MatrixXd cov = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3));
 MatrixXd R = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3)); // Motion Noise
 */
 
 // particle filter
 static const int numParticles = 100;
-double noise = 0.005;
-
+double noise = 0.005, gaussnoise = 0;
+int N = numParticles;
+ MatrixXd w = MatrixXd::Zero(1,N);
+// std::cout << "IRUKEN" << std::endl;
 // particle structure
 struct landmarks_struct{
 bool landmarks_observed;
@@ -84,10 +84,10 @@ struct particles_struct{
 double weight;
 geometry_msgs::Pose pose;
 geometry_msgs::Pose pose_history;
-struct landmarks_struct landmarks[numParticles];
+struct landmarks_struct landmarks[total_landmarks];
 };
 
-particles_struct particles[numParticles];
+particles_struct particles[numParticles], old_particles[numParticles];
 
 // robot velocity data
 void odometryvelCallback (const geometry_msgs::Twist::ConstPtr& odometry_vel){
@@ -109,7 +109,7 @@ yaw = tf::getYaw(quat);
 void linepointsCallback(const thorvald_2d_nav::scan_detected_line::ConstPtr& line_points){
 
 if (line_points->range.size() > 0){
-for (int num = 1; num <= total_landmarks; num++){
+for (int num = 0; num < total_landmarks; num++){
 measured_points_range[num] = line_points->range[num];
 measured_points_bearing[num] = line_points->bearing[num];
 }}
@@ -158,13 +158,13 @@ MatrixXd measurement_model(struct particles_struct *particles3, int i, int z){
 
  double expectedRange = sqrt(q);
  double expectedBearing = normalizeangle((lambda_y/lambda_x) - yaw);
- expectedZ(2*z,0) = expectedRange;
- expectedZ((2*z)+1,0) = expectedBearing;
+ expectedZ(0,0) = expectedRange;
+ expectedZ(1,0) = expectedBearing;
 
- H(1,1) = (particles[i].landmarks[z].mu(0)-particles[i].pose.position.x)/expectedRange;
- H(1,2) = (particles[i].landmarks[z].mu(1)-particles[i].pose.position.y)/expectedRange;
- H(2,1) = (particles[i].pose.position.y-particles[i].landmarks[z].mu(1))/(pow(expectedRange,2));
- H(2,2) = (particles[i].landmarks[z].mu(0)-particles[i].pose.position.x)/(pow(expectedRange,2));
+ H(0,0) = (particles[i].landmarks[z].mu(0)-particles[i].pose.position.x)/expectedRange;
+ H(0,1) = (particles[i].landmarks[z].mu(1)-particles[i].pose.position.y)/expectedRange;
+ H(1,0) = (particles[i].pose.position.y-particles[i].landmarks[z].mu(1))/(pow(expectedRange,2));
+ H(1,1) = (particles[i].landmarks[z].mu(0)-particles[i].pose.position.x)/(pow(expectedRange,2));
  return H;
 }
 
@@ -179,15 +179,33 @@ double normrnd(double mean, double stdDev) {
     return mean + stdDev * u * mul;
 }
 
+void cumsum(MatrixXd &w) 
+{
+    MatrixXd csumVec = MatrixXd(w);
+
+    for (int i=0; i< w.size(); i++) {
+        float sum =0;
+        for (int j=0; j<=i; j++) {
+	    sum+=csumVec(j);
+	}			
+	w(i) = sum;
+    }
+}
+
+double unifRand()
+{
+    return rand() / double(RAND_MAX);
+}
+
 void initializate_paramters(){
 
-for (int i = 1; i <= numParticles; i++){
+for (int i = 0; i < numParticles; i++){
 particles[i].weight = 1/numParticles;
 particles[i].pose.position.x = 0;
 particles[i].pose.position.y = 0;
 particles[i].pose.orientation = tf::createQuaternionMsgFromYaw(0);
 particles[i].pose_history = particles[i].pose;
- for (int j = 1; j <= total_landmarks; j++){
+ for (int j = 0; j < total_landmarks; j++){
  particles[i].landmarks[j].landmarks_observed = false;
  // particles[i].landmarks[j].mu[2] = {0};
  // particles[i].landmarks[j].sigma[2][2] = {};
@@ -198,27 +216,27 @@ particles[i].pose_history = particles[i].pose;
 
 void prediction_step(struct particles_struct *particles1, double dt1){
 
-vx = robot_pose.twist.twist.linear.x;
-vy = robot_pose.twist.twist.linear.y;
-vth = robot_pose.twist.twist.angular.z;
+ vx = robot_pose.twist.twist.linear.x;
+ vy = robot_pose.twist.twist.linear.y;
+ vth = robot_pose.twist.twist.angular.z;
 
-for (int i = 1; i <= numParticles; i++){
-
+ for (int i = 0; i < numParticles; i++){
 // particles[i].pose_history = particles[i].pose;
-gaussnoise = normrnd(vth,noise);
-particles1[i].pose.position.x = particles1[i].pose.position.x + ((vx+gaussnoise)*dt1);
-particles1[i].pose.position.y = particles1[i].pose.position.y + ((vy+gaussnoise)*dt1);
+ gaussnoise = normrnd(vth,noise);
+ particles1[i].pose.position.x = particles1[i].pose.position.x + ((vx+gaussnoise)*dt1);
+ particles1[i].pose.position.y = particles1[i].pose.position.y + ((vy+gaussnoise)*dt1);
+ current_yaw = (current_yaw+vth+gaussnoise)*dt1;
+ particles1[i].pose.orientation = tf::createQuaternionMsgFromYaw(current_yaw);
+ }
 
-current_yaw = (current_yaw+vth+gaussnoise)*dt1;
-particles1[i].pose.orientation = tf::createQuaternionMsgFromYaw(current_yaw);}
 }
 
 void correction_step(struct particles_struct *particles2, double dt2){
 
-for (int i = 1; i <= numParticles; i++){
+for (int i = 0; i < numParticles; i++){
 
       // Landmarks observation
-     for (int z = 1; z <= total_landmarks; z++){
+     for (int z = 0; z < total_landmarks; z++){
 
         // Transformation of Line from global co-ordinate into robot frame
       if (particles[i].landmarks[z].landmarks_observed == false){
@@ -238,9 +256,8 @@ for (int i = 1; i <= numParticles; i++){
       }
 
       else{
-
-         Z(2*z,0) = measured_points_range[z];
-         Z((2*z)+1,0) = measured_points_bearing[z];
+         Z(0,0) = measured_points_range[z];
+         Z(1,0) = measured_points_bearing[z];
 
          // calculate jacobian w.r.t landmark pose
          H = measurement_model(particles,i,z);
@@ -262,12 +279,95 @@ for (int i = 1; i <= numParticles; i++){
         // particles[i].weight = particles[i].weight*(1/sqrt(det(2*M_PI*Q))*exp((-1/2)*diff.transpose()/Q*diff));
         // particles[i].weight = particles[i].weight * (abs(pow((2*M_PI*Q),0.5)) * exp((-1/2)*diff.transpose()*Q.inverse()*diff));
        }
+
       }	
-
-
+// std::cout << "particles1[i].pose.position.y:" << particles1[1].pose.position.y << "\n"  << "current_yaw:" << current_yaw << "\n" << std::endl;
+// std::cout << "diff:" << diff << "\n"  << "particles[1].landmarks[1].mu(1):" << particles[1].landmarks[1].mu(1) << "\n" << std::endl;
+}
 }
 
+void resample(struct particles_struct *particles4, double dt4){
+
+int Nmin = 0.75*N;
+int doresample = 1;
+// MatrixXd w= MatrixXd::Zero(1,N);
+
+for(int i=0;i<N;i++){
+w(i)= particles4[i].weight;}
+double ws= w.sum(); 
+assert(ws!=0);
+
+for (int i=0;i<N;i++){
+w(i)= w(i)/ws;}
+
+for (int i=0;i<N;i++){
+particles4[i].weight= (particles4[i].weight/ws);}
+
+// stratified_resample 
+double Neff = 0;
+std::vector<int> keep;
+MatrixXd wsqrd = MatrixXd::Zero(1,N);
+float wsum = w.sum(); 
+
+for (int i=0;i<w.size();i++){
+w(i)= w(i)/wsum; // normalise
+wsqrd(i) = (float)pow(w(i),2);
 }
+
+Neff= 1.0f/(float)wsqrd.sum(); 
+
+int len= w.size();
+keep.resize(len);
+for (int i=0; i<len; i++){
+keep[i] = -1;
+}
+
+// stratified_random 
+std::vector<float> select;
+float k = 1.0/float(len);
+    //deterministic intervals
+    float temp = k/2;
+    select.push_back(temp);
+    while (temp < 1-k/2) {
+        temp = temp+k;
+        select.push_back(temp);
+    }
+
+    //dither within interval
+    std::vector<float>::iterator diter; 
+    for (diter = select.begin(); diter != select.end(); diter++) {
+        *diter = (*diter) + unifRand() * k - (k/2);
+    }
+
+    cumsum(w); 
+
+    int ctr=0;
+    for (int i=0; i<len; i++) {
+        while ((ctr<len) && (select[ctr]<w(i))) {
+            keep[ctr] = i;
+            ctr++;
+        }
+    }
+
+// straified resample ends
+for (int i=0; i<N; i++) {
+old_particles[i] = particles[i];
+}
+
+    if ((Neff < Nmin) && (doresample == 1)) {
+        for(int i=0; i< keep.size(); i++) {
+            particles[i] = old_particles[keep[i]]; 	
+        }	
+        for (int i=0; i<N; i++) {
+            float new_w = 1.0f/(float)N;
+            assert(std::isfinite(new_w));
+            assert(N == 100);
+            particles[i].weight = new_w;
+        }
+    } 
+}
+
+
 
 int main(int argc, char** argv)
 {
@@ -281,25 +381,35 @@ int main(int argc, char** argv)
    ros::Subscriber odom_vel_sub = n.subscribe("/odom_topic", 50, odometryvelCallback);
    ros::Subscriber point_sub = n.subscribe("measurement_points", 100, linepointsCallback);
 
-   current_time = ros::Time::now();
-   last_time = ros::Time::now();
-
+  current_time = ros::Time::now();
+  last_time = ros::Time::now();
+  int init = 0;
   while (ros::ok()){
 
   ros::spinOnce();
   current_time = ros::Time::now();
   dt = (current_time - last_time).toSec();
  
+  if(init==0){
   initializate_paramters();
+  init = 1;
+  }
 
+  // if(robot_pose.twist.twist.linear.x != 0){
   // prediction step
   prediction_step(particles, dt);
 
-  // prediction step
+  // correction step
   correction_step(particles, dt);
+  // ROS_INFO("NAVI");
+  // resampling step
+  resample(particles, dt);
+  // ROS_INFO("NAVI1");
+   // }
 
   r.sleep();
-  } 
+}
   return 0;
 }
+
 

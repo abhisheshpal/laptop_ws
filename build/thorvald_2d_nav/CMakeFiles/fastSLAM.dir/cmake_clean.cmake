@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/fastSLAM.dir/src/fastSLAM.cpp.o"
-  "/home/vignesh/laptop_ws/devel/lib/thorvald_2d_nav/fastSLAM.pdb"
-  "/home/vignesh/laptop_ws/devel/lib/thorvald_2d_nav/fastSLAM"
+  "/home/vigneshnuc/laptop_ws/devel/lib/thorvald_2d_nav/fastSLAM.pdb"
+  "/home/vigneshnuc/laptop_ws/devel/lib/thorvald_2d_nav/fastSLAM"
 )
 
 # Per-language clean rules from dependency scanning.

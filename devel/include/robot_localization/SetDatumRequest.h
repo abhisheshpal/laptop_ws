@@ -40,6 +40,7 @@ struct SetDatumRequest_
 
 
 
+
   typedef boost::shared_ptr< ::robot_localization::SetDatumRequest_<ContainerAllocator> > Ptr;
   typedef boost::shared_ptr< ::robot_localization::SetDatumRequest_<ContainerAllocator> const> ConstPtr;
 

@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/vignesh/laptop_ws/src
+CMAKE_SOURCE_DIR = /home/vigneshnuc/laptop_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/vignesh/laptop_ws/build
+CMAKE_BINARY_DIR = /home/vigneshnuc/laptop_ws/build
 
 # Utility rule file for _catkin_empty_exported_target.
 
@@ -63,10 +63,10 @@ Extra\ Packages/libpcan/CMakeFiles/_catkin_empty_exported_target.dir/build: _cat
 .PHONY : Extra\ Packages/libpcan/CMakeFiles/_catkin_empty_exported_target.dir/build
 
 Extra\ Packages/libpcan/CMakeFiles/_catkin_empty_exported_target.dir/clean:
-	cd "/home/vignesh/laptop_ws/build/Extra Packages/libpcan" && $(CMAKE_COMMAND) -P CMakeFiles/_catkin_empty_exported_target.dir/cmake_clean.cmake
+	cd "/home/vigneshnuc/laptop_ws/build/Extra Packages/libpcan" && $(CMAKE_COMMAND) -P CMakeFiles/_catkin_empty_exported_target.dir/cmake_clean.cmake
 .PHONY : Extra\ Packages/libpcan/CMakeFiles/_catkin_empty_exported_target.dir/clean
 
 Extra\ Packages/libpcan/CMakeFiles/_catkin_empty_exported_target.dir/depend:
-	cd /home/vignesh/laptop_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/vignesh/laptop_ws/src "/home/vignesh/laptop_ws/src/Extra Packages/libpcan" /home/vignesh/laptop_ws/build "/home/vignesh/laptop_ws/build/Extra Packages/libpcan" "/home/vignesh/laptop_ws/build/Extra Packages/libpcan/CMakeFiles/_catkin_empty_exported_target.dir/DependInfo.cmake" --color=$(COLOR)
+	cd /home/vigneshnuc/laptop_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/vigneshnuc/laptop_ws/src "/home/vigneshnuc/laptop_ws/src/Extra Packages/libpcan" /home/vigneshnuc/laptop_ws/build "/home/vigneshnuc/laptop_ws/build/Extra Packages/libpcan" "/home/vigneshnuc/laptop_ws/build/Extra Packages/libpcan/CMakeFiles/_catkin_empty_exported_target.dir/DependInfo.cmake" --color=$(COLOR)
 .PHONY : Extra\ Packages/libpcan/CMakeFiles/_catkin_empty_exported_target.dir/depend
 

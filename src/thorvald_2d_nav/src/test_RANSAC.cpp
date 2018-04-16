@@ -84,7 +84,7 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
             measurement_points.bearing[1] = angle_1[aIndex_1];
             measurement_points.bearing[2] = angle_1[bIndex_1];
              
-            if(measurement_points.range[0]<measurement_points.range[1]){
+            if(measurement_points.range[1]<measurement_points.range[2]){
             final_Index_1[1].real_x = x_1[aIndex_1];
             final_Index_1[1].real_y = y_1[aIndex_1];
             final_Index_1[2].real_x = x_1[bIndex_1];
@@ -164,7 +164,7 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
             measurement_points.bearing[3] = angle_2[aIndex_2];       
             measurement_points.bearing[4] = angle_2[bIndex_2];
 
-            if(measurement_points.range[2]<measurement_points.range[3]){ 
+            if(measurement_points.range[3]<measurement_points.range[4]){ 
             final_Index_2[1].real_x = x_2[aIndex_2];
             final_Index_2[2].real_x = x_2[bIndex_2];
             final_Index_2[1].real_y = y_2[aIndex_2];
