@@ -90,7 +90,11 @@ leica_tca1100_EXTERNAL_OBJECTS =
 
 /home/vigneshnuc/laptop_ws/devel/lib/leica_tca1100/leica_tca1100: Sensors/leica_tca1100/CMakeFiles/leica_tca1100.dir/src/leica_tca1100.cpp.o
 /home/vigneshnuc/laptop_ws/devel/lib/leica_tca1100/leica_tca1100: Sensors/leica_tca1100/CMakeFiles/leica_tca1100.dir/build.make
+<<<<<<< HEAD
 /home/vigneshnuc/laptop_ws/devel/lib/leica_tca1100/leica_tca1100: /opt/ros/kinetic/lib/libserial.so
+=======
+/home/vigneshnuc/laptop_ws/devel/lib/leica_tca1100/leica_tca1100: /home/vigneshnuc/laptop_ws/devel/lib/libserial.so
+>>>>>>> 17d04735fb135d3b15646f8f98ee762afb6aa523
 /home/vigneshnuc/laptop_ws/devel/lib/leica_tca1100/leica_tca1100: /opt/ros/kinetic/lib/libtf.so
 /home/vigneshnuc/laptop_ws/devel/lib/leica_tca1100/leica_tca1100: /opt/ros/kinetic/lib/libtf2_ros.so
 /home/vigneshnuc/laptop_ws/devel/lib/leica_tca1100/leica_tca1100: /opt/ros/kinetic/lib/libactionlib.so

@@ -6,6 +6,35 @@
 
 #IncludeRegexTransform: 
 
+<<<<<<< HEAD
+=======
+/home/vigneshnuc/laptop_ws/src/Extra Packages/serial/include/serial/serial.h
+limits
+-
+vector
+-
+string
+-
+cstring
+-
+sstream
+-
+exception
+-
+stdexcept
+-
+serial/v8stdint.h
+-
+
+/home/vigneshnuc/laptop_ws/src/Extra Packages/serial/include/serial/v8stdint.h
+stddef.h
+-
+stdio.h
+-
+stdint.h
+-
+
+>>>>>>> 17d04735fb135d3b15646f8f98ee762afb6aa523
 /home/vigneshnuc/laptop_ws/src/Sensors/leica_tca1100/src/leica_tca1100.cpp
 ros/ros.h
 -
@@ -1102,32 +1131,6 @@ std_msgs/Header.h
 geometry_msgs/Point32.h
 -
 sensor_msgs/ChannelFloat32.h
--
-
-/opt/ros/kinetic/include/serial/serial.h
-limits
--
-vector
--
-string
--
-cstring
--
-sstream
--
-exception
--
-stdexcept
--
-serial/v8stdint.h
--
-
-/opt/ros/kinetic/include/serial/v8stdint.h
-stddef.h
--
-stdio.h
--
-stdint.h
 -
 
 /opt/ros/kinetic/include/std_msgs/Empty.h
