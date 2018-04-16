@@ -1,8 +1,0 @@
-prefix=/home/vigneshnuc/laptop_ws/devel
-
-Name: ros_csv_extraction
-Description: Description of ros_csv_extraction
-Version: 1.5.0
-Cflags: 
-Libs: -L/home/vigneshnuc/laptop_ws/devel/lib 
-Requires: 

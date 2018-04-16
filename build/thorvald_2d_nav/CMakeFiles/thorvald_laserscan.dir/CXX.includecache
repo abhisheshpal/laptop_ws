@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/src/thorvald_laserscan.cpp
+/home/vignesh/laptop_ws/src/thorvald_2d_nav/src/thorvald_laserscan.cpp
 ros/ros.h
 -
 cmath

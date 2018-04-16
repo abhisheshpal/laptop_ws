@@ -1,8 +1,8 @@
-# Install script for directory: /home/vigneshnuc/laptop_ws/src/Sensors/leica_tca1100
+# Install script for directory: /home/vignesh/laptop_ws/src/Sensors/leica_tca1100
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/vigneshnuc/laptop_ws/install")
+  set(CMAKE_INSTALL_PREFIX "/home/vignesh/laptop_ws/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,17 +33,17 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/vigneshnuc/laptop_ws/build/Sensors/leica_tca1100/catkin_generated/installspace/leica_tca1100.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/vignesh/laptop_ws/build/Sensors/leica_tca1100/catkin_generated/installspace/leica_tca1100.pc")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/leica_tca1100/cmake" TYPE FILE FILES
-    "/home/vigneshnuc/laptop_ws/build/Sensors/leica_tca1100/catkin_generated/installspace/leica_tca1100Config.cmake"
-    "/home/vigneshnuc/laptop_ws/build/Sensors/leica_tca1100/catkin_generated/installspace/leica_tca1100Config-version.cmake"
+    "/home/vignesh/laptop_ws/build/Sensors/leica_tca1100/catkin_generated/installspace/leica_tca1100Config.cmake"
+    "/home/vignesh/laptop_ws/build/Sensors/leica_tca1100/catkin_generated/installspace/leica_tca1100Config-version.cmake"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/leica_tca1100" TYPE FILE FILES "/home/vigneshnuc/laptop_ws/src/Sensors/leica_tca1100/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/leica_tca1100" TYPE FILE FILES "/home/vignesh/laptop_ws/src/Sensors/leica_tca1100/package.xml")
 endif()
 

@@ -146,6 +146,10 @@ include_directories(
 
 include_directories(EIGEN3_INCLUDE_DIR)
 include_directories(/usr/include/eigen3)
+	
+find_package(PythonLibs REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
+#target_link_libraries(hoge )
 
 ## Declare a C++ library
 # add_library(thorvald_2dnav
@@ -183,7 +187,7 @@ include_directories(/usr/include/eigen3)
  target_link_libraries(test_line_SLAM ${catkin_LIBRARIES})
 
  add_executable(fastSLAM src/fastSLAM.cpp)
- target_link_libraries(fastSLAM ${catkin_LIBRARIES})
+ target_link_libraries(fastSLAM ${catkin_LIBRARIES} ${PYTHON_LIBRARIES})
 
  #add_executable(gps_switch_server src/gps_server.cpp)
  #target_link_libraries(gps_switch_server ${catkin_LIBRARIES})

@@ -17,6 +17,7 @@
 #include <Eigen/Geometry>
 #include <random>
 #include <assert.h>
+#include "matplotlibcpp.h"
 
 // ROS message includes
 #include <thorvald_2d_nav/scan_detected_line.h>
@@ -25,6 +26,8 @@
 
 #define INF 1000
 using namespace Eigen;
+
+namespace plt = matplotlibcpp;
 
 // Initialization for callbacks
 geometry_msgs::Twist odom_vel;
@@ -384,7 +387,19 @@ int main(int argc, char** argv)
   current_time = ros::Time::now();
   last_time = ros::Time::now();
   int init = 0;
+
   while (ros::ok()){
+
+  /*	int n = 1000;
+	std::vector<double> x(n), y(n);
+
+	for(int i=0; i<n; ++i) {
+		x[i] = 2 * M_PI * i / n;
+		y[i] = sin(x[i]);
+	}
+
+	plt::plot(x, y);
+	plt::show(); */
 
   ros::spinOnce();
   current_time = ros::Time::now();

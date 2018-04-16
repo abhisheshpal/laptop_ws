@@ -1,6 +1,2 @@
-<<<<<<< HEAD
-Extra Packages/libpcan:Sensors/ethzasl_xsens_driver-master:Sensors/leica_tca1100:Sensors/trigger_sync-master:odometry_package:robot_localization-kinetic-devel:thorvald_2d_nav
-=======
-Extra Packages/driver_common/driver_base:Extra Packages/driver_common/driver_common:Extra Packages/driver_common/timestamp_tools:Extra Packages/libpcan:Extra Packages/razor_imu_9dof:Extra Packages/rosserial/rosserial:Extra Packages/rosserial/rosserial_arduino:Extra Packages/rosserial/rosserial_client:Extra Packages/rosserial/rosserial_embeddedlinux:Extra Packages/rosserial/rosserial_mbed:Extra Packages/rosserial/rosserial_msgs:Extra Packages/rosserial/rosserial_python:Extra Packages/rosserial/rosserial_server:Extra Packages/rosserial/rosserial_test:Extra Packages/rosserial/rosserial_tivac:Extra Packages/rosserial/rosserial_windows:Extra Packages/rosserial/rosserial_xbee:Extra Packages/serial:Sensors/ethzasl_xsens_driver-master:Sensors/leica_tca1100:Sensors/nmea_navsat_driver:Sensors/rplidar_ros:Sensors/trigger_sync-master:odometry_package:robot_localization-kinetic-devel:ros_csv_extraction:thorvald_2d_nav
->>>>>>> 17d04735fb135d3b15646f8f98ee762afb6aa523
--DCATKIN_DEVEL_PREFIX=/home/vigneshnuc/laptop_ws/devel -DCMAKE_INSTALL_PREFIX=/home/vigneshnuc/laptop_ws/install -G Unix Makefiles
+Extra_Packages/libpcan:Sensors/ethzasl_xsens_driver-master:Sensors/leica_tca1100:Sensors/trigger_sync-master:odometry_package:robot_localization-kinetic-devel:thorvald_2d_nav
+-DCATKIN_DEVEL_PREFIX=/home/vignesh/laptop_ws/devel -DCMAKE_INSTALL_PREFIX=/home/vignesh/laptop_ws/install -G Unix Makefiles
