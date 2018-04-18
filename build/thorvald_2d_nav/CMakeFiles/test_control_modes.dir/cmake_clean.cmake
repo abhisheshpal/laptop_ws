@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/test_control_modes.dir/src/test_control_modes.cpp.o"
-  "/home/vignesh/laptop_ws/devel/lib/thorvald_2d_nav/test_control_modes.pdb"
-  "/home/vignesh/laptop_ws/devel/lib/thorvald_2d_nav/test_control_modes"
+  "/home/vigneshnuc/laptop_ws/devel/lib/thorvald_2d_nav/test_control_modes.pdb"
+  "/home/vigneshnuc/laptop_ws/devel/lib/thorvald_2d_nav/test_control_modes"
 )
 
 # Per-language clean rules from dependency scanning.

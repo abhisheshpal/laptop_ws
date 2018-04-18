@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/vignesh/laptop_ws/src/Sensors/trigger_sync-master/src/pps_config.c" "/home/vignesh/laptop_ws/build/Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/src/pps_config.c.o"
+  "/home/vigneshnuc/laptop_ws/src/Sensors/trigger_sync-master/src/pps_config.c" "/home/vigneshnuc/laptop_ws/build/Sensors/trigger_sync-master/CMakeFiles/pps_config.dir/src/pps_config.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
@@ -17,12 +17,13 @@ set(CMAKE_TARGET_DEFINITIONS_C
 
 # The include file search paths:
 set(CMAKE_C_TARGET_INCLUDE_PATH
-  "/home/vignesh/laptop_ws/devel/include"
-  "/home/vignesh/laptop_ws/src/Sensors/trigger_sync-master/include"
+  "/home/vigneshnuc/laptop_ws/devel/include"
+  "/home/vigneshnuc/laptop_ws/src/Sensors/trigger_sync-master/include"
   "/opt/ros/kinetic/include"
   "/opt/ros/kinetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
   "/opt/ros/kinetic/include/opencv-3.3.1"
   "/opt/ros/kinetic/include/opencv-3.3.1/opencv"
+  "/usr/include/python2.7"
   )
 
 # Targets to which this target links.

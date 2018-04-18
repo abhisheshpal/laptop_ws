@@ -2,7 +2,7 @@
 
 message(STATUS "thorvald_2d_nav: 2 messages, 2 services")
 
-set(MSG_I_FLAGS "-Ithorvald_2d_nav:/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg;-Istd_msgs:/opt/ros/kinetic/share/std_msgs/cmake/../msg;-Igeometry_msgs:/opt/ros/kinetic/share/geometry_msgs/cmake/../msg;-Iactionlib_msgs:/opt/ros/kinetic/share/actionlib_msgs/cmake/../msg")
+set(MSG_I_FLAGS "-Ithorvald_2d_nav:/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg;-Istd_msgs:/opt/ros/kinetic/share/std_msgs/cmake/../msg;-Igeometry_msgs:/opt/ros/kinetic/share/geometry_msgs/cmake/../msg;-Iactionlib_msgs:/opt/ros/kinetic/share/actionlib_msgs/cmake/../msg;-Inav_msgs:/opt/ros/kinetic/share/nav_msgs/cmake/../msg")
 
 # Find all generators
 find_package(gencpp REQUIRED)
@@ -17,24 +17,24 @@ add_custom_target(thorvald_2d_nav_generate_messages ALL)
 
 
 
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv" NAME_WE)
 add_custom_target(_thorvald_2d_nav_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "thorvald_2d_nav" "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg" "std_msgs/Header"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "thorvald_2d_nav" "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv" ""
 )
 
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg" NAME_WE)
 add_custom_target(_thorvald_2d_nav_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "thorvald_2d_nav" "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "thorvald_2d_nav" "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg" "std_msgs/Header:geometry_msgs/Point"
 )
 
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv" NAME_WE)
 add_custom_target(_thorvald_2d_nav_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "thorvald_2d_nav" "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg" "std_msgs/Header:geometry_msgs/Point"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "thorvald_2d_nav" "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv" ""
 )
 
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg" NAME_WE)
 add_custom_target(_thorvald_2d_nav_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "thorvald_2d_nav" "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "thorvald_2d_nav" "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg" "std_msgs/Header"
 )
 
 #
@@ -44,27 +44,27 @@ add_custom_target(_thorvald_2d_nav_generate_messages_check_deps_${_filename}
 ### Section generating for lang: gencpp
 ### Generating Messages
 _generate_msg_cpp(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/kinetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/thorvald_2d_nav
 )
 _generate_msg_cpp(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/kinetic/share/geometry_msgs/cmake/../msg/Point.msg"
+  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/thorvald_2d_nav
 )
 
 ### Generating Services
 _generate_srv_cpp(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/thorvald_2d_nav
 )
 _generate_srv_cpp(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/thorvald_2d_nav
@@ -82,13 +82,13 @@ add_custom_target(thorvald_2d_nav_generate_messages_cpp
 add_dependencies(thorvald_2d_nav_generate_messages thorvald_2d_nav_generate_messages_cpp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_cpp _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_cpp _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_cpp _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_cpp _thorvald_2d_nav_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -101,27 +101,27 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS thorvald_2d_nav_generate_messages_c
 ### Section generating for lang: geneus
 ### Generating Messages
 _generate_msg_eus(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/kinetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/thorvald_2d_nav
 )
 _generate_msg_eus(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/kinetic/share/geometry_msgs/cmake/../msg/Point.msg"
+  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/thorvald_2d_nav
 )
 
 ### Generating Services
 _generate_srv_eus(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/thorvald_2d_nav
 )
 _generate_srv_eus(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/thorvald_2d_nav
@@ -139,13 +139,13 @@ add_custom_target(thorvald_2d_nav_generate_messages_eus
 add_dependencies(thorvald_2d_nav_generate_messages thorvald_2d_nav_generate_messages_eus)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_eus _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_eus _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_eus _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_eus _thorvald_2d_nav_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -158,27 +158,27 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS thorvald_2d_nav_generate_messages_e
 ### Section generating for lang: genlisp
 ### Generating Messages
 _generate_msg_lisp(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/kinetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/thorvald_2d_nav
 )
 _generate_msg_lisp(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/kinetic/share/geometry_msgs/cmake/../msg/Point.msg"
+  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/thorvald_2d_nav
 )
 
 ### Generating Services
 _generate_srv_lisp(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/thorvald_2d_nav
 )
 _generate_srv_lisp(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/thorvald_2d_nav
@@ -196,13 +196,13 @@ add_custom_target(thorvald_2d_nav_generate_messages_lisp
 add_dependencies(thorvald_2d_nav_generate_messages thorvald_2d_nav_generate_messages_lisp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_lisp _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_lisp _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_lisp _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_lisp _thorvald_2d_nav_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -215,27 +215,27 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS thorvald_2d_nav_generate_messages_l
 ### Section generating for lang: gennodejs
 ### Generating Messages
 _generate_msg_nodejs(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/kinetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/thorvald_2d_nav
 )
 _generate_msg_nodejs(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/kinetic/share/geometry_msgs/cmake/../msg/Point.msg"
+  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/thorvald_2d_nav
 )
 
 ### Generating Services
 _generate_srv_nodejs(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/thorvald_2d_nav
 )
 _generate_srv_nodejs(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/thorvald_2d_nav
@@ -253,13 +253,13 @@ add_custom_target(thorvald_2d_nav_generate_messages_nodejs
 add_dependencies(thorvald_2d_nav_generate_messages thorvald_2d_nav_generate_messages_nodejs)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_nodejs _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_nodejs _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_nodejs _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_nodejs _thorvald_2d_nav_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -272,27 +272,27 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS thorvald_2d_nav_generate_messages_n
 ### Section generating for lang: genpy
 ### Generating Messages
 _generate_msg_py(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/kinetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/thorvald_2d_nav
 )
 _generate_msg_py(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/kinetic/share/geometry_msgs/cmake/../msg/Point.msg"
+  "/opt/ros/kinetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/thorvald_2d_nav
 )
 
 ### Generating Services
 _generate_srv_py(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/thorvald_2d_nav
 )
 _generate_srv_py(thorvald_2d_nav
-  "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv"
+  "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/thorvald_2d_nav
@@ -310,13 +310,13 @@ add_custom_target(thorvald_2d_nav_generate_messages_py
 add_dependencies(thorvald_2d_nav_generate_messages thorvald_2d_nav_generate_messages_py)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_py _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/sub_goal.srv" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_py _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/msg/landmarks.msg" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_py _thorvald_2d_nav_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/vignesh/laptop_ws/src/thorvald_2d_nav/srv/GpsSwitch.srv" NAME_WE)
+get_filename_component(_filename "/home/vigneshnuc/laptop_ws/src/thorvald_2d_nav/msg/scan_detected_line.msg" NAME_WE)
 add_dependencies(thorvald_2d_nav_generate_messages_py _thorvald_2d_nav_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -347,6 +347,9 @@ endif()
 if(TARGET std_srvs_generate_messages_cpp)
   add_dependencies(thorvald_2d_nav_generate_messages_cpp std_srvs_generate_messages_cpp)
 endif()
+if(TARGET plot_tool_generate_messages_cpp)
+  add_dependencies(thorvald_2d_nav_generate_messages_cpp plot_tool_generate_messages_cpp)
+endif()
 
 if(geneus_INSTALL_DIR AND EXISTS ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/thorvald_2d_nav)
   # install generated code
@@ -366,6 +369,9 @@ if(TARGET actionlib_msgs_generate_messages_eus)
 endif()
 if(TARGET std_srvs_generate_messages_eus)
   add_dependencies(thorvald_2d_nav_generate_messages_eus std_srvs_generate_messages_eus)
+endif()
+if(TARGET plot_tool_generate_messages_eus)
+  add_dependencies(thorvald_2d_nav_generate_messages_eus plot_tool_generate_messages_eus)
 endif()
 
 if(genlisp_INSTALL_DIR AND EXISTS ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/thorvald_2d_nav)
@@ -387,6 +393,9 @@ endif()
 if(TARGET std_srvs_generate_messages_lisp)
   add_dependencies(thorvald_2d_nav_generate_messages_lisp std_srvs_generate_messages_lisp)
 endif()
+if(TARGET plot_tool_generate_messages_lisp)
+  add_dependencies(thorvald_2d_nav_generate_messages_lisp plot_tool_generate_messages_lisp)
+endif()
 
 if(gennodejs_INSTALL_DIR AND EXISTS ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/thorvald_2d_nav)
   # install generated code
@@ -406,6 +415,9 @@ if(TARGET actionlib_msgs_generate_messages_nodejs)
 endif()
 if(TARGET std_srvs_generate_messages_nodejs)
   add_dependencies(thorvald_2d_nav_generate_messages_nodejs std_srvs_generate_messages_nodejs)
+endif()
+if(TARGET plot_tool_generate_messages_nodejs)
+  add_dependencies(thorvald_2d_nav_generate_messages_nodejs plot_tool_generate_messages_nodejs)
 endif()
 
 if(genpy_INSTALL_DIR AND EXISTS ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/thorvald_2d_nav)
@@ -427,4 +439,7 @@ if(TARGET actionlib_msgs_generate_messages_py)
 endif()
 if(TARGET std_srvs_generate_messages_py)
   add_dependencies(thorvald_2d_nav_generate_messages_py std_srvs_generate_messages_py)
+endif()
+if(TARGET plot_tool_generate_messages_py)
+  add_dependencies(thorvald_2d_nav_generate_messages_py plot_tool_generate_messages_py)
 endif()

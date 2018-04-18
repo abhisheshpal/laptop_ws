@@ -40,6 +40,7 @@ struct SetPoseRequest_
 
 
 
+
   typedef boost::shared_ptr< ::robot_localization::SetPoseRequest_<ContainerAllocator> > Ptr;
   typedef boost::shared_ptr< ::robot_localization::SetPoseRequest_<ContainerAllocator> const> ConstPtr;
 

@@ -15,7 +15,10 @@
 #include <std_msgs/Float64MultiArray.h>
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
+#include <Eigen/Core>
+#include <unsupported/Eigen/MatrixFunctions>
 #include <random>
+#include <string>
 #include <assert.h>
 #include "matplotlibcpp.h"
 
@@ -23,6 +26,7 @@
 #include <thorvald_2d_nav/scan_detected_line.h>
 #include <thorvald_2d_nav/landmarks.h>
 #include <thorvald_2d_nav/sub_goal.h>
+#include "plot_tool/PlotPose.h"
 
 #define INF 1000
 using namespace Eigen;
@@ -42,39 +46,30 @@ double d = 0.5; // distance between two wheels
 double lambda_x, lambda_y, q, dt;
 // bool landmarks_observed = false;
 ros::Time current_time, last_time;
-
+plot_tool::PlotPose xyplot, xyplot1;
 
 //initialize velocity variables
 double vx = 0.0, vy = 0.0, vth = 0.0;
 
 // Initialization for SLAM
 double yaw, current_yaw = 0, motion_noise = 0.00001, measurement_noise = 0.0001, sub_goal_thershold = 0.05;
-// MatrixXd mu = MatrixXd::Zero(2,1); // mu
-// MatrixXd sigma = MatrixXd::Zero(2,2); // mu
 
 MatrixXd H = MatrixXd::Zero(2,2); // H - Jacobian
-MatrixXd diff = MatrixXd::Zero(2,2); // error
 MatrixXd K = MatrixXd::Zero(2,2); // Kalman gain
-MatrixXd Z = MatrixXd::Zero(2,1); // Z
 MatrixXd Q_t = MatrixXd::Identity(2,2)* measurement_noise; // Measurement Noise 
-MatrixXd Q = MatrixXd::Identity(2,2)* measurement_noise; // Measurement Noise 
+MatrixXd Q = MatrixXd::Identity(2,2)* measurement_noise; // Measurement Process 
+MatrixXd Z = MatrixXd::Zero(2,1); // Z
 MatrixXd expectedZ = MatrixXd::Zero(2,1); // expectedZ
+MatrixXd diff = MatrixXd::Zero(2,1); // error
 MatrixXd line_pho = MatrixXd::Zero(4,1); // polar co-ordinates
 MatrixXd line_theta = MatrixXd::Zero(4,1); // polar co-ordinates
-
-
-/*MatrixXd mu = MatrixXd::Zero(2*total_landmarks+3,1); // mu
-MatrixXd line_local(4,2); // line_local
-MatrixXd line_local_fixed(4,2); // line_local_fixed
-MatrixXd cov = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3));
-MatrixXd R = MatrixXd::Zero((2*total_landmarks+3),(2*total_landmarks+3)); // Motion Noise
-*/
 
 // particle filter
 static const int numParticles = 100;
 double noise = 0.005, gaussnoise = 0;
 int N = numParticles;
- MatrixXd w = MatrixXd::Zero(1,N);
+MatrixXd w = MatrixXd::Zero(1,N);
+MatrixXd num1 = MatrixXd::Zero(1,N);;
 // std::cout << "IRUKEN" << std::endl;
 // particle structure
 struct landmarks_struct{
@@ -279,14 +274,17 @@ for (int i = 0; i < numParticles; i++){
         particles[i].landmarks[z].mu(1) = normalizeangle(particles[i].landmarks[z].mu(1));
 
         // Particle Weight
-        // particles[i].weight = particles[i].weight*(1/sqrt(det(2*M_PI*Q))*exp((-1/2)*diff.transpose()/Q*diff));
-        // particles[i].weight = particles[i].weight * (abs(pow((2*M_PI*Q),0.5)) * exp((-1/2)*diff.transpose()*Q.inverse()*diff));
+        double den, num;
+       /* for (int k=0; k<N; k++) {
+        den = 2*M_PI*sqrt(Q.determinant()); 
+        num1 = (-0.5*diff.transpose()*Q.inverse()*diff).exp(); 
+        particles[i].weight(k) = particles[i].weight(k)* num/den; 
+        } */
        }
-
       }	
 // std::cout << "particles1[i].pose.position.y:" << particles1[1].pose.position.y << "\n"  << "current_yaw:" << current_yaw << "\n" << std::endl;
 // std::cout << "diff:" << diff << "\n"  << "particles[1].landmarks[1].mu(1):" << particles[1].landmarks[1].mu(1) << "\n" << std::endl;
-}
+ }
 }
 
 void resample(struct particles_struct *particles4, double dt4){
@@ -378,48 +376,76 @@ int main(int argc, char** argv)
   ros::NodeHandle n;
   ros::Rate r(10.0);
 
-   // Subscribers
-   ros::Subscriber landmarks_sub = n.subscribe("landmark_points", 100, landmarksposeCallback);
-   ros::Subscriber odom_sub = n.subscribe("/thorvald_ii/odom", 100, odometryCallback);
-   ros::Subscriber odom_vel_sub = n.subscribe("/odom_topic", 50, odometryvelCallback);
-   ros::Subscriber point_sub = n.subscribe("measurement_points", 100, linepointsCallback);
+  // Subscribers
+  ros::Subscriber landmarks_sub = n.subscribe("landmark_points", 100, landmarksposeCallback);
+  ros::Subscriber odom_sub = n.subscribe("/thorvald_ii/odom", 100, odometryCallback);
+  ros::Subscriber odom_vel_sub = n.subscribe("/odom_topic", 50, odometryvelCallback);
+  ros::Subscriber point_sub = n.subscribe("measurement_points", 100, linepointsCallback);
+
+  //Service Client
+  ros::ServiceClient pose_srv_h = n.serviceClient<plot_tool::PlotPose>("plot_tool/draw_pose");
+  ros::ServiceClient pose_srv_h1 = n.serviceClient<plot_tool::PlotPose>("plot_tool/draw_pose");
 
   current_time = ros::Time::now();
   last_time = ros::Time::now();
   int init = 0;
+  std::vector<double> weights_total;
+  double max_weight;
 
   while (ros::ok()){
-
-  /*	int n = 1000;
-	std::vector<double> x(n), y(n);
-
-	for(int i=0; i<n; ++i) {
-		x[i] = 2 * M_PI * i / n;
-		y[i] = sin(x[i]);
-	}
-
-	plt::plot(x, y);
-	plt::show(); */
 
   ros::spinOnce();
   current_time = ros::Time::now();
   dt = (current_time - last_time).toSec();
- 
+
+  // initialization step
   if(init==0){
   initializate_paramters();
-  init = 1;
-  }
+  init = 1;}
 
-  // if(robot_pose.twist.twist.linear.x != 0){
   // prediction step
   prediction_step(particles, dt);
 
   // correction step
-  correction_step(particles, dt);
-  // ROS_INFO("NAVI");
+  // correction_step(particles, dt);
+
   // resampling step
-  resample(particles, dt);
-  // ROS_INFO("NAVI1");
+  // resample(particles, dt);
+
+  for (int i=0; i<N; i++) {
+  weights_total.push_back(particles[i].weight);
+  }
+
+  max_weight = *(std::max_element(weights_total.begin(), weights_total.end()));
+
+/*void access_vec_elements(vector<a_struct> *posit, size_t vec_sz)
+{
+    double x_pos;
+    double y_pos;
+ 
+    x_pos = posit->at(vec_sz).x_position;
+    y_pos = posit->at(vec_sz).y_position;
+}*/
+
+  xyplot.request.msg.position.x = particles[1].pose.position.y;
+  xyplot.request.msg.position.y = particles[1].pose.position.x;
+  xyplot.request.append=true;
+  xyplot.request.series= 0;
+  xyplot.request.symbol= '-';
+  xyplot.request.symbol_size= 5;
+
+  xyplot1.request.msg.position.x = robot_pose.pose.pose.position.y;
+  xyplot1.request.msg.position.y = robot_pose.pose.pose.position.x;
+  xyplot1.request.append=true;
+  xyplot1.request.series= 0;
+  xyplot1.request.symbol= '-';
+  xyplot1.request.symbol_size= 5;
+
+  pose_srv_h.call(xyplot);
+  pose_srv_h1.call(xyplot1);
+  // ros::Duration(0.05).sleep();	
+
+
    // }
 
   r.sleep();

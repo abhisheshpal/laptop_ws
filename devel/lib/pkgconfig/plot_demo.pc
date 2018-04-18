@@ -1,0 +1,8 @@
+prefix=/home/vigneshnuc/laptop_ws/devel
+
+Name: plot_demo
+Description: Description of plot_demo
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/vigneshnuc/laptop_ws/devel/lib 
+Requires: ecl_geometry geometry_msgs nav_msgs roscpp rospy std_msgs plot_tool

@@ -71,13 +71,17 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(include ${catkin_INCLUDE_DIRS})
+find_package(PythonLibs REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
 
 ## Declare a cpp library
 add_library(trigger_sync_lib
    src/trigger_sync.cpp
 )
-target_link_libraries(trigger_sync_lib ${catkin_LIBRARIES})
+target_link_libraries(trigger_sync_lib ${catkin_LIBRARIES} ${PYTHON_LIBRARIES})
 add_dependencies(trigger_sync_lib trigger_sync_generate_messages_cpp)
+
+
 
 ## Declare a cpp executable
 add_executable(pps_trigger             src/pps_trigger.cpp)

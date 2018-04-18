@@ -1,4 +1,4 @@
-set(file "/home/vignesh/laptop_ws/build/Extra_Packages/libpcan/EP_libpcan-prefix/src/peak-linux-driver-8.3.tar.gz")
+set(file "/home/vigneshnuc/laptop_ws/build/Extra_Packages/libpcan/EP_libpcan-prefix/src/peak-linux-driver-8.3.tar.gz")
 message(STATUS "verifying file...
      file='${file}'")
 set(expect_value "d8d58223c1b1c03b891aa43763fec2cb")
@@ -16,7 +16,7 @@ does not match expected value
 Retrying download.
 ")
     file(REMOVE "${file}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -P "/home/vignesh/laptop_ws/build/Extra_Packages/libpcan/EP_libpcan-prefix/src/EP_libpcan-stamp/download-EP_libpcan.cmake")
+    execute_process(COMMAND ${CMAKE_COMMAND} -P "/home/vigneshnuc/laptop_ws/build/Extra_Packages/libpcan/EP_libpcan-prefix/src/EP_libpcan-stamp/download-EP_libpcan.cmake")
   endif()
   math(EXPR attempt "${attempt} + 1")
 endwhile()
