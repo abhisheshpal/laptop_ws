@@ -10,6 +10,7 @@
 #include <cmath>
 #include <visualization_msgs/Marker.h>
 #include <nav_msgs/Odometry.h>
+#include <nav_msgs/Path.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Pose.h>
 #include <std_msgs/Float64MultiArray.h>
@@ -46,10 +47,14 @@ double d = 0.5; // distance between two wheels
 double lambda_x, lambda_y, q, dt;
 // bool landmarks_observed = false;
 ros::Time current_time, last_time;
-plot_tool::PlotPose xyplot, xyplot1;
+plot_tool::PlotPose xyplot, xyplot1, xyplot2, xyplot3, xyplot4, xyplot5;
 
 //initialize velocity variables
 double vx = 0.0, vy = 0.0, vth = 0.0;
+
+// Markers
+visualization_msgs::Marker landmark_strip_1, landmark_strip_2, landmark_strip_3, landmark_strip_4;
+nav_msgs::Path thor_pose;
 
 // Initialization for SLAM
 double yaw, current_yaw = 0, motion_noise = 0.00001, measurement_noise = 0.0001, sub_goal_thershold = 0.05;
@@ -57,7 +62,7 @@ double yaw, current_yaw = 0, motion_noise = 0.00001, measurement_noise = 0.0001,
 MatrixXd H = MatrixXd::Zero(2,2); // H - Jacobian
 MatrixXd K = MatrixXd::Zero(2,2); // Kalman gain
 MatrixXd Q_t = MatrixXd::Identity(2,2)* measurement_noise; // Measurement Noise 
-MatrixXd Q = MatrixXd::Identity(2,2)* measurement_noise; // Measurement Process 
+MatrixXd Q = MatrixXd::Zero(2,2)* measurement_noise; // Measurement Process 
 MatrixXd Z = MatrixXd::Zero(2,1); // Z
 MatrixXd expectedZ = MatrixXd::Zero(2,1); // expectedZ
 MatrixXd diff = MatrixXd::Zero(2,1); // error
@@ -66,12 +71,14 @@ MatrixXd line_theta = MatrixXd::Zero(4,1); // polar co-ordinates
 
 // particle filter
 static const int numParticles = 100;
-double noise = 0.005, gaussnoise = 0;
+double noise = 0.000005, gaussnoise = 0;
 int N = numParticles;
 MatrixXd w = MatrixXd::Zero(1,N);
-MatrixXd num1 = MatrixXd::Zero(1,N);;
-// std::cout << "IRUKEN" << std::endl;
-// particle structure
+MatrixXd num = MatrixXd::Zero(1,1);
+double den;
+
+
+// Particle structure
 struct landmarks_struct{
 bool landmarks_observed;
 MatrixXd mu = MatrixXd::Zero(2,1); // mu
@@ -79,8 +86,8 @@ MatrixXd sigma = MatrixXd::Zero(2,2); // sigma
 };
 
 struct particles_struct{
-double weight;
-geometry_msgs::Pose pose;
+MatrixXd weight = MatrixXd::Zero(1,1); // weight
+geometry_msgs::PoseStamped pose;
 geometry_msgs::Pose pose_history;
 struct landmarks_struct landmarks[total_landmarks];
 };
@@ -159,10 +166,10 @@ MatrixXd measurement_model(struct particles_struct *particles3, int i, int z){
  expectedZ(0,0) = expectedRange;
  expectedZ(1,0) = expectedBearing;
 
- H(0,0) = (particles[i].landmarks[z].mu(0)-particles[i].pose.position.x)/expectedRange;
- H(0,1) = (particles[i].landmarks[z].mu(1)-particles[i].pose.position.y)/expectedRange;
- H(1,0) = (particles[i].pose.position.y-particles[i].landmarks[z].mu(1))/(pow(expectedRange,2));
- H(1,1) = (particles[i].landmarks[z].mu(0)-particles[i].pose.position.x)/(pow(expectedRange,2));
+ H(0,0) = (particles[i].landmarks[z].mu(0)-particles[i].pose.pose.position.x)/expectedRange;
+ H(0,1) = (particles[i].landmarks[z].mu(1)-particles[i].pose.pose.position.y)/expectedRange;
+ H(1,0) = (particles[i].pose.pose.position.y-particles[i].landmarks[z].mu(1))/(pow(expectedRange,2));
+ H(1,1) = (particles[i].landmarks[z].mu(0)-particles[i].pose.pose.position.x)/(pow(expectedRange,2));
  return H;
 }
 
@@ -196,20 +203,16 @@ double unifRand()
 }
 
 void initializate_paramters(){
-
-for (int i = 0; i < numParticles; i++){
-particles[i].weight = 1/numParticles;
-particles[i].pose.position.x = 0;
-particles[i].pose.position.y = 0;
-particles[i].pose.orientation = tf::createQuaternionMsgFromYaw(0);
-particles[i].pose_history = particles[i].pose;
- for (int j = 0; j < total_landmarks; j++){
- particles[i].landmarks[j].landmarks_observed = false;
- // particles[i].landmarks[j].mu[2] = {0};
- // particles[i].landmarks[j].sigma[2][2] = {};
+ for (int i = 0; i < numParticles; i++){
+ particles[i].weight(0,0) = 1/numParticles;
+ particles[i].pose.pose.position.x = 0;
+ particles[i].pose.pose.position.y = 0;
+ particles[i].pose.pose.orientation = tf::createQuaternionMsgFromYaw(0);
+ particles[i].pose_history = particles[i].pose.pose;
+  for (int j = 0; j < total_landmarks; j++){
+  particles[i].landmarks[j].landmarks_observed = false;
+  }
  }
-}
-
 }
 
 void prediction_step(struct particles_struct *particles1, double dt1){
@@ -221,12 +224,12 @@ void prediction_step(struct particles_struct *particles1, double dt1){
  for (int i = 0; i < numParticles; i++){
 // particles[i].pose_history = particles[i].pose;
  gaussnoise = normrnd(vth,noise);
- particles1[i].pose.position.x = particles1[i].pose.position.x + ((vx+gaussnoise)*dt1);
- particles1[i].pose.position.y = particles1[i].pose.position.y + ((vy+gaussnoise)*dt1);
+ particles1[i].pose.pose.position.x = particles1[i].pose.pose.position.x + ((vx+gaussnoise)*dt1);
+ particles1[i].pose.pose.position.y = particles1[i].pose.pose.position.y + ((vy+gaussnoise)*dt1);
  current_yaw = (current_yaw+vth+gaussnoise)*dt1;
- particles1[i].pose.orientation = tf::createQuaternionMsgFromYaw(current_yaw);
+ particles1[i].pose.pose.orientation = tf::createQuaternionMsgFromYaw(current_yaw);
  }
-
+// ROS_INFO("HERE");
 }
 
 void correction_step(struct particles_struct *particles2, double dt2){
@@ -250,7 +253,7 @@ for (int i = 0; i < numParticles; i++){
 
          // initialize 2*2 EKF for current landmark
          particles[i].landmarks[z].sigma = H.inverse() * Q_t * (H.inverse()).transpose(); //CHECK
-         particles[i].weight = 0.5;
+         particles[i].weight(0,0) = 0.5;
       }
 
       else{
@@ -274,41 +277,43 @@ for (int i = 0; i < numParticles; i++){
         particles[i].landmarks[z].mu(1) = normalizeangle(particles[i].landmarks[z].mu(1));
 
         // Particle Weight
-        double den, num;
-       /* for (int k=0; k<N; k++) {
         den = 2*M_PI*sqrt(Q.determinant()); 
-        num1 = (-0.5*diff.transpose()*Q.inverse()*diff).exp(); 
-        particles[i].weight(k) = particles[i].weight(k)* num/den; 
-        } */
+        num = (-0.5* diff.transpose() * Q.inverse() * diff).exp(); 
+        particles[i].weight = particles[i].weight * (num/den); 
        }
       }	
 // std::cout << "particles1[i].pose.position.y:" << particles1[1].pose.position.y << "\n"  << "current_yaw:" << current_yaw << "\n" << std::endl;
-// std::cout << "diff:" << diff << "\n"  << "particles[1].landmarks[1].mu(1):" << particles[1].landmarks[1].mu(1) << "\n" << std::endl;
  }
+        // ROS_INFO("HERE1");
 }
 
 void resample(struct particles_struct *particles4, double dt4){
 
+// initializations
 int Nmin = 0.75*N;
 int doresample = 1;
-// MatrixXd w= MatrixXd::Zero(1,N);
+int len;
+double ws, wsum, Neff = 0;
+std::vector<int> keep;
+MatrixXd wsqrd = MatrixXd::Zero(1,N);
+std::vector<float> select;
+std::vector<float>::iterator diter; 
+float k, temp, new_w;
+int ctr=0;
 
 for(int i=0;i<N;i++){
-w(i)= particles4[i].weight;}
-double ws= w.sum(); 
-assert(ws!=0);
+w(i)= particles4[i].weight(0,0);}
+ws = w.sum(); 
+// assert(ws!=0);
 
 for (int i=0;i<N;i++){
 w(i)= w(i)/ws;}
 
 for (int i=0;i<N;i++){
-particles4[i].weight= (particles4[i].weight/ws);}
+particles4[i].weight(0,0)= (particles4[i].weight(0,0)/ws);}
 
 // stratified_resample 
-double Neff = 0;
-std::vector<int> keep;
-MatrixXd wsqrd = MatrixXd::Zero(1,N);
-float wsum = w.sum(); 
+wsum = w.sum(); 
 
 for (int i=0;i<w.size();i++){
 w(i)= w(i)/wsum; // normalise
@@ -317,17 +322,16 @@ wsqrd(i) = (float)pow(w(i),2);
 
 Neff= 1.0f/(float)wsqrd.sum(); 
 
-int len= w.size();
+len= w.size();
 keep.resize(len);
 for (int i=0; i<len; i++){
 keep[i] = -1;
 }
 
 // stratified_random 
-std::vector<float> select;
-float k = 1.0/float(len);
+ k = 1.0/float(len);
     //deterministic intervals
-    float temp = k/2;
+    temp = k/2;
     select.push_back(temp);
     while (temp < 1-k/2) {
         temp = temp+k;
@@ -335,14 +339,12 @@ float k = 1.0/float(len);
     }
 
     //dither within interval
-    std::vector<float>::iterator diter; 
     for (diter = select.begin(); diter != select.end(); diter++) {
         *diter = (*diter) + unifRand() * k - (k/2);
     }
 
     cumsum(w); 
 
-    int ctr=0;
     for (int i=0; i<len; i++) {
         while ((ctr<len) && (select[ctr]<w(i))) {
             keep[ctr] = i;
@@ -354,18 +356,18 @@ float k = 1.0/float(len);
 for (int i=0; i<N; i++) {
 old_particles[i] = particles[i];
 }
-
+// ROS_INFO("HERE2");
     if ((Neff < Nmin) && (doresample == 1)) {
         for(int i=0; i< keep.size(); i++) {
             particles[i] = old_particles[keep[i]]; 	
         }	
         for (int i=0; i<N; i++) {
-            float new_w = 1.0f/(float)N;
+            new_w = 1.0f/(float)N;
             assert(std::isfinite(new_w));
             assert(N == 100);
-            particles[i].weight = new_w;
+            particles[i].weight(0,0) = new_w;
         }
-    } 
+     } 
 }
 
 
@@ -382,15 +384,23 @@ int main(int argc, char** argv)
   ros::Subscriber odom_vel_sub = n.subscribe("/odom_topic", 50, odometryvelCallback);
   ros::Subscriber point_sub = n.subscribe("measurement_points", 100, linepointsCallback);
 
+  // Publishers
+  ros::Publisher thorvald_pose_pub = n.advertise<geometry_msgs::Pose>("thorvald_pose", 10);
+  ros::Publisher thorvald_path_pub = n.advertise<nav_msgs::Path>("thorvald_path", 10);
+  ros::Publisher marker_pub_1 = n.advertise<visualization_msgs::Marker>("landmark_marker_1", 10);
+  ros::Publisher marker_pub_2 = n.advertise<visualization_msgs::Marker>("landmark_marker_2", 10);
+  ros::Publisher marker_pub_3 = n.advertise<visualization_msgs::Marker>("landmark_marker_3", 10);
+  ros::Publisher marker_pub_4 = n.advertise<visualization_msgs::Marker>("landmark_marker_4", 10);
+
   //Service Client
-  ros::ServiceClient pose_srv_h = n.serviceClient<plot_tool::PlotPose>("plot_tool/draw_pose");
-  ros::ServiceClient pose_srv_h1 = n.serviceClient<plot_tool::PlotPose>("plot_tool/draw_pose");
+  // ros::ServiceClient pose_srv_h = n.serviceClient<plot_tool::PlotPose>("plot_tool/draw_pose");
+  // ros::ServiceClient pose_srv_h1 = n.serviceClient<plot_tool::PlotPose>("plot_tool/draw_pose");
 
   current_time = ros::Time::now();
   last_time = ros::Time::now();
   int init = 0;
   std::vector<double> weights_total;
-  double max_weight;
+  int max_weight;
 
   while (ros::ok()){
 
@@ -403,51 +413,142 @@ int main(int argc, char** argv)
   initializate_paramters();
   init = 1;}
 
+  // if((abs(robot_pose.twist.twist.linear.x)) >= 0.00000001){  // robot static check
+
   // prediction step
   prediction_step(particles, dt);
 
   // correction step
-  // correction_step(particles, dt);
+  correction_step(particles, dt);
 
   // resampling step
-  // resample(particles, dt);
+  resample(particles, dt);
 
   for (int i=0; i<N; i++) {
-  weights_total.push_back(particles[i].weight);
+  weights_total.push_back(particles[i].weight(0,0));
   }
 
-  max_weight = *(std::max_element(weights_total.begin(), weights_total.end()));
+  max_weight = (ceil)(*(std::max_element(weights_total.begin(), weights_total.end())));
 
-/*void access_vec_elements(vector<a_struct> *posit, size_t vec_sz)
-{
-    double x_pos;
-    double y_pos;
- 
-    x_pos = posit->at(vec_sz).x_position;
-    y_pos = posit->at(vec_sz).y_position;
-}*/
+        thor_pose.header.frame_id = "/map";
+        thor_pose.poses.push_back(particles[max_weight].pose);
 
-  xyplot.request.msg.position.x = particles[1].pose.position.y;
-  xyplot.request.msg.position.y = particles[1].pose.position.x;
+        landmark_strip_1.header.frame_id = "/map";
+        landmark_strip_1.action = visualization_msgs::Marker::ADD;
+        landmark_strip_1.pose.position.x = particles[max_weight].landmarks[0].mu(0,0);
+        landmark_strip_1.pose.position.y = particles[max_weight].landmarks[0].mu(1,0);
+        landmark_strip_1.pose.position.z = 0.75;
+        landmark_strip_1.pose.orientation.w = 1.0;
+        landmark_strip_1.type = visualization_msgs::Marker::CYLINDER;
+        landmark_strip_1.lifetime = ros::Duration(0.1);
+        landmark_strip_1.id = 1;
+        landmark_strip_1.scale.x = 0.05;
+        landmark_strip_1.color.b = 1.0;
+        landmark_strip_1.color.a = 1.0;
+
+        landmark_strip_2.header.frame_id = "/map";
+        landmark_strip_2.action = visualization_msgs::Marker::ADD;
+        landmark_strip_2.pose.position.x = particles[max_weight].landmarks[1].mu(0,0);
+        landmark_strip_2.pose.position.y = particles[max_weight].landmarks[1].mu(1,0);
+        landmark_strip_2.pose.position.z = 0.75;
+        landmark_strip_2.pose.orientation.w = 1.0;
+        landmark_strip_2.type = visualization_msgs::Marker::CYLINDER;
+        landmark_strip_2.lifetime = ros::Duration(0.1);
+        landmark_strip_2.id = 1;
+        landmark_strip_2.scale.x = 0.05;
+        landmark_strip_2.color.b = 1.0;
+        landmark_strip_2.color.a = 1.0;
+
+        landmark_strip_3.header.frame_id = "/map";
+        landmark_strip_3.action = visualization_msgs::Marker::ADD;
+        landmark_strip_3.pose.position.x = particles[max_weight].landmarks[2].mu(0,0);
+        landmark_strip_3.pose.position.y = particles[max_weight].landmarks[2].mu(1,0);
+        landmark_strip_3.pose.position.z = 0.75;
+        landmark_strip_3.pose.orientation.w = 1.0;
+        landmark_strip_3.type = visualization_msgs::Marker::CYLINDER;
+        landmark_strip_3.lifetime = ros::Duration(0.1);
+        landmark_strip_3.id = 1;
+        landmark_strip_3.scale.x = 0.05;
+        landmark_strip_3.color.b = 1.0;
+        landmark_strip_3.color.a = 1.0;
+
+        landmark_strip_4.header.frame_id = "/map";
+        landmark_strip_4.action = visualization_msgs::Marker::ADD;
+        landmark_strip_4.pose.position.x = particles[max_weight].landmarks[3].mu(0,0);
+        landmark_strip_4.pose.position.y = particles[max_weight].landmarks[3].mu(1,0);
+        landmark_strip_4.pose.position.z = 0.75;
+        landmark_strip_4.pose.orientation.w = 1.0;
+        landmark_strip_4.type = visualization_msgs::Marker::CYLINDER;
+        landmark_strip_4.lifetime = ros::Duration(0.1);
+        landmark_strip_4.id = 1;
+        landmark_strip_4.scale.x = 0.05;
+        landmark_strip_4.color.b = 1.0;
+        landmark_strip_4.color.a = 1.0;
+
+
+        landmark_strip_1.header.stamp = ros::Time::now();
+        landmark_strip_2.header.stamp = ros::Time::now();
+        landmark_strip_3.header.stamp = ros::Time::now();
+        landmark_strip_4.header.stamp = ros::Time::now();
+        thor_pose.header.stamp = ros::Time::now();
+
+ /* xyplot.request.msg.position.x = particles[max_weight].pose.position.y;
+  xyplot.request.msg.position.y = particles[max_weight].pose.position.x;
   xyplot.request.append=true;
   xyplot.request.series= 0;
-  xyplot.request.symbol= '-';
+  xyplot.request.symbol= 's';
   xyplot.request.symbol_size= 5;
 
   xyplot1.request.msg.position.x = robot_pose.pose.pose.position.y;
   xyplot1.request.msg.position.y = robot_pose.pose.pose.position.x;
   xyplot1.request.append=true;
-  xyplot1.request.series= 0;
-  xyplot1.request.symbol= '-';
+  xyplot1.request.series= 2;
+  xyplot1.request.symbol= 's';
   xyplot1.request.symbol_size= 5;
 
+  xyplot2.request.msg.position.x = particles[max_weight].landmarks[0].mu(0,0);
+  xyplot2.request.msg.position.y = particles[max_weight].landmarks[0].mu(1,0);
+  xyplot2.request.append=false;
+  xyplot2.request.series= 1;
+  xyplot2.request.symbol= 's';
+  xyplot2.request.symbol_size= 5;
+  xyplot3.request.msg.position.x = particles[max_weight].landmarks[1].mu(0,0);
+  xyplot3.request.msg.position.y = particles[max_weight].landmarks[1].mu(1,0);
+  xyplot3.request.append=false;
+  xyplot3.request.series= 1;
+  xyplot3.request.symbol= 's';
+  xyplot3.request.symbol_size= 5;
+  xyplot4.request.msg.position.x = particles[max_weight].landmarks[2].mu(0,0);
+  xyplot4.request.msg.position.y = particles[max_weight].landmarks[2].mu(1,0);
+  xyplot4.request.append=false;
+  xyplot4.request.series= 1;
+  xyplot4.request.symbol= 's';
+  xyplot4.request.symbol_size= 5;
+  xyplot5.request.msg.position.x = particles[max_weight].landmarks[3].mu(0,0);
+  xyplot5.request.msg.position.y = particles[max_weight].landmarks[3].mu(1,0);
+  xyplot5.request.append=false;
+  xyplot5.request.series= 1;
+  xyplot5.request.symbol= 's';
+  xyplot5.request.symbol_size= 5;
+
   pose_srv_h.call(xyplot);
-  pose_srv_h1.call(xyplot1);
-  // ros::Duration(0.05).sleep();	
+  pose_srv_h.call(xyplot1);
+  pose_srv_h.call(xyplot2);
+  pose_srv_h.call(xyplot3);
+  pose_srv_h.call(xyplot4);
+  pose_srv_h.call(xyplot5);
+  // pose_srv_h1.call(xyplot1);
+  // ros::Duration(0.05).sleep(); */
 
+  thorvald_pose_pub.publish(particles[max_weight].pose); 
+  thorvald_path_pub.publish(thor_pose);
+  marker_pub_1.publish(landmark_strip_1);	
+  marker_pub_2.publish(landmark_strip_2);	
+  marker_pub_3.publish(landmark_strip_3);	
+  marker_pub_4.publish(landmark_strip_4);	
+ // } // robot static check
 
-   // }
-
+  last_time = current_time;
   r.sleep();
 }
   return 0;

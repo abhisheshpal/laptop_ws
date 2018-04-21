@@ -10,11 +10,13 @@
 <node pkg="odometry_package" type="odometry_package_node" name="odometry_package_node"/-->
 <param name ="/use_sim_time" value="true"/>
 
-<node pkg="thorvald_2d_nav" type="guinea_pig" name="guinea_pig" output="screen"/>
+<!--node pkg="plot_tool" type="plot_path.py" name="plot_path.py" output="screen"/-->
+
+<node pkg="thorvald_2d_nav" type="fastSLAM" name="fastSLAM" output="screen"/>
 
 <!--node pkg="thorvald_2d_nav" type="thorvald_line_SLAM" name="thorvald_line_SLAM"/-->
 
-<node pkg="thorvald_2d_nav" type="thorvald_control_modes" name="thorvald_control_modes" output="screen"/>
+
 
 
 </launch>

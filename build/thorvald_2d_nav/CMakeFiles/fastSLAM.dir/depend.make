@@ -25,6 +25,7 @@ thorvald_2d_nav/CMakeFiles/fastSLAM.dir/src/fastSLAM.cpp.o: /opt/ros/kinetic/inc
 thorvald_2d_nav/CMakeFiles/fastSLAM.dir/src/fastSLAM.cpp.o: /opt/ros/kinetic/include/geometry_msgs/Vector3.h
 thorvald_2d_nav/CMakeFiles/fastSLAM.dir/src/fastSLAM.cpp.o: /opt/ros/kinetic/include/geometry_msgs/Vector3Stamped.h
 thorvald_2d_nav/CMakeFiles/fastSLAM.dir/src/fastSLAM.cpp.o: /opt/ros/kinetic/include/nav_msgs/Odometry.h
+thorvald_2d_nav/CMakeFiles/fastSLAM.dir/src/fastSLAM.cpp.o: /opt/ros/kinetic/include/nav_msgs/Path.h
 thorvald_2d_nav/CMakeFiles/fastSLAM.dir/src/fastSLAM.cpp.o: /opt/ros/kinetic/include/ros/advertise_options.h
 thorvald_2d_nav/CMakeFiles/fastSLAM.dir/src/fastSLAM.cpp.o: /opt/ros/kinetic/include/ros/advertise_service_options.h
 thorvald_2d_nav/CMakeFiles/fastSLAM.dir/src/fastSLAM.cpp.o: /opt/ros/kinetic/include/ros/assert.h

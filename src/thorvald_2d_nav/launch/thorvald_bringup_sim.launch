@@ -28,13 +28,13 @@
     <param name="scan" value="scan"/>
   </node>
 
-<node pkg="thorvald_2d_nav" type="test_RANSAC" name="test_RANSAC" output="screen"/>
+  <node pkg="thorvald_2d_nav" type="test_RANSAC" name="test_RANSAC" output="screen"/>
 
-<node pkg="thorvald_2d_nav" type="test_control_modes" name="test_control_modes" output="screen"/>
+  <node pkg="thorvald_2d_nav" type="test_control_modes" name="test_control_modes" output="screen"/>
 
-<node pkg="thorvald_2d_nav" type="fastSLAM" name="fastSLAM" output="screen"/>
+  <node pkg="thorvald_2d_nav" type="fastSLAM" name="fastSLAM" output="screen"/>
 
-<node pkg="thorvald_2d_nav" type="test_row_transition" name="test_row_transition" output="screen"/>
+  <!--node pkg="thorvald_2d_nav" type="test_row_transition" name="test_row_transition" output="screen"/-->
 
   <!-- twist mux bringup -->
   <include file="$(find thorvald_twist_mux)/launch/twist_mux.launch" />
