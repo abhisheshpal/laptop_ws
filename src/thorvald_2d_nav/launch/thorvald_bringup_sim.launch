@@ -78,5 +78,6 @@
   <remap from="/odometry/filtered" to="/odometry/global" /> 
   </node-->
 
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find thorvald_2d_nav)/rviz/fastSLAM.rviz"/>
 
 </launch>

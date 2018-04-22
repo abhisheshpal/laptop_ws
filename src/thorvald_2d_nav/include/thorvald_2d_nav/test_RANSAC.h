@@ -72,6 +72,6 @@ double row_end = 0, yaw, row_no = 1;
 thorvald_2d_nav::sub_goal end_row_check;
 int end_row_reach = 0, line_pt = 0;
 double min_range_view = 4.0, max_range = 30.0;
-int end_line = 0, end_row = 0, finale_1 = 0, finale_2 = 0;
+int end_line = 0, end_row = 0, finale_1 = 0, finale_2 = 0, land_check = 0;
 bool line_found_1 = false, line_found_2 = false, new_row = false;
 

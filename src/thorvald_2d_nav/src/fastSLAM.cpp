@@ -29,6 +29,11 @@
 #include <thorvald_2d_nav/sub_goal.h>
 #include "plot_tool/PlotPose.h"
 
+#include "tf2_ros/message_filter.h"
+#include "tf2_ros/transform_listener.h"
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf/transform_listener.h>
+
 #define INF 1000
 using namespace Eigen;
 
@@ -44,7 +49,7 @@ geometry_msgs::Twist twist_msg;
 double measured_points_range[4], measured_points_bearing[4];
 static const int total_landmarks = 4; 
 double d = 0.5; // distance between two wheels
-double lambda_x, lambda_y, q, dt;
+double lambda_x, lambda_y, q, dt, expectedRange, expectedBearing;
 // bool landmarks_observed = false;
 ros::Time current_time, last_time;
 plot_tool::PlotPose xyplot, xyplot1, xyplot2, xyplot3, xyplot4, xyplot5;
@@ -55,6 +60,10 @@ double vx = 0.0, vy = 0.0, vth = 0.0;
 // Markers
 visualization_msgs::Marker landmark_strip_1, landmark_strip_2, landmark_strip_3, landmark_strip_4;
 nav_msgs::Path thor_pose;
+
+geometry_msgs::TransformStamped transformStamped;
+tf::StampedTransform transform;
+geometry_msgs::PoseStamped landmark_trans, landmark_transformed, robot_trans, robot_transformed;
 
 // Initialization for SLAM
 double yaw, current_yaw = 0, motion_noise = 0.00001, measurement_noise = 0.0001, sub_goal_thershold = 0.05;
@@ -118,7 +127,7 @@ for (int num = 0; num < total_landmarks; num++){
 measured_points_range[num] = line_points->range[num];
 measured_points_bearing[num] = line_points->bearing[num];
 }}
-
+// std::cout << "measured_points_range[1]" << measured_points_range[1] << "measured_points_bearing[1]" << measured_points_bearing[1]  << std::endl;
 }
 
 //line points 
@@ -149,20 +158,20 @@ line_theta(3,0) = atan2(landmarks_pose.pt_4.y,landmarks_pose.pt_4.x);
 }
 
 double normalizeangle(double bearing){
-if (bearing > M_PI){
-bearing = M_PI;}
-if(bearing < -M_PI){
-bearing = -M_PI;}
+    if (bearing < -M_PI) {
+        bearing += 2*M_PI;
+    } else if (bearing > M_PI) {
+        bearing -= 2*M_PI;
+    }
 }
-
 
 MatrixXd measurement_model(struct particles_struct *particles3, int i, int z){
  lambda_x = particles3[i].landmarks[z].mu(0) - robot_pose.pose.pose.position.x;
  lambda_y = particles3[i].landmarks[z].mu(1) - robot_pose.pose.pose.position.y;
  q = pow(lambda_x,2) + pow(lambda_y,2);
 
- double expectedRange = sqrt(q);
- double expectedBearing = normalizeangle((lambda_y/lambda_x) - yaw);
+ expectedRange = sqrt(q);
+ expectedBearing = normalizeangle((lambda_y/lambda_x) - yaw);
  expectedZ(0,0) = expectedRange;
  expectedZ(1,0) = expectedBearing;
 
@@ -215,7 +224,7 @@ void initializate_paramters(){
  }
 }
 
-void prediction_step(struct particles_struct *particles1, double dt1){
+void prediction_step(struct particles_struct *particles1, double dt1, geometry_msgs::TransformStamped transformed_stamp){
 
  vx = robot_pose.twist.twist.linear.x;
  vy = robot_pose.twist.twist.linear.y;
@@ -224,57 +233,67 @@ void prediction_step(struct particles_struct *particles1, double dt1){
  for (int i = 0; i < numParticles; i++){
 // particles[i].pose_history = particles[i].pose;
  gaussnoise = normrnd(vth,noise);
+ particles1[i].pose.header.stamp = ros::Time::now(); 	
  particles1[i].pose.pose.position.x = particles1[i].pose.pose.position.x + ((vx+gaussnoise)*dt1);
  particles1[i].pose.pose.position.y = particles1[i].pose.pose.position.y + ((vy+gaussnoise)*dt1);
  current_yaw = (current_yaw+vth+gaussnoise)*dt1;
+ current_yaw = normalizeangle(current_yaw);
  particles1[i].pose.pose.orientation = tf::createQuaternionMsgFromYaw(current_yaw);
  }
 // ROS_INFO("HERE");
 }
 
-void correction_step(struct particles_struct *particles2, double dt2){
+void correction_step(struct particles_struct *particles2, double dt2, geometry_msgs::TransformStamped transformed_stamp){
 
 for (int i = 0; i < numParticles; i++){
 
       // Landmarks observation
-     for (int z = 0; z < total_landmarks; z++){
+     for (int s = 0; s < total_landmarks; s++){
 
         // Transformation of Line from global co-ordinate into robot frame
-      if (particles[i].landmarks[z].landmarks_observed == false){
+      if (particles[i].landmarks[s].landmarks_observed == false){
         // line_local_2(z,0) =  line_pho(z,0) - (robot_pose.pose.pose.position.x * cos(line_theta(z,0))) - (robot_pose.pose.pose.position.y * sin(line_theta(z,0)));
         // line_local_2(z,1) =  line_theta(z,0) - yaw + (3.14/2);
 
-         particles[i].landmarks[z].mu(0) =  robot_pose.pose.pose.position.x + (measured_points_range[z] + cos(yaw+measured_points_bearing[z]));
-         particles[i].landmarks[z].mu(1) =  robot_pose.pose.pose.position.y + (measured_points_range[z] + sin(yaw+measured_points_bearing[z]));
-         particles[i].landmarks[z].landmarks_observed = true;
+         // transformation from hokuyo to map frame
+         landmark_trans.header.frame_id = "hokuyo";
+         landmark_trans.pose.position.x = measured_points_range[s] * cos(yaw+measured_points_bearing[s]);
+         landmark_trans.pose.position.y = measured_points_range[s] * sin(yaw+measured_points_bearing[s]);
+         tf2::doTransform(landmark_trans, landmark_transformed, transformed_stamp);
 
+         particles[i].landmarks[s].mu(0) =   robot_pose.pose.pose.position.x + (landmark_transformed.pose.position.x);
+         particles[i].landmarks[s].mu(1) =   robot_pose.pose.pose.position.y + (landmark_transformed.pose.position.y);
+         particles[i].landmarks[s].landmarks_observed = true;
+ // std::cout << "measured_points_range[0]" << measured_points_range[0] << "\n" << "measured_points_bearing[0]" << measured_points_bearing[0] << std::endl;
+ // std::cout << "particles[i].landmarks["<<s<<"].mu(0)" << measured_points_range[0] * cos(measured_points_bearing[0]) << "\n" << "particles[i].landmarks["<<s<<"].mu(1)" << measured_points_range[0] *	 sin(measured_points_bearing[0])  << std::endl;
          // calculate jacobian w.r.t landmark pose
-         H = measurement_model(particles,i,z);
+         H = measurement_model(particles,i,s);
 
-         // initialize 2*2 EKF for current landmark
-         particles[i].landmarks[z].sigma = H.inverse() * Q_t * (H.inverse()).transpose(); //CHECK
+         // initialize 2*2 EKF for current landmark 
+         particles[i].landmarks[s].sigma = H.inverse() * Q_t * (H.inverse()).transpose(); //CHECK
          particles[i].weight(0,0) = 0.5;
       }
 
-      else{
-         Z(0,0) = measured_points_range[z];
-         Z(1,0) = measured_points_bearing[z];
+     else{
+         Z(0,0) = measured_points_range[s];
+         Z(1,0) = measured_points_bearing[s];
 
          // calculate jacobian w.r.t landmark pose
-         H = measurement_model(particles,i,z);
+         H = measurement_model(particles,i,s);
 
-         Q = (H*particles[i].landmarks[z].sigma*H.transpose()) + Q_t;
+         Q = (H*particles[i].landmarks[s].sigma*H.transpose()) + Q_t;
 
          // Kalman Gain
-         K = (particles[i].landmarks[z].sigma*H.transpose()) * (Q.inverse());
+         K = (particles[i].landmarks[s].sigma*H.transpose()) * (Q.inverse());
 
-        // Compute the diference between the expected and recorded measurements.
+         // Compute the diference between the expected and recorded measurements.
          diff = Z - expectedZ;
+         diff(1) = normalizeangle(diff(1));
+         // std::cout << "K" << K << "\n" << "diff" << diff << std::endl;
+	 // Finish the correction step by computing the new mu and sigma.
+         particles[i].landmarks[s].mu = particles[i].landmarks[s].mu + K*diff;
+         particles[i].landmarks[s].sigma = (MatrixXd::Identity(2,2)- K*H)*particles[i].landmarks[s].sigma;
 
-	// Finish the correction step by computing the new mu and sigma.
-        particles[i].landmarks[z].mu = particles[i].landmarks[z].mu + K*diff;
-        particles[i].landmarks[z].sigma =  (MatrixXd::Identity(2,2)- K*H)*particles[i].landmarks[z].sigma ;
-        particles[i].landmarks[z].mu(1) = normalizeangle(particles[i].landmarks[z].mu(1));
 
         // Particle Weight
         den = 2*M_PI*sqrt(Q.determinant()); 
@@ -385,7 +404,7 @@ int main(int argc, char** argv)
   ros::Subscriber point_sub = n.subscribe("measurement_points", 100, linepointsCallback);
 
   // Publishers
-  ros::Publisher thorvald_pose_pub = n.advertise<geometry_msgs::Pose>("thorvald_pose", 10);
+  ros::Publisher thorvald_pose_pub = n.advertise<geometry_msgs::PoseStamped>("thorvald_pose", 10);
   ros::Publisher thorvald_path_pub = n.advertise<nav_msgs::Path>("thorvald_path", 10);
   ros::Publisher marker_pub_1 = n.advertise<visualization_msgs::Marker>("landmark_marker_1", 10);
   ros::Publisher marker_pub_2 = n.advertise<visualization_msgs::Marker>("landmark_marker_2", 10);
@@ -402,6 +421,10 @@ int main(int argc, char** argv)
   std::vector<double> weights_total;
   int max_weight;
 
+  tf::TransformListener listener;
+  tf2_ros::Buffer tfBuffer; 
+  tf2_ros::TransformListener tfListener(tfBuffer);
+
   while (ros::ok()){
 
   ros::spinOnce();
@@ -413,13 +436,21 @@ int main(int argc, char** argv)
   initializate_paramters();
   init = 1;}
 
-  // if((abs(robot_pose.twist.twist.linear.x)) >= 0.00000001){  // robot static check
+  if (landmarks_pose.landmark_check > 0){  // robot static check
+
+  try{
+  transformStamped = tfBuffer.lookupTransform("map", "hokuyo", ros::Time(0));
+  }
+  catch (tf2::TransformException &ex){
+  ROS_WARN("%s",ex.what());
+  ros::Duration(1.0).sleep();
+  } 
 
   // prediction step
-  prediction_step(particles, dt);
+  prediction_step(particles, dt, transformStamped);
 
   // correction step
-  correction_step(particles, dt);
+  correction_step(particles, dt, transformStamped);
 
   // resampling step
   resample(particles, dt);
@@ -435,54 +466,62 @@ int main(int argc, char** argv)
 
         landmark_strip_1.header.frame_id = "/map";
         landmark_strip_1.action = visualization_msgs::Marker::ADD;
-        landmark_strip_1.pose.position.x = particles[max_weight].landmarks[0].mu(0,0);
-        landmark_strip_1.pose.position.y = particles[max_weight].landmarks[0].mu(1,0);
+        landmark_strip_1.pose.position.x = particles[1].landmarks[0].mu(0);
+        landmark_strip_1.pose.position.y = particles[1].landmarks[0].mu(1);
         landmark_strip_1.pose.position.z = 0.75;
         landmark_strip_1.pose.orientation.w = 1.0;
         landmark_strip_1.type = visualization_msgs::Marker::CYLINDER;
         landmark_strip_1.lifetime = ros::Duration(0.1);
         landmark_strip_1.id = 1;
-        landmark_strip_1.scale.x = 0.05;
-        landmark_strip_1.color.b = 1.0;
+        landmark_strip_1.scale.x = 0.1;
+        landmark_strip_1.scale.y = 0.1;
+        landmark_strip_1.scale.z = 0.2;
+        landmark_strip_1.color.g = 1.0;
         landmark_strip_1.color.a = 1.0;
 
         landmark_strip_2.header.frame_id = "/map";
         landmark_strip_2.action = visualization_msgs::Marker::ADD;
-        landmark_strip_2.pose.position.x = particles[max_weight].landmarks[1].mu(0,0);
-        landmark_strip_2.pose.position.y = particles[max_weight].landmarks[1].mu(1,0);
+        landmark_strip_2.pose.position.x = particles[max_weight].landmarks[1].mu(0);
+        landmark_strip_2.pose.position.y = particles[max_weight].landmarks[1].mu(1);
         landmark_strip_2.pose.position.z = 0.75;
         landmark_strip_2.pose.orientation.w = 1.0;
         landmark_strip_2.type = visualization_msgs::Marker::CYLINDER;
         landmark_strip_2.lifetime = ros::Duration(0.1);
         landmark_strip_2.id = 1;
-        landmark_strip_2.scale.x = 0.05;
-        landmark_strip_2.color.b = 1.0;
+        landmark_strip_2.scale.x = 0.1;
+        landmark_strip_2.scale.y = 0.1;
+        landmark_strip_2.scale.z = 0.2;
+        landmark_strip_2.color.g = 1.0;
         landmark_strip_2.color.a = 1.0;
 
         landmark_strip_3.header.frame_id = "/map";
         landmark_strip_3.action = visualization_msgs::Marker::ADD;
-        landmark_strip_3.pose.position.x = particles[max_weight].landmarks[2].mu(0,0);
-        landmark_strip_3.pose.position.y = particles[max_weight].landmarks[2].mu(1,0);
+        landmark_strip_3.pose.position.x = particles[max_weight].landmarks[2].mu(0);
+        landmark_strip_3.pose.position.y = particles[max_weight].landmarks[2].mu(1);
         landmark_strip_3.pose.position.z = 0.75;
         landmark_strip_3.pose.orientation.w = 1.0;
         landmark_strip_3.type = visualization_msgs::Marker::CYLINDER;
         landmark_strip_3.lifetime = ros::Duration(0.1);
         landmark_strip_3.id = 1;
-        landmark_strip_3.scale.x = 0.05;
-        landmark_strip_3.color.b = 1.0;
+        landmark_strip_3.scale.x = 0.1;
+        landmark_strip_3.scale.y = 0.1;
+        landmark_strip_3.scale.z = 0.2;
+        landmark_strip_3.color.g = 1.0;
         landmark_strip_3.color.a = 1.0;
 
         landmark_strip_4.header.frame_id = "/map";
         landmark_strip_4.action = visualization_msgs::Marker::ADD;
-        landmark_strip_4.pose.position.x = particles[max_weight].landmarks[3].mu(0,0);
-        landmark_strip_4.pose.position.y = particles[max_weight].landmarks[3].mu(1,0);
+        landmark_strip_4.pose.position.x = particles[max_weight].landmarks[3].mu(0);
+        landmark_strip_4.pose.position.y = particles[max_weight].landmarks[3].mu(1);
         landmark_strip_4.pose.position.z = 0.75;
         landmark_strip_4.pose.orientation.w = 1.0;
         landmark_strip_4.type = visualization_msgs::Marker::CYLINDER;
         landmark_strip_4.lifetime = ros::Duration(0.1);
         landmark_strip_4.id = 1;
-        landmark_strip_4.scale.x = 0.05;
-        landmark_strip_4.color.b = 1.0;
+        landmark_strip_4.scale.x = 0.1;
+        landmark_strip_4.scale.y = 0.1;
+        landmark_strip_4.scale.z = 0.2;
+        landmark_strip_4.color.g = 1.0;
         landmark_strip_4.color.a = 1.0;
 
 
@@ -546,7 +585,7 @@ int main(int argc, char** argv)
   marker_pub_2.publish(landmark_strip_2);	
   marker_pub_3.publish(landmark_strip_3);	
   marker_pub_4.publish(landmark_strip_4);	
- // } // robot static check
+  } // robot static check
 
   last_time = current_time;
   r.sleep();
