@@ -11,6 +11,7 @@
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Pose.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <std_msgs/Float64MultiArray.h>
 
 // ROS message includes
@@ -19,7 +20,7 @@
 
 
 //Callback Initialzations
-nav_msgs::Odometry thorvald_estimated_pose;
+geometry_msgs::PoseStamped thor_est;
 thorvald_2d_nav::landmarks landmarks_pose;
 
 //Rosservice parameters

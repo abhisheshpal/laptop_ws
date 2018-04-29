@@ -37,22 +37,6 @@ geometry_msgs/Point.h
 -
 
 /home/vigneshnuc/laptop_ws/devel/include/thorvald_2d_nav/scan_detected_line.h
-string
--
-vector
--
-map
--
-ros/types.h
--
-ros/serialization.h
--
-ros/builtin_message_traits.h
--
-ros/message_operations.h
--
-std_msgs/Header.h
--
 
 /home/vigneshnuc/laptop_ws/devel/include/thorvald_2d_nav/sub_goal.h
 ros/service_traits.h

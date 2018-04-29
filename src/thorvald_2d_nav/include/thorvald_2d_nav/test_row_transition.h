@@ -22,7 +22,7 @@
 //Callback parameters
 geometry_msgs::Twist est_twist;
 double yaw;
-nav_msgs::Odometry thorvald_pose;
+geometry_msgs::PoseStamped thor_est;
 
 //Transform parameters
 geometry_msgs::Pose goal_pt[2];

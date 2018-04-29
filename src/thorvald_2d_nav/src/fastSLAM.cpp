@@ -46,8 +46,8 @@ thorvald_2d_nav::landmarks landmarks_pose;
 nav_msgs::Odometry thorvald_estimated_pose;
 thorvald_2d_nav::sub_goal goal_count; 
 geometry_msgs::Twist twist_msg;
-double measured_points_range[4], measured_points_bearing[4];
-static const int total_landmarks = 4; 
+thorvald_2d_nav::scan_detected_line act_meas;
+static const int total_landmarks = 6; 
 double d = 0.5; // distance between two wheels
 double lambda_x, lambda_y, q, dt, expectedRange, expectedBearing;
 // bool landmarks_observed = false;
@@ -58,8 +58,9 @@ plot_tool::PlotPose xyplot, xyplot1, xyplot2, xyplot3, xyplot4, xyplot5;
 double vx = 0.0, vy = 0.0, vth = 0.0;
 
 // Markers
-visualization_msgs::Marker landmark_strip_1, landmark_strip_2, landmark_strip_3, landmark_strip_4;
+visualization_msgs::Marker landmark_strip_1, landmark_strip_2, landmark_strip_3, landmark_strip_4, landmark_strip_5, landmark_strip_6;
 nav_msgs::Path thor_pose;
+visualization_msgs::Marker est_l_1, est_l_2;
 
 geometry_msgs::TransformStamped transformStamped;
 tf::StampedTransform transform;
@@ -122,10 +123,13 @@ yaw = tf::getYaw(quat);
 //line point data
 void linepointsCallback(const thorvald_2d_nav::scan_detected_line::ConstPtr& line_points){
 
+act_meas.range.resize(6);
+act_meas.bearing.resize(6);
+
 if (line_points->range.size() > 0){
 for (int num = 0; num < total_landmarks; num++){
-measured_points_range[num] = line_points->range[num];
-measured_points_bearing[num] = line_points->bearing[num];
+act_meas.range[num] = line_points->range[num];
+act_meas.bearing[num] = line_points->bearing[num];
 }}
 // std::cout << "measured_points_range[1]" << measured_points_range[1] << "measured_points_bearing[1]" << measured_points_bearing[1]  << std::endl;
 }
@@ -144,7 +148,7 @@ landmarks_pose.pt_6 = landmarks_msg->pt_6;
 landmarks_pose.landmark_check = landmarks_msg->landmark_check; 
 
 // calculation of estimated range and bearing
-line_pho(0,0) = sqrt(pow(landmarks_pose.pt_1.x,2) + pow(landmarks_pose.pt_1.y,2));
+/*line_pho(0,0) = sqrt(pow(landmarks_pose.pt_1.x,2) + pow(landmarks_pose.pt_1.y,2));
 line_theta(0,0) = atan2(landmarks_pose.pt_1.y,landmarks_pose.pt_1.x);
 line_pho(1,0) = sqrt(pow(landmarks_pose.pt_2.x,2) + pow(landmarks_pose.pt_2.y,2));
 line_theta(1,0) = atan2(landmarks_pose.pt_2.y,landmarks_pose.pt_2.x);
@@ -152,7 +156,7 @@ line_theta(1,0) = atan2(landmarks_pose.pt_2.y,landmarks_pose.pt_2.x);
 line_pho(2,0) = sqrt(pow(landmarks_pose.pt_3.x,2) + pow(landmarks_pose.pt_3.y,2));
 line_theta(2,0) = atan2(landmarks_pose.pt_3.y,landmarks_pose.pt_3.x);
 line_pho(3,0) = sqrt(pow(landmarks_pose.pt_4.x,2) + pow(landmarks_pose.pt_4.y,2));
-line_theta(3,0) = atan2(landmarks_pose.pt_4.y,landmarks_pose.pt_4.x);
+line_theta(3,0) = atan2(landmarks_pose.pt_4.y,landmarks_pose.pt_4.x); */
 }
 
 }
@@ -248,7 +252,7 @@ void correction_step(struct particles_struct *particles2, double dt2, geometry_m
 for (int i = 0; i < numParticles; i++){
 
       // Landmarks observation
-     for (int s = 0; s < total_landmarks; s++){
+     for (int s = 0; s < (act_meas.range.size()); s++){
 
         // Transformation of Line from global co-ordinate into robot frame
       if (particles[i].landmarks[s].landmarks_observed == false){
@@ -257,15 +261,14 @@ for (int i = 0; i < numParticles; i++){
 
          // transformation from hokuyo to map frame
          landmark_trans.header.frame_id = "hokuyo";
-         landmark_trans.pose.position.x = measured_points_range[s] * cos(yaw+measured_points_bearing[s]);
-         landmark_trans.pose.position.y = measured_points_range[s] * sin(yaw+measured_points_bearing[s]);
+         landmark_trans.pose.position.x = act_meas.range[s] * cos(yaw+act_meas.bearing[s]);
+         landmark_trans.pose.position.y = act_meas.range[s] * sin(yaw+act_meas.bearing[s]);
          tf2::doTransform(landmark_trans, landmark_transformed, transformed_stamp);
 
-         particles[i].landmarks[s].mu(0) =   robot_pose.pose.pose.position.x + (landmark_transformed.pose.position.x);
-         particles[i].landmarks[s].mu(1) =   robot_pose.pose.pose.position.y + (landmark_transformed.pose.position.y);
+         particles[i].landmarks[s].mu(0) =   robot_pose.pose.pose.position.x + landmark_transformed.pose.position.x;
+         particles[i].landmarks[s].mu(1) =   robot_pose.pose.pose.position.y + landmark_transformed.pose.position.y;
          particles[i].landmarks[s].landmarks_observed = true;
- // std::cout << "measured_points_range[0]" << measured_points_range[0] << "\n" << "measured_points_bearing[0]" << measured_points_bearing[0] << std::endl;
- // std::cout << "particles[i].landmarks["<<s<<"].mu(0)" << measured_points_range[0] * cos(measured_points_bearing[0]) << "\n" << "particles[i].landmarks["<<s<<"].mu(1)" << measured_points_range[0] *	 sin(measured_points_bearing[0])  << std::endl;
+ 
          // calculate jacobian w.r.t landmark pose
          H = measurement_model(particles,i,s);
 
@@ -275,8 +278,8 @@ for (int i = 0; i < numParticles; i++){
       }
 
      else{
-         Z(0,0) = measured_points_range[s];
-         Z(1,0) = measured_points_bearing[s];
+         Z(0,0) = act_meas.range[s];
+         Z(1,0) = act_meas.bearing[s];
 
          // calculate jacobian w.r.t landmark pose
          H = measurement_model(particles,i,s);
@@ -289,7 +292,7 @@ for (int i = 0; i < numParticles; i++){
          // Compute the diference between the expected and recorded measurements.
          diff = Z - expectedZ;
          diff(1) = normalizeangle(diff(1));
-         // std::cout << "K" << K << "\n" << "diff" << diff << std::endl;
+
 	 // Finish the correction step by computing the new mu and sigma.
          particles[i].landmarks[s].mu = particles[i].landmarks[s].mu + K*diff;
          particles[i].landmarks[s].sigma = (MatrixXd::Identity(2,2)- K*H)*particles[i].landmarks[s].sigma;
@@ -303,7 +306,6 @@ for (int i = 0; i < numParticles; i++){
       }	
 // std::cout << "particles1[i].pose.position.y:" << particles1[1].pose.position.y << "\n"  << "current_yaw:" << current_yaw << "\n" << std::endl;
  }
-        // ROS_INFO("HERE1");
 }
 
 void resample(struct particles_struct *particles4, double dt4){
@@ -410,6 +412,10 @@ int main(int argc, char** argv)
   ros::Publisher marker_pub_2 = n.advertise<visualization_msgs::Marker>("landmark_marker_2", 10);
   ros::Publisher marker_pub_3 = n.advertise<visualization_msgs::Marker>("landmark_marker_3", 10);
   ros::Publisher marker_pub_4 = n.advertise<visualization_msgs::Marker>("landmark_marker_4", 10);
+  ros::Publisher marker_pub_5 = n.advertise<visualization_msgs::Marker>("landmark_marker_5", 10);
+  ros::Publisher marker_pub_6 = n.advertise<visualization_msgs::Marker>("landmark_marker_6", 10);
+  ros::Publisher marker_pub_7 = n.advertise<visualization_msgs::Marker>("est_l_1", 10);
+  ros::Publisher marker_pub_8 = n.advertise<visualization_msgs::Marker>("est_l_2", 10);
 
   //Service Client
   // ros::ServiceClient pose_srv_h = n.serviceClient<plot_tool::PlotPose>("plot_tool/draw_pose");
@@ -419,7 +425,8 @@ int main(int argc, char** argv)
   last_time = ros::Time::now();
   int init = 0;
   std::vector<double> weights_total;
-  int max_weight;
+  int max_weight, co = 1, co1 = 1;
+  bool land_r = false, land_r1 = false;
 
   tf::TransformListener listener;
   tf2_ros::Buffer tfBuffer; 
@@ -460,14 +467,33 @@ int main(int argc, char** argv)
   }
 
   max_weight = (ceil)(*(std::max_element(weights_total.begin(), weights_total.end())));
+  // std::cout << "max_weight:" << max_weight << "\n" << std::endl;
+  
+  if( (abs(robot_pose.pose.pose.position.x-particles[max_weight].landmarks[4].mu(0)) < 0.5) && (co == 1)){ 
+  // ROS_INFO("Landmarks reduced");
+  act_meas.range.resize(4);
+  act_meas.bearing.resize(4);
+  co = co + 1;
+  land_r = true;
+  goto landmark_reduction_1;
+  }
+
+  if( (abs(robot_pose.pose.pose.position.x-particles[max_weight].landmarks[2].mu(0)) < 0.5) && (co1 == 1)){ 
+  // ROS_INFO("Landmarks reduced");
+  act_meas.range.resize(2);
+  act_meas.bearing.resize(2);
+  co1 = co1 + 1;
+  land_r1 = true;
+  goto landmark_reduction_2;
+  }
 
         thor_pose.header.frame_id = "/map";
         thor_pose.poses.push_back(particles[max_weight].pose);
 
         landmark_strip_1.header.frame_id = "/map";
         landmark_strip_1.action = visualization_msgs::Marker::ADD;
-        landmark_strip_1.pose.position.x = particles[1].landmarks[0].mu(0);
-        landmark_strip_1.pose.position.y = particles[1].landmarks[0].mu(1);
+        landmark_strip_1.pose.position.x = particles[max_weight].landmarks[0].mu(0);
+        landmark_strip_1.pose.position.y = particles[max_weight].landmarks[0].mu(1);
         landmark_strip_1.pose.position.z = 0.75;
         landmark_strip_1.pose.orientation.w = 1.0;
         landmark_strip_1.type = visualization_msgs::Marker::CYLINDER;
@@ -494,6 +520,8 @@ int main(int argc, char** argv)
         landmark_strip_2.color.g = 1.0;
         landmark_strip_2.color.a = 1.0;
 
+        landmark_reduction_2:
+        if(land_r1 == false){
         landmark_strip_3.header.frame_id = "/map";
         landmark_strip_3.action = visualization_msgs::Marker::ADD;
         landmark_strip_3.pose.position.x = particles[max_weight].landmarks[2].mu(0);
@@ -523,12 +551,100 @@ int main(int argc, char** argv)
         landmark_strip_4.scale.z = 0.2;
         landmark_strip_4.color.g = 1.0;
         landmark_strip_4.color.a = 1.0;
+        }
+        else{
+         visualization_msgs::Marker empty_landmark_strip_3, empty_landmark_strip_4;
+         landmark_strip_3 = empty_landmark_strip_3;
+         landmark_strip_4 = empty_landmark_strip_4;
+        }
 
+        landmark_reduction_1:
+        if(land_r == false){
+        landmark_strip_5.header.frame_id = "/map";
+        landmark_strip_5.action = visualization_msgs::Marker::ADD;
+        landmark_strip_5.pose.position.x = particles[max_weight].landmarks[4].mu(0);
+        landmark_strip_5.pose.position.y = particles[max_weight].landmarks[4].mu(1);
+        landmark_strip_5.pose.position.z = 0.75;
+        landmark_strip_5.pose.orientation.w = 1.0;
+        landmark_strip_5.type = visualization_msgs::Marker::CYLINDER;
+        landmark_strip_5.lifetime = ros::Duration(0.1);
+        landmark_strip_5.id = 1;
+        landmark_strip_5.scale.x = 0.1;
+        landmark_strip_5.scale.y = 0.1;
+        landmark_strip_5.scale.z = 0.2;
+        landmark_strip_5.color.g = 1.0;
+        landmark_strip_5.color.a = 1.0;
+
+        landmark_strip_6.header.frame_id = "/map";
+        landmark_strip_6.action = visualization_msgs::Marker::ADD;
+        landmark_strip_6.pose.position.x = particles[max_weight].landmarks[5].mu(0);
+        landmark_strip_6.pose.position.y = particles[max_weight].landmarks[5].mu(1);
+        landmark_strip_6.pose.position.z = 0.75;
+        landmark_strip_6.pose.orientation.w = 1.0;
+        landmark_strip_6.type = visualization_msgs::Marker::CYLINDER;
+        landmark_strip_6.lifetime = ros::Duration(0.1);
+        landmark_strip_6.id = 1;
+        landmark_strip_6.scale.x = 0.1;
+        landmark_strip_6.scale.y = 0.1;
+        landmark_strip_6.scale.z = 0.2;
+        landmark_strip_6.color.g = 1.0;
+        landmark_strip_6.color.a = 1.0;
+
+        est_l_1.header.frame_id = "/map";
+        est_l_1.action = visualization_msgs::Marker::ADD;
+        est_l_1.pose.position.z = 0.0;
+        est_l_1.pose.orientation.w = 1.0;
+        est_l_1.type = visualization_msgs::Marker::LINE_STRIP;
+        est_l_1.lifetime = ros::Duration(0.1);
+        est_l_1.id = 8;
+        est_l_1.scale.x = 0.02;
+        est_l_1.color.g = 1.0;
+        est_l_1.color.a = 1.0;
+
+        est_l_2.header.frame_id = "/map";
+        est_l_2.action = visualization_msgs::Marker::ADD;
+        est_l_2.pose.position.z = 0.0;
+        est_l_2.pose.orientation.w = 1.0;
+        est_l_2.type = visualization_msgs::Marker::LINE_STRIP;
+        est_l_2.lifetime = ros::Duration(0.1);
+        est_l_2.id = 9;
+        est_l_2.scale.x = 0.02;
+        est_l_2.color.g = 1.0;
+        est_l_2.color.a = 1.0;
+
+        // Create the vertices for the points and lines
+        geometry_msgs::Point pt_1[2], pt_2[2];
+
+        pt_1[1].x = particles[max_weight].landmarks[5].mu(0); 
+        pt_1[1].y = particles[max_weight].landmarks[5].mu(1); 
+        pt_1[2].x = particles[max_weight].landmarks[1].mu(0); 
+        pt_1[2].y = particles[max_weight].landmarks[1].mu(1); 
+
+        pt_2[1].x = particles[max_weight].landmarks[4].mu(0); 
+        pt_2[1].y = particles[max_weight].landmarks[4].mu(1); 
+        pt_2[2].x = particles[max_weight].landmarks[0].mu(0); 
+        pt_2[2].y = particles[max_weight].landmarks[0].mu(1); 
+
+         for(int q_1 = 1; q_1 <= 2; q_1++){
+          est_l_1.points.push_back(pt_1[q_1]);
+          est_l_2.points.push_back(pt_2[q_1]); 
+         }// for loop end for storing points
+
+        }
+        else{
+         visualization_msgs::Marker empty_landmark_strip_5, empty_landmark_strip_6;
+         landmark_strip_5 = empty_landmark_strip_5;
+         landmark_strip_6 = empty_landmark_strip_6;
+        }
 
         landmark_strip_1.header.stamp = ros::Time::now();
         landmark_strip_2.header.stamp = ros::Time::now();
         landmark_strip_3.header.stamp = ros::Time::now();
         landmark_strip_4.header.stamp = ros::Time::now();
+        landmark_strip_5.header.stamp = ros::Time::now();
+        landmark_strip_6.header.stamp = ros::Time::now();
+        est_l_1.header.stamp = ros::Time::now();
+        est_l_2.header.stamp = ros::Time::now();
         thor_pose.header.stamp = ros::Time::now();
 
  /* xyplot.request.msg.position.x = particles[max_weight].pose.position.y;
@@ -584,7 +700,11 @@ int main(int argc, char** argv)
   marker_pub_1.publish(landmark_strip_1);	
   marker_pub_2.publish(landmark_strip_2);	
   marker_pub_3.publish(landmark_strip_3);	
-  marker_pub_4.publish(landmark_strip_4);	
+  marker_pub_4.publish(landmark_strip_4);
+  marker_pub_5.publish(landmark_strip_5);	
+  marker_pub_6.publish(landmark_strip_6);
+  marker_pub_7.publish(est_l_1);	
+  marker_pub_8.publish(est_l_2);	
   } // robot static check
 
   last_time = current_time;

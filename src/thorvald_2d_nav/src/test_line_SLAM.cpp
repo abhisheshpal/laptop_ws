@@ -127,7 +127,6 @@ void correction_step(MatrixXd mu_2, MatrixXd cov_2, MatrixXd line_local_2, Matri
       expectedZ(2*z,0) = expectedRange;
       expectedZ((2*z)+1,0) = expectedBearing;
 
-   //std::cout << "line_pho(2,0)" << "\t" << line_pho(2,0) << "\t" << "line_pho(3,0)" << "\t" << line_pho(3,0) << "\t" << "line_theta(2,0)" << "\t" << line_theta(2,0) << std::endl;
    // std::cout << "expectedRange" << "\t" << line_pho(z,0) << "\t" << "Z" << "\t" <<  Z(2*z,0) << std::endl;
 
       // Compute the Jacobian H of the measurement function h wrt the landmark location

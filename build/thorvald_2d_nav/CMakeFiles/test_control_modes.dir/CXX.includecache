@@ -103,6 +103,8 @@ geometry_msgs/Twist.h
 -
 geometry_msgs/Pose.h
 -
+geometry_msgs/PoseStamped.h
+-
 std_msgs/Float64MultiArray.h
 -
 thorvald_2d_nav/sub_goal.h

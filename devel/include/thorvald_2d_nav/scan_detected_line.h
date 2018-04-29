@@ -28,29 +28,23 @@ struct scan_detected_line_
     : header()
     , range()
     , bearing()  {
-      range.assign(0.0);
-
-      bearing.assign(0.0);
-  }
+    }
   scan_detected_line_(const ContainerAllocator& _alloc)
     : header(_alloc)
-    , range()
-    , bearing()  {
+    , range(_alloc)
+    , bearing(_alloc)  {
   (void)_alloc;
-      range.assign(0.0);
-
-      bearing.assign(0.0);
-  }
+    }
 
 
 
    typedef  ::std_msgs::Header_<ContainerAllocator>  _header_type;
   _header_type header;
 
-   typedef boost::array<float, 10>  _range_type;
+   typedef std::vector<float, typename ContainerAllocator::template rebind<float>::other >  _range_type;
   _range_type range;
 
-   typedef boost::array<float, 10>  _bearing_type;
+   typedef std::vector<float, typename ContainerAllocator::template rebind<float>::other >  _bearing_type;
   _bearing_type bearing;
 
 
@@ -131,12 +125,12 @@ struct MD5Sum< ::thorvald_2d_nav::scan_detected_line_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "e898260d96b8c031fca2533c01815bf0";
+    return "0c48d7ea62e7b537c35fd031effe2cbf";
   }
 
   static const char* value(const ::thorvald_2d_nav::scan_detected_line_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0xe898260d96b8c031ULL;
-  static const uint64_t static_value2 = 0xfca2533c01815bf0ULL;
+  static const uint64_t static_value1 = 0x0c48d7ea62e7b537ULL;
+  static const uint64_t static_value2 = 0xc35fd031effe2cbfULL;
 };
 
 template<class ContainerAllocator>
@@ -156,8 +150,8 @@ struct Definition< ::thorvald_2d_nav::scan_detected_line_<ContainerAllocator> >
   static const char* value()
   {
     return "Header header\n\
-float32[10] range\n\
-float32[10] bearing\n\
+float32[] range\n\
+float32[] bearing\n\
 \n\
 \n\
 ================================================================================\n\

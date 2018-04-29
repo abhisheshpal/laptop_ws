@@ -20,6 +20,10 @@ Panels:
         - /Marker7
         - /Marker8
         - /Path1
+        - /Marker9
+        - /Marker10
+        - /Marker11
+        - /Marker12
       Splitter Ratio: 0.508720934
     Tree Height: 775
   - Class: rviz/Selection
@@ -561,6 +565,38 @@ Visualization Manager:
       Topic: /thorvald_path
       Unreliable: false
       Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /landmark_marker_5
+      Name: Marker
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /landmark_marker_6
+      Name: Marker
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /est_l_1
+      Name: Marker
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /est_l_2
+      Name: Marker
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -593,18 +629,18 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 4.60931396
-        Y: -1.50905263
-        Z: -0.38307327
+        X: 4.99333811
+        Y: -0.845993102
+        Z: 0.132542819
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.535396874
+      Pitch: 0.745396674
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.02723956
+      Yaw: 3.00724173
     Saved: ~
 Window Geometry:
   Displays:

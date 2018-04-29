@@ -8,12 +8,12 @@ import struct
 import std_msgs.msg
 
 class scan_detected_line(genpy.Message):
-  _md5sum = "e898260d96b8c031fca2533c01815bf0"
+  _md5sum = "0c48d7ea62e7b537c35fd031effe2cbf"
   _type = "thorvald_2d_nav/scan_detected_line"
   _has_header = True #flag to mark the presence of a Header object
   _full_text = """Header header
-float32[10] range
-float32[10] bearing
+float32[] range
+float32[] bearing
 
 
 ================================================================================
@@ -35,7 +35,7 @@ time stamp
 string frame_id
 """
   __slots__ = ['header','range','bearing']
-  _slot_types = ['std_msgs/Header','float32[10]','float32[10]']
+  _slot_types = ['std_msgs/Header','float32[]','float32[]']
 
   def __init__(self, *args, **kwds):
     """
@@ -57,13 +57,13 @@ string frame_id
       if self.header is None:
         self.header = std_msgs.msg.Header()
       if self.range is None:
-        self.range = [0.] * 10
+        self.range = []
       if self.bearing is None:
-        self.bearing = [0.] * 10
+        self.bearing = []
     else:
       self.header = std_msgs.msg.Header()
-      self.range = [0.] * 10
-      self.bearing = [0.] * 10
+      self.range = []
+      self.bearing = []
 
   def _get_types(self):
     """
@@ -85,8 +85,14 @@ string frame_id
         _x = _x.encode('utf-8')
         length = len(_x)
       buff.write(struct.pack('<I%ss'%length, length, _x))
-      buff.write(_get_struct_10f().pack(*self.range))
-      buff.write(_get_struct_10f().pack(*self.bearing))
+      length = len(self.range)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sf'%length
+      buff.write(struct.pack(pattern, *self.range))
+      length = len(self.bearing)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sf'%length
+      buff.write(struct.pack(pattern, *self.bearing))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -113,11 +119,19 @@ string frame_id
       else:
         self.header.frame_id = str[start:end]
       start = end
-      end += 40
-      self.range = _get_struct_10f().unpack(str[start:end])
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sf'%length
       start = end
-      end += 40
-      self.bearing = _get_struct_10f().unpack(str[start:end])
+      end += struct.calcsize(pattern)
+      self.range = struct.unpack(pattern, str[start:end])
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sf'%length
+      start = end
+      end += struct.calcsize(pattern)
+      self.bearing = struct.unpack(pattern, str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -138,7 +152,13 @@ string frame_id
         _x = _x.encode('utf-8')
         length = len(_x)
       buff.write(struct.pack('<I%ss'%length, length, _x))
+      length = len(self.range)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sf'%length
       buff.write(self.range.tostring())
+      length = len(self.bearing)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sf'%length
       buff.write(self.bearing.tostring())
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
@@ -167,11 +187,19 @@ string frame_id
       else:
         self.header.frame_id = str[start:end]
       start = end
-      end += 40
-      self.range = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=10)
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sf'%length
       start = end
-      end += 40
-      self.bearing = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=10)
+      end += struct.calcsize(pattern)
+      self.range = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=length)
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sf'%length
+      start = end
+      end += struct.calcsize(pattern)
+      self.bearing = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=length)
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -186,9 +214,3 @@ def _get_struct_3I():
     if _struct_3I is None:
         _struct_3I = struct.Struct("<3I")
     return _struct_3I
-_struct_10f = None
-def _get_struct_10f():
-    global _struct_10f
-    if _struct_10f is None:
-        _struct_10f = struct.Struct("<10f")
-    return _struct_10f

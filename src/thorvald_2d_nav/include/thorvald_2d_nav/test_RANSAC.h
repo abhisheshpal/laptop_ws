@@ -25,7 +25,7 @@
 // Parameters 
 geometry_msgs::Point n;
 int k; // iterations need to find the best model
-double thershold = 0.1;
+double thershold = 0.05;
 int d = 25; // nearby point to fit the line
 
 double best_model;
@@ -36,9 +36,9 @@ double current_range_1, current_range_2;
 int count_i_1[1080], count_i_2[1080];
 visualization_msgs::Marker line_strip_1, line_strip_2, final_line;
 nav_msgs::Odometry thorvald_pose;
-thorvald_2d_nav::scan_detected_line measurement_points;
+thorvald_2d_nav::scan_detected_line meas_pts;
 thorvald_2d_nav::landmarks landmarks_pos;
-tf2_ros::Buffer tfBuffer; 
+tf2_ros::Buffer tfBuffer, tfBuffer1; 
 
 // Our "data".
 struct Point {
@@ -61,9 +61,10 @@ Line final_line_2;
 Point final_Index_2[2], current_Index_2[2];
 
 //Transform varibles
-geometry_msgs::TransformStamped transformStamped;
-geometry_msgs::PoseStamped left_line_1, left_line_1_transformed, left_line_2, left_line_2_transformed;
-geometry_msgs::PoseStamped right_line_1, right_line_1_transformed, right_line_2, right_line_2_transformed;
+geometry_msgs::TransformStamped transformStamped, transformStamped1;
+geometry_msgs::PoseStamped curr_pose, left_line_1, left_line_1_trans, left_line_2, left_line_2_trans;
+geometry_msgs::PoseStamped curr_pose_trans, right_line_1, right_line_1_trans, right_line_2, right_line_2_trans;
+geometry_msgs::Pose left_l_c, right_l_c;
 
 // dummy variables
 int p_1 = 1, l_1 = 1, c_1 = 0, a_1 = 0, b_1 = 0, p_2 = 1, l_2 = 1, c_2 = 0, a_2 = 0, b_2 = 0;

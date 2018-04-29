@@ -1,12 +1,11 @@
 #include "test_control_modes.h"
 
 // Thorvald Estimated Pose data
-void robotposeCallback (const nav_msgs::Odometry::ConstPtr& pose_msg)
+void robotposeCallback (const geometry_msgs::PoseStamped::ConstPtr& pose_msg)
 {
-thorvald_estimated_pose.pose.pose.position = pose_msg->pose.pose.position;
-thorvald_estimated_pose.pose.pose.orientation = pose_msg->pose.pose.orientation;
+thor_est.pose = pose_msg->pose;
 
-tf::Quaternion quat(thorvald_estimated_pose.pose.pose.orientation.x,thorvald_estimated_pose.pose.pose.orientation.y, thorvald_estimated_pose.pose.pose.orientation.z, thorvald_estimated_pose.pose.pose.orientation.w);
+tf::Quaternion quat(thor_est.pose.orientation.x,thor_est.pose.orientation.y, thor_est.pose.orientation.z, thor_est.pose.orientation.w);
 quat = quat.normalize();
 yaw = tf::getYaw(quat);
 
@@ -37,8 +36,8 @@ bool row_transition(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::su
 double control_law(double v, double _dt){
 
   // calculation of error
-  q_x =  mini_goal_pts.x-thorvald_estimated_pose.pose.pose.position.x;
-  q_y =  mini_goal_pts.y-thorvald_estimated_pose.pose.pose.position.y;
+  q_x =  mini_goal_pts.x-thor_est.pose.position.x;
+  q_y =  mini_goal_pts.y-thor_est.pose.position.y;
   position_error = sqrt(pow(q_x,2) + pow(q_y,2));
   angular_error = atan2(q_y,q_x)- yaw;
 
@@ -56,9 +55,6 @@ double control_law(double v, double _dt){
 
   double omega = K_p * angular_error + K_d * ((angular_error - lastError)/_dt);
   lastError = angular_error;
-
-   // std::cout << "atan2(q_y,q_x):" << atan2(q_y,q_x) << "\n" << "yaw:" << yaw << "\n" << std::endl;
-   // std::cout << "angular_error:" << angular_error << "\n" << "omega:" << omega << "\n" << std::endl;
 
   if (omega > M_PI){
   omega -= M_PI;}
@@ -83,7 +79,7 @@ int main(int argc, char** argv)
 
   // Subscribers
   ros::Subscriber landmarks_sub = n.subscribe("landmark_points", 100, landmarksposeCallback);
-  ros::Subscriber pose_sub = n.subscribe("/thorvald_ii/odom", 100, robotposeCallback);
+  ros::Subscriber pose_sub = n.subscribe("curr_thor", 100, robotposeCallback);
 
   // Publishers
   ros::Publisher twist_gazebo = n.advertise<geometry_msgs::Twist>( "/nav_vel", 100);
@@ -113,8 +109,8 @@ int main(int argc, char** argv)
    line_count = landmarks_pose.landmark_check;
 
     for(int i=1;i<=Total_Points;i++){
-    Points[i].position.x = (thorvald_estimated_pose.pose.pose.position.x *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.x-1.0) *(float(i)/Total_Points));
-    Points[i].position.y = (thorvald_estimated_pose.pose.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.y) *(float(i)/Total_Points));
+    Points[i].position.x = (thor_est.pose.position.x *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.x-1.0) *(float(i)/Total_Points));
+    Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.y) *(float(i)/Total_Points));
     }
 
   mini_goal_pts.x = Points[1].position.x;
@@ -130,7 +126,7 @@ int main(int argc, char** argv)
 
    // std::cout << "angular_velocity" << angular_velocity << "\n" << std::endl;
 
-   if(fabs(Points[Total_Points].position.x - thorvald_estimated_pose.pose.pose.position.x) <= 0.30){
+   if(fabs(Points[Total_Points].position.x - thor_est.pose.position.x) <= 0.30){
    counter_1 = 1;
    mini_goal = false;
    est_twist.linear.x = 0;

@@ -14,9 +14,9 @@ void scanCallback (const sensor_msgs::LaserScan::ConstPtr& scan_msg)
 // Thorvald Estimated Pose data
 void robotposeCallback (const nav_msgs::Odometry::ConstPtr& pose_msg)
 {
-thorvald_pose.pose.pose = pose_msg->pose.pose;
+thor_est.pose = pose_msg->pose.pose;
 
-tf::Quaternion quat(thorvald_pose.pose.pose.orientation.x,thorvald_pose.pose.pose.orientation.y, thorvald_pose.pose.pose.orientation.z, thorvald_pose.pose.pose.orientation.w);
+tf::Quaternion quat(thor_est.pose.orientation.x,thor_est.pose.orientation.y, thor_est.pose.orientation.z, thor_est.pose.orientation.w);
 quat = quat.normalize();
 yaw = tf::getYaw(quat);
 
@@ -308,7 +308,7 @@ int main(int argc, char** argv)
 
   // Subscribers
   ros::Subscriber scan_sub_test = n.subscribe("scan", 100, scanCallback);
-  ros::Subscriber pose_sub = n.subscribe("/thorvald_ii/odom", 100, robotposeCallback);
+  ros::Subscriber pose_sub = n.subscribe("/curr_thor", 100, robotposeCallback);
 
   // Publishers
   ros::Publisher twist_gazebo = n.advertise<geometry_msgs::Twist>( "/nav_vel", 100);
@@ -354,8 +354,8 @@ int main(int argc, char** argv)
   Pole_detection(scan_msg_main, min_itr , max_itr); // pole detection
 
   if(goal_found == true){
-   goal_range = sqrt(pow((goal_pt[goal_transit].position.y - thorvald_pose.pose.pose.position.y),2) + pow((goal_pt[goal_transit].position.x - thorvald_pose.pose.pose.position.x),2));
-   goal_bearing = atan2((goal_pt[goal_transit].position.y-thorvald_pose.pose.pose.position.y),(goal_pt[goal_transit].position.x - thorvald_pose.pose.pose.position.x)) - yaw;
+   goal_range = sqrt(pow((goal_pt[goal_transit].position.y - thor_est.pose.position.y),2) + pow((goal_pt[goal_transit].position.x - thor_est.pose.position.x),2));
+   goal_bearing = atan2((goal_pt[goal_transit].position.y-thor_est.pose.position.y),(goal_pt[goal_transit].position.x - thor_est.pose.position.x)) - yaw;
 
    angular_velocity = pure_pursuit(goal_range, goal_bearing); //pure pursuit controller
 
