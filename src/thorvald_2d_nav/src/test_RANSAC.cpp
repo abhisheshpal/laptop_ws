@@ -102,12 +102,12 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
 Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 
         // x, y, theta calculation
-	for (int i_2 = (num_ranges/2); i_2 <= 1079; i_2++){
+	for (int i_2 = (num_ranges/2); i_2 <= 920; i_2++){
 	angle_2[i_2] = scan_msg_main.angle_min+i_2*scan_msg_main.angle_increment;
 	x_2[i_2] = scan_msg_main.ranges[i_2]*cos(angle_2[i_2]);
 	y_2[i_2] = scan_msg_main.ranges[i_2]*sin(angle_2[i_2]);
 
-          if(!std::isnan(x_2[i_2]) && !std::isnan(y_2[i_2]) && (scan_msg_main.ranges[i_2] < 5.0)){
+          if(!std::isnan(x_2[i_2]) && !std::isnan(y_2[i_2]) && (scan_msg_main.ranges[i_2] < 5.5)){
            count_i_2[l_2] = i_2;
            l_2 = l_2 + 1;                
           } // storing the ith value with pre-conditions
@@ -147,7 +147,7 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
         l_2 = 0;
 
         if(final_count_4 > d){ // selecting the inliers with max of points    
-         if(final_count_4 > final_count_5 && (fabs(y_2[aIndex_2]) < 1.0) && (fabs(y_2[bIndex_2]) < 1.0)){           
+         if(final_count_4 > final_count_5 && (fabs(y_2[aIndex_2]) < 1.2) && (fabs(y_2[bIndex_2]) < 1.2)){           
 
             if(scan_msg_main.ranges[aIndex_2]<scan_msg_main.ranges[bIndex_2]){ 
             final_Index_2[1].real_x = x_2[aIndex_2];
@@ -177,7 +177,7 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 bool add(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
    {
      end_line = end_line + req.counter;
-     if(end_line > finale_1){
+     if((end_line > finale_1) && (end_line < 2)){
      finale = 0; 
      ROS_INFO("End of previous line reached");
      finale_1 = end_line;
@@ -231,22 +231,20 @@ int main(int argc, char** argv)
         meas_pts.range.resize(6);
         tf2_ros::TransformListener tfListener1(tfBuffer1);
         meas_pts.bearing.resize(6);
-
+        
         while (ros::ok()){
 	ros::spinOnce();
         
-        line_detect:
-        if(scan_msg_main.ranges.size() > 0 && (finale == 0)){ // check for new lines
-
+      if(scan_msg_main.ranges.size() > 0){
         // end of row detection
-        for (int l=360; l <=720; ++l){ // Number of iterations
+ /*       for (int l=360; l <=720; ++l){ // Number of iterations
          if(((scan_msg_main.ranges[l]) > min_range_view) && ((scan_msg_main.ranges[l]) < max_range) && (!std::isinf(scan_msg_main.ranges[l])) ){
          end_row_reach = end_row_reach + 1;
          // std::cout << "end_row_reach" << end_row_reach << "\n" << std::endl;
          }
-        }
-
-        if(end_row_reach==0){
+        } */
+// end_line = 2;
+        if((end_line==2) && (new_row == false)){
         finale = 1;
         end_row_check.request.counter = 1;
         if (client.call(end_row_check)){ 
@@ -254,6 +252,10 @@ int main(int argc, char** argv)
         new_row = true;
         goto line_publish;}
         }
+       }
+
+        line_detect:
+        if(scan_msg_main.ranges.size() > 0 && (finale == 0)){ // check for new lines
 
           ROS_INFO("Line Detection starts");
 	
@@ -270,7 +272,6 @@ int main(int argc, char** argv)
           transformStamped = tfBuffer.lookupTransform("map", "hokuyo", ros::Time(0));
           }
           catch (tf2::TransformException &ex){
-          ROS_WARN("%s",ex.what());
           ros::Duration(1.0).sleep();
           }
  

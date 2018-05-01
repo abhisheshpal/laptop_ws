@@ -326,6 +326,7 @@
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/thorvald_row_transition.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/fastSLAM.dir
+/home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/fusion_model.dir
 /home/vigneshnuc/laptop_ws/build/thorvald_2d_nav/CMakeFiles/install/local.dir
 /home/vigneshnuc/laptop_ws/build/Sensors/ethzasl_xsens_driver-master/CMakeFiles/list_install_components.dir
 /home/vigneshnuc/laptop_ws/build/Sensors/ethzasl_xsens_driver-master/CMakeFiles/install.dir

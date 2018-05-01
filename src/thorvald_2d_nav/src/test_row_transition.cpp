@@ -11,16 +11,18 @@ void scanCallback (const sensor_msgs::LaserScan::ConstPtr& scan_msg)
 
 } // callback end
 
+/*
 // Thorvald Estimated Pose data
-void robotposeCallback (const nav_msgs::Odometry::ConstPtr& pose_msg)
+void robotposeCallback (const geometry_msgs::PoseStamped::ConstPtr& pose_msg)
 {
-thor_est.pose = pose_msg->pose.pose;
+thor_est.pose = pose_msg->pose;
 
 tf::Quaternion quat(thor_est.pose.orientation.x,thor_est.pose.orientation.y, thor_est.pose.orientation.z, thor_est.pose.orientation.w);
 quat = quat.normalize();
 yaw = tf::getYaw(quat);
 
 }
+*/
 
 // Pole detection
 void Pole_detection(sensor_msgs::LaserScan scan_msg_poles, double itr_begin, double itr_end){
@@ -166,7 +168,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_1.action = visualization_msgs::Marker::ADD;
   marker_1.pose.position.x = pole_1_transformed.pose.position.x;
   marker_1.pose.position.y = pole_1_transformed.pose.position.y;
-  marker_1.pose.position.z = 0.75;
+  marker_1.pose.position.z = 0.90;
   marker_1.pose.orientation.w = 1.0;
   marker_1.scale.x = 0.05;
   marker_1.scale.y = 0.05;
@@ -182,7 +184,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_2.action = visualization_msgs::Marker::ADD;
   marker_2.pose.position.x = pole_2_transformed.pose.position.x;
   marker_2.pose.position.y = pole_2_transformed.pose.position.y;
-  marker_2.pose.position.z = 0.75;
+  marker_2.pose.position.z = 0.90;
   marker_2.pose.orientation.w = 1.0;
   marker_2.scale.x = 0.05;
   marker_2.scale.y = 0.05;
@@ -198,7 +200,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_3.action = visualization_msgs::Marker::ADD;
   marker_3.pose.position.x = pole_3_transformed.pose.position.x;
   marker_3.pose.position.y = pole_3_transformed.pose.position.y;
-  marker_3.pose.position.z = 0.75;
+  marker_3.pose.position.z = 0.90;
   marker_3.pose.orientation.w = 1.0;
   marker_3.scale.x = 0.05;
   marker_3.scale.y = 0.05;
@@ -242,7 +244,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_goal_1.action = visualization_msgs::Marker::ADD;
   marker_goal_1.pose.position.x = ((nearest_pole_x + next_nearest_pole_x)/2) + 1.0;
   marker_goal_1.pose.position.y = (nearest_pole_y + next_nearest_pole_y)/2;
-  marker_goal_1.pose.position.z = 0.75;
+  marker_goal_1.pose.position.z = 0.90;
   marker_goal_1.pose.orientation.w = 1.0;
   marker_goal_1.scale.x = 0.05;
   marker_goal_1.scale.y = 0.05;
@@ -257,7 +259,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_goal_2.action = visualization_msgs::Marker::ADD;
   marker_goal_2.pose.position.x = ((farthest_pole_x + next_nearest_pole_x)/2) + 1.0;
   marker_goal_2.pose.position.y = (farthest_pole_y + next_nearest_pole_y)/2;
-  marker_goal_2.pose.position.z = 0.75;
+  marker_goal_2.pose.position.z = 0.90	;
   marker_goal_2.pose.orientation.w = 1.0;
   marker_goal_2.scale.x = 0.05;
   marker_goal_2.scale.y = 0.05;
@@ -274,10 +276,10 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   break;
 
   case LEFT: 
-  goal_pt[1].position.x = marker_goal_1.pose.position.x;
-  goal_pt[1].position.y = marker_goal_1.pose.position.y;
-  goal_pt[2].position.x = marker_goal_2.pose.position.x;
-  goal_pt[2].position.y = marker_goal_2.pose.position.y;
+  goal_pt[1].position.x = marker_goal_2.pose.position.x;
+  goal_pt[1].position.y = marker_goal_2.pose.position.y;
+  goal_pt[2].position.x = marker_goal_1.pose.position.x;
+  goal_pt[2].position.y = marker_goal_1.pose.position.y;
   break;
  }
 
@@ -288,7 +290,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
 }
 
 double pure_pursuit(double obs_range, double obs_bearing){
-double robotlength = 1.1;
+double robotlength = 0.8;
 double steeringAngle = atan(2*robotlength*sin(obs_bearing))/obs_range;
 return steeringAngle;
 }
@@ -308,7 +310,7 @@ int main(int argc, char** argv)
 
   // Subscribers
   ros::Subscriber scan_sub_test = n.subscribe("scan", 100, scanCallback);
-  ros::Subscriber pose_sub = n.subscribe("/curr_thor", 100, robotposeCallback);
+  // ros::Subscriber pose_sub = n.subscribe("/curr_thor", 100, robotposeCallback);
 
   // Publishers
   ros::Publisher twist_gazebo = n.advertise<geometry_msgs::Twist>( "/nav_vel", 100);
@@ -328,10 +330,32 @@ int main(int argc, char** argv)
   ros::Rate r(1.0);
 
   tf2_ros::TransformListener tfListener(tfBuffer);
+  tf2_ros::TransformListener tfListener1(tfBuffer1);
 
   while (ros::ok()){
   ros::spinOnce();
 
+ try{
+   transformStamped1 = tfBuffer1.lookupTransform("map", "base_link", ros::Time(0));
+ }
+ catch (tf2::TransformException &ex1){
+   ros::Duration(1.0).sleep();
+   // continue;
+ }
+
+  // thor_est_trans.pose.position.x = transformStamped1.transform.translation.x;
+  // thor_est_trans.pose.position.y = transformStamped1.transform.translation.y;
+   tf2::doTransform(thor_est, thor_est_trans, transformStamped1);
+
+  thor_est_trans.pose.orientation = transformStamped1.transform.rotation;
+  // thor_est_trans.pose.orientation.y = transformStamped1.transform.rotation.y;
+  // thor_est_trans.pose.orientation.z = transformStamped1.transform.rotation.z;
+  // thor_est_trans.pose.orientation.w = transformStamped1.transform.rotation.w;
+  // std::cout << transformStamped1.transform.translation.x << "\n" << transformStamped1.transform.translation.y << std::endl;
+  // std::cout << thor_est_trans.pose.orientation.w << "\n" << transformStamped1.transform.rotation.w << std::endl;
+  tf::Quaternion quat(thor_est_trans.pose.orientation.x,thor_est_trans.pose.orientation.y, thor_est_trans.pose.orientation.z, thor_est_trans.pose.orientation.w);
+  quat = quat.normalize();
+  yaw = tf::getYaw(quat);
 
   if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0) && (row_transit_mode == row_transit)){ // scan check  
 
@@ -351,15 +375,17 @@ int main(int argc, char** argv)
    max_itr = 1079;
    }
 
+
+
   Pole_detection(scan_msg_main, min_itr , max_itr); // pole detection
 
   if(goal_found == true){
-   goal_range = sqrt(pow((goal_pt[goal_transit].position.y - thor_est.pose.position.y),2) + pow((goal_pt[goal_transit].position.x - thor_est.pose.position.x),2));
-   goal_bearing = atan2((goal_pt[goal_transit].position.y-thor_est.pose.position.y),(goal_pt[goal_transit].position.x - thor_est.pose.position.x)) - yaw;
-
+   goal_range = sqrt(pow((goal_pt[goal_transit].position.y - thor_est_trans.pose.position.y),2) + pow((goal_pt[goal_transit].position.x - thor_est_trans.pose.position.x),2));
+   goal_bearing = atan2((goal_pt[goal_transit].position.y-thor_est_trans.pose.position.y),(goal_pt[goal_transit].position.x - thor_est_trans.pose.position.x)) - yaw;
+   std::cout << goal_range << "\n" << yaw << std::endl;
    angular_velocity = pure_pursuit(goal_range, goal_bearing); //pure pursuit controller
 
-   if(goal_range < 0.15){
+   if(goal_range < 0.25){
     est_twist.linear.x = 0.0; 
     est_twist.angular.z = 0.0;
 
@@ -396,7 +422,7 @@ int main(int argc, char** argv)
     }
    } 
    else{
-   est_twist.linear.x = 0; 
+   est_twist.linear.x = 0.2; 
    est_twist.angular.z = 0;
    }
 
@@ -446,11 +472,11 @@ int main(int argc, char** argv)
   vis_pub_5.publish(marker_goal_1);
   vis_pub_6.publish(marker_goal_2);
 
-  stopover:
-  twist_gazebo.publish(est_twist);
+  // r.sleep();
   } // scan check
 
-  r.sleep();
+  stopover:
+  twist_gazebo.publish(est_twist);
   } // node shutdown
  return 0;
 } // main loop end

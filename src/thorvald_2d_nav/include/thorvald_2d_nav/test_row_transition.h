@@ -22,16 +22,16 @@
 //Callback parameters
 geometry_msgs::Twist est_twist;
 double yaw;
-geometry_msgs::PoseStamped thor_est;
+geometry_msgs::PoseStamped thor_est, thor_est_trans;
 
 //Transform parameters
 geometry_msgs::Pose goal_pt[2];
-tf2_ros::Buffer tfBuffer;
-geometry_msgs::TransformStamped transformStamped;
+tf2_ros::Buffer tfBuffer, tfBuffer1;
+geometry_msgs::TransformStamped transformStamped, transformStamped1;
 thorvald_2d_nav::sub_goal end_row_transit, end_row_transit_1;
 
 //Parameters for pole detection
-double min_range_left = 3.0, min_range_right = 2.0;
+double min_range_left = 3.5, min_range_right = 4.5;
 sensor_msgs::LaserScan scan_msg_main;
 size_t num_ranges;
 bool goal_found = false;

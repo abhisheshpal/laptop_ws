@@ -795,6 +795,21 @@ fastSLAM/fast:
 	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fastSLAM.dir/build.make thorvald_2d_nav/CMakeFiles/fastSLAM.dir/build
 .PHONY : fastSLAM/fast
 
+# Convenience name for target.
+thorvald_2d_nav/CMakeFiles/fusion_model.dir/rule:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f CMakeFiles/Makefile2 thorvald_2d_nav/CMakeFiles/fusion_model.dir/rule
+.PHONY : thorvald_2d_nav/CMakeFiles/fusion_model.dir/rule
+
+# Convenience name for target.
+fusion_model: thorvald_2d_nav/CMakeFiles/fusion_model.dir/rule
+
+.PHONY : fusion_model
+
+# fast build rule for target.
+fusion_model/fast:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fusion_model.dir/build.make thorvald_2d_nav/CMakeFiles/fusion_model.dir/build
+.PHONY : fusion_model/fast
+
 src/fastSLAM.o: src/fastSLAM.cpp.o
 
 .PHONY : src/fastSLAM.o
@@ -875,6 +890,33 @@ src/test_control_modes.s: src/test_control_modes.cpp.s
 src/test_control_modes.cpp.s:
 	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/test_control_modes.dir/build.make thorvald_2d_nav/CMakeFiles/test_control_modes.dir/src/test_control_modes.cpp.s
 .PHONY : src/test_control_modes.cpp.s
+
+src/test_fusion.o: src/test_fusion.cpp.o
+
+.PHONY : src/test_fusion.o
+
+# target to build an object file
+src/test_fusion.cpp.o:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fusion_model.dir/build.make thorvald_2d_nav/CMakeFiles/fusion_model.dir/src/test_fusion.cpp.o
+.PHONY : src/test_fusion.cpp.o
+
+src/test_fusion.i: src/test_fusion.cpp.i
+
+.PHONY : src/test_fusion.i
+
+# target to preprocess a source file
+src/test_fusion.cpp.i:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fusion_model.dir/build.make thorvald_2d_nav/CMakeFiles/fusion_model.dir/src/test_fusion.cpp.i
+.PHONY : src/test_fusion.cpp.i
+
+src/test_fusion.s: src/test_fusion.cpp.s
+
+.PHONY : src/test_fusion.s
+
+# target to generate assembly for a file
+src/test_fusion.cpp.s:
+	cd /home/vigneshnuc/laptop_ws/build && $(MAKE) -f thorvald_2d_nav/CMakeFiles/fusion_model.dir/build.make thorvald_2d_nav/CMakeFiles/fusion_model.dir/src/test_fusion.cpp.s
+.PHONY : src/test_fusion.cpp.s
 
 src/test_line_SLAM.o: src/test_line_SLAM.cpp.o
 
@@ -1119,6 +1161,7 @@ help:
 	@echo "... thorvald_row_transition"
 	@echo "... test_line_SLAM"
 	@echo "... fastSLAM"
+	@echo "... fusion_model"
 	@echo "... install/local"
 	@echo "... src/fastSLAM.o"
 	@echo "... src/fastSLAM.i"
@@ -1129,6 +1172,9 @@ help:
 	@echo "... src/test_control_modes.o"
 	@echo "... src/test_control_modes.i"
 	@echo "... src/test_control_modes.s"
+	@echo "... src/test_fusion.o"
+	@echo "... src/test_fusion.i"
+	@echo "... src/test_fusion.s"
 	@echo "... src/test_line_SLAM.o"
 	@echo "... src/test_line_SLAM.i"
 	@echo "... src/test_line_SLAM.s"

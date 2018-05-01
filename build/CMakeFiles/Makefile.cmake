@@ -654,4 +654,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "thorvald_2d_nav/CMakeFiles/thorvald_row_transition.dir/DependInfo.cmake"
   "thorvald_2d_nav/CMakeFiles/test_line_SLAM.dir/DependInfo.cmake"
   "thorvald_2d_nav/CMakeFiles/fastSLAM.dir/DependInfo.cmake"
+  "thorvald_2d_nav/CMakeFiles/fusion_model.dir/DependInfo.cmake"
   )

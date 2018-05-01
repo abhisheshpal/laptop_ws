@@ -3441,6 +3441,19 @@ fastSLAM/fast:
 	$(MAKE) -f thorvald_2d_nav/CMakeFiles/fastSLAM.dir/build.make thorvald_2d_nav/CMakeFiles/fastSLAM.dir/build
 .PHONY : fastSLAM/fast
 
+#=============================================================================
+# Target rules for targets named fusion_model
+
+# Build rule for target.
+fusion_model: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 fusion_model
+.PHONY : fusion_model
+
+# fast build rule for target.
+fusion_model/fast:
+	$(MAKE) -f thorvald_2d_nav/CMakeFiles/fusion_model.dir/build.make thorvald_2d_nav/CMakeFiles/fusion_model.dir/build
+.PHONY : fusion_model/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -3706,6 +3719,7 @@ help:
 	@echo "... thorvald_row_transition"
 	@echo "... test_line_SLAM"
 	@echo "... fastSLAM"
+	@echo "... fusion_model"
 .PHONY : help
 
 

@@ -18,10 +18,16 @@
 #include <thorvald_2d_nav/sub_goal.h>
 #include <thorvald_2d_nav/landmarks.h>
 
+#include "tf2_ros/message_filter.h"
+#include "tf2_ros/transform_listener.h"
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf/transform_listener.h>
 
 //Callback Initialzations
-geometry_msgs::PoseStamped thor_est;
+geometry_msgs::PoseStamped thor_est, thor_est_trans;
 thorvald_2d_nav::landmarks landmarks_pose;
+geometry_msgs::TransformStamped transformStamped;
+tf2_ros::Buffer tfBuffer;
 
 //Rosservice parameters
 thorvald_2d_nav::sub_goal goal_count; 
@@ -34,7 +40,7 @@ int Total_Points = 15;
 geometry_msgs::Pose Points[20];
 geometry_msgs::Twist est_twist;
 double yaw, position_error, angular_error, q_x , q_y, lastError = 0;
-double K_d = 0.001, K_p = 0.001, K_i = 0.000001;
+double K_d = 0.1, K_p = 0.2, K_i = 0.001;
 bool mini_goal = false;
 double _integral = 0;
 
