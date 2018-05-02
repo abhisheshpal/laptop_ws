@@ -1,0 +1,12 @@
+<!-- -*- xml -*- -->
+
+<launch>
+
+<include file = "$(find laser_filters)/examples/range_filter_example.launch" />
+
+
+<node name="test_RANSAC" type="test_RANSAC" pkg="thorvald_2d_nav" output="screen" />
+<node name="test_control_modes" type="test_control_modes" pkg="thorvald_2d_nav" output="screen" />
+<node name="test_row_transition" type="test_row_transition" pkg="thorvald_2d_nav" output="screen" />
+
+</launch>

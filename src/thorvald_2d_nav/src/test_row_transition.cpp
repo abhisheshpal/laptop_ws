@@ -11,25 +11,12 @@ void scanCallback (const sensor_msgs::LaserScan::ConstPtr& scan_msg)
 
 } // callback end
 
-/*
-// Thorvald Estimated Pose data
-void robotposeCallback (const geometry_msgs::PoseStamped::ConstPtr& pose_msg)
-{
-thor_est.pose = pose_msg->pose;
-
-tf::Quaternion quat(thor_est.pose.orientation.x,thor_est.pose.orientation.y, thor_est.pose.orientation.z, thor_est.pose.orientation.w);
-quat = quat.normalize();
-yaw = tf::getYaw(quat);
-
-}
-*/
-
 // Pole detection
 void Pole_detection(sensor_msgs::LaserScan scan_msg_poles, double itr_begin, double itr_end){
 
 if(goal_found == false){
 
-double thershold = 0.2;
+double thershold = 0.3;
 int initial_count_1 = 0, initial_count_2 = 0;
 double x[num_ranges], y[num_ranges], angle[num_ranges];
 double range_1[num_ranges], count_angle_1[num_ranges], count_angle_2[num_ranges];
@@ -39,8 +26,8 @@ double sum_k[num_ranges];
 
 //---------------------- FIRST MARKER ---------------------------//
         pole_redetect:
-	for (int i = 1; i < 540; i++){
-           if((scan_msg_poles.ranges[i] < min_range_left)){
+	for (int i = 240; i <= 540; i++){
+           if((scan_msg_poles.ranges[i] < min_range_right)){
             initial_count_1 = initial_count_1 + 1;
             angle[initial_count_1] = scan_msg_poles.angle_min+i*scan_msg_poles.angle_increment;
             x[initial_count_1] = scan_msg_poles.ranges[i]*cos(angle[initial_count_1]);
@@ -68,9 +55,8 @@ double sum_k[num_ranges];
           else{
             unfit = unfit + 1;
             array_1[unfit] = itr_loop_1;
-          }         
+          }     
         }
-
 //---------------------- SECOND MARKER ---------------------------//
   if(unfit>0){
   double sum_q[num_ranges];
@@ -101,10 +87,10 @@ double sum_k[num_ranges];
 //---------------------- THIRD MARKER ---------------------------//
 
   double sum_n[num_ranges];
- 
+
         pole_redetect_left:
 	for (int r = 540; r <=1079; r++){
-           if((scan_msg_poles.ranges[r] < min_range_right)){
+           if((scan_msg_poles.ranges[r] < min_range_left)){
             initial_count_2 = initial_count_2 + 1;
             count_angle_2[initial_count_2] = r;
            }
@@ -130,6 +116,7 @@ if(n == 0){
 ROS_INFO("Left Pole has to be re-detected");
 goto pole_redetect_left;
 }
+
 
 //---------------------- GOAL ---------------------------// 
 geometry_msgs::PoseStamped pole_1, pole_1_transformed;
@@ -176,7 +163,6 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_1.color.a = 1.0; // Don't forget to set the alpha!
   marker_1.color.b = 1.0;
 
-  if(q>5){
   marker_2.header.frame_id = "map";
   marker_2.ns = "poles_2";
   marker_2.id = 2;
@@ -191,7 +177,6 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_2.scale.z = 0.2;
   marker_2.color.a = 1.0; // Don't forget to set the alpha!
   marker_2.color.b = 1.0;
-  }
 
   marker_3.header.frame_id = "map";
   marker_3.ns = "poles_3";
@@ -242,7 +227,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_goal_1.id = 3;
   marker_goal_1.type = visualization_msgs::Marker::CYLINDER;
   marker_goal_1.action = visualization_msgs::Marker::ADD;
-  marker_goal_1.pose.position.x = ((nearest_pole_x + next_nearest_pole_x)/2) + 1.0;
+  marker_goal_1.pose.position.x = ((nearest_pole_x + next_nearest_pole_x)/2) + 1.25;
   marker_goal_1.pose.position.y = (nearest_pole_y + next_nearest_pole_y)/2;
   marker_goal_1.pose.position.z = 0.90;
   marker_goal_1.pose.orientation.w = 1.0;
@@ -257,7 +242,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_goal_2.id = 3;
   marker_goal_2.type = visualization_msgs::Marker::CYLINDER;
   marker_goal_2.action = visualization_msgs::Marker::ADD;
-  marker_goal_2.pose.position.x = ((farthest_pole_x + next_nearest_pole_x)/2) + 1.0;
+  marker_goal_2.pose.position.x = ((farthest_pole_x + next_nearest_pole_x)/2) + 1.25;
   marker_goal_2.pose.position.y = (farthest_pole_y + next_nearest_pole_y)/2;
   marker_goal_2.pose.position.z = 0.90	;
   marker_goal_2.pose.orientation.w = 1.0;
@@ -309,10 +294,11 @@ int main(int argc, char** argv)
   ros::NodeHandle n;
 
   // Subscribers
-  ros::Subscriber scan_sub_test = n.subscribe("scan", 100, scanCallback);
+  ros::Subscriber scan_sub_test = n.subscribe("scan_filtered", 100, scanCallback);
   // ros::Subscriber pose_sub = n.subscribe("/curr_thor", 100, robotposeCallback);
 
   // Publishers
+ // ros::Publisher scan_pub = n.advertise<sensor_msgs::LaserScan>( "/scan_range", 100);
   ros::Publisher twist_gazebo = n.advertise<geometry_msgs::Twist>( "/nav_vel", 100);
   ros::Publisher vis_pub_1 = n.advertise<visualization_msgs::Marker>( "pole_marker_1", 1 );
   ros::Publisher vis_pub_2 = n.advertise<visualization_msgs::Marker>( "pole_marker_2", 1 );
@@ -343,16 +329,8 @@ int main(int argc, char** argv)
    // continue;
  }
 
-  // thor_est_trans.pose.position.x = transformStamped1.transform.translation.x;
-  // thor_est_trans.pose.position.y = transformStamped1.transform.translation.y;
-   tf2::doTransform(thor_est, thor_est_trans, transformStamped1);
-
+  tf2::doTransform(thor_est, thor_est_trans, transformStamped1);
   thor_est_trans.pose.orientation = transformStamped1.transform.rotation;
-  // thor_est_trans.pose.orientation.y = transformStamped1.transform.rotation.y;
-  // thor_est_trans.pose.orientation.z = transformStamped1.transform.rotation.z;
-  // thor_est_trans.pose.orientation.w = transformStamped1.transform.rotation.w;
-  // std::cout << transformStamped1.transform.translation.x << "\n" << transformStamped1.transform.translation.y << std::endl;
-  // std::cout << thor_est_trans.pose.orientation.w << "\n" << transformStamped1.transform.rotation.w << std::endl;
   tf::Quaternion quat(thor_est_trans.pose.orientation.x,thor_est_trans.pose.orientation.y, thor_est_trans.pose.orientation.z, thor_est_trans.pose.orientation.w);
   quat = quat.normalize();
   yaw = tf::getYaw(quat);
@@ -382,21 +360,21 @@ int main(int argc, char** argv)
   if(goal_found == true){
    goal_range = sqrt(pow((goal_pt[goal_transit].position.y - thor_est_trans.pose.position.y),2) + pow((goal_pt[goal_transit].position.x - thor_est_trans.pose.position.x),2));
    goal_bearing = atan2((goal_pt[goal_transit].position.y-thor_est_trans.pose.position.y),(goal_pt[goal_transit].position.x - thor_est_trans.pose.position.x)) - yaw;
-   std::cout << goal_range << "\n" << yaw << std::endl;
+   std::cout << "goal_range:" << goal_range << "\n" << "yaw" << yaw << std::endl;
    angular_velocity = pure_pursuit(goal_range, goal_bearing); //pure pursuit controller
 
-   if(goal_range < 0.25){
+   if(goal_range < 0.30){
     est_twist.linear.x = 0.0; 
     est_twist.angular.z = 0.0;
 
   switch(turn_side){ 
     case RIGHT:
-    if(yaw>=(-(goal_transit*1.50))){
+    if(yaw>(-(goal_transit*1.40))){
     est_twist.angular.z = -0.20; 
     turn_90=false;  
     }
-    else if((yaw<=-3.0)&&(yaw>=-3.14)){ 
-    est_twist.angular.z = fabs(yaw)-3.14; 
+    else if((yaw<=-2.80)&&(yaw>=-2.90)){ 
+    est_twist.angular.z = fabs(yaw)-2.90; 
     }
     else{
     turn_90 = true;
@@ -406,12 +384,12 @@ int main(int argc, char** argv)
     break;
 
     case LEFT:
-    if(yaw<=(goal_transit*1.50)){
+    if(yaw<=(goal_transit*1.40)){
     est_twist.angular.z = 0.20; 
     turn_90=false;  
     }
-    else if((yaw>=3.0)&&(yaw<=3.14)){ 
-    est_twist.angular.z = 3.14-yaw; 
+    else if((yaw>=2.80)&&(yaw<=2.90)){ 
+    est_twist.angular.z = 2.90-yaw; 
     }
     else{
     turn_90 = true;
@@ -426,11 +404,8 @@ int main(int argc, char** argv)
    est_twist.angular.z = 0;
    }
 
-
-//  std::cout << "goal_range" << goal_range << "\n" << "yaw" << yaw << "\n" << std::endl;
-
    // Service for end of row transition
-   if ((turn_90 = true) && (goal_transit==2) && ((yaw >= 3.12)||(yaw<=-3.12))){
+   if ((turn_90 = true) && (goal_transit==2) && ((yaw >= 2.90)||(yaw<=-2.90))){
      // std::cout << "final_yaw" << yaw << "\n"<< std::endl;
      end_row_transit.request.counter = 1;
      end_row_transit_1.request.counter = 1;
@@ -460,6 +435,7 @@ int main(int argc, char** argv)
   } // goal check 
 
   // publish the markers
+ // scan_msg.header.stamp = ros::Time::now();
   marker_1.header.stamp = ros::Time::now();
   marker_2.header.stamp = ros::Time::now();
   marker_3.header.stamp = ros::Time::now();
@@ -472,11 +448,12 @@ int main(int argc, char** argv)
   vis_pub_5.publish(marker_goal_1);
   vis_pub_6.publish(marker_goal_2);
 
+  stopover:
+  twist_gazebo.publish(est_twist);
   // r.sleep();
   } // scan check
 
-  stopover:
-  twist_gazebo.publish(est_twist);
+ // scan_pub.publish(scan_msg);
   } // node shutdown
  return 0;
 } // main loop end

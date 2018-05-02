@@ -29,7 +29,7 @@ counter_line = 1;
 bool row_transition(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
    {
      row_no = row_no + req.counter;
-     next_row_check = true;
+     // next_row_check = true;  /// change it
      return true;
    }
 
@@ -112,7 +112,7 @@ int main(int argc, char** argv)
    line_count = landmarks_pose.landmark_check;
 
     for(int i=1;i<=Total_Points;i++){
-    Points[i].position.x = (thor_est.pose.position.x *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.x-0.5) *(float(i)/Total_Points));
+    Points[i].position.x = (thor_est.pose.position.x *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.x-1.0) *(float(i)/Total_Points));
     Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.pt_6.y) *(float(i)/Total_Points));
     }
 
@@ -138,9 +138,9 @@ int main(int argc, char** argv)
 
    angular_velocity = control_law(linear_velocity, dt); // control law
 
-   std::cout << "angular_velocity" << angular_velocity << "\n" << std::endl;
+   // std::cout << "angular_velocity" << angular_velocity << "\n" << std::endl;
 
-   if(fabs(Points[Total_Points].position.x - thor_est_trans.pose.position.x) <= 0.5){
+   if(fabs(Points[Total_Points].position.x - thor_est_trans.pose.position.x) <= 0.3){
    counter_1 = 1;
    mini_goal = false;
    est_twist.linear.x = 0;
@@ -151,9 +151,11 @@ int main(int argc, char** argv)
    est_twist.linear.x = 0.2;
    est_twist.angular.z = 0;
      if(c>5){
-     est_twist.angular.z = 0;
+     est_twist.angular.z = angular_velocity;
      }
     } 
+
+   twist_gazebo.publish(est_twist);
    } // final min-goal check
 
    if(counter_1 == 1){
@@ -164,8 +166,6 @@ int main(int argc, char** argv)
 
    last_time = current_time;
   } // generated line check
-
- twist_gazebo.publish(est_twist);
  }
   return 0;
 }

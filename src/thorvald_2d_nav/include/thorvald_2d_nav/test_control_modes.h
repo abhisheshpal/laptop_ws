@@ -40,7 +40,7 @@ int Total_Points = 15;
 geometry_msgs::Pose Points[20];
 geometry_msgs::Twist est_twist;
 double yaw, position_error, angular_error, q_x , q_y, lastError = 0;
-double K_d = 0.1, K_p = 0.2, K_i = 0.001;
+double K_d = 0.01, K_p = 0.02, K_i = 0.001;
 bool mini_goal = false;
 double _integral = 0;
 

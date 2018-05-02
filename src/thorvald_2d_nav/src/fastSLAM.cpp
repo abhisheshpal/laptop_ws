@@ -406,7 +406,7 @@ int main(int argc, char** argv)
   ros::Subscriber point_sub = n.subscribe("measurement_points", 100, linepointsCallback);
 
   // Publishers
-  ros::Publisher thorvald_pose_pub = n.advertise<geometry_msgs::PoseStamped>("thorvald_pose", 10);
+  ros::Publisher thorvald_pose_pub = n.advertise<geometry_msgs::PoseStamped>("thor_est_laser", 10);
   ros::Publisher thorvald_path_pub = n.advertise<nav_msgs::Path>("thorvald_path", 10);
   ros::Publisher marker_pub_1 = n.advertise<visualization_msgs::Marker>("landmark_marker_1", 10);
   ros::Publisher marker_pub_2 = n.advertise<visualization_msgs::Marker>("landmark_marker_2", 10);
