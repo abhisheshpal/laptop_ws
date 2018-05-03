@@ -24,7 +24,8 @@
 
 using namespace Eigen;
 int n1;
-MatrixXd p_j = MatrixXd::Zero(2,1);
+MatrixXd p_j_0 = MatrixXd::Zero(1,1);
+MatrixXd p_j_1 = MatrixXd::Zero(1,1);
 
 // Thorvald pose structure
 struct thorvald_pose_struct{
@@ -33,7 +34,7 @@ MatrixXd mu = MatrixXd::Zero(6,1); // mu
 MatrixXd sigma = MatrixXd::Zero(6,6); // sigma
 };
 
-thorvald_pose_struct thor_pose;
+thorvald_pose_struct thor_pose, thor_pose_est;
 geometry_msgs::PoseStamped true_pose, thor_est;
 nav_msgs::Odometry thor_est_gps;
 MatrixXd expp = MatrixXd::Zero(1,1);
@@ -109,11 +110,17 @@ return weight;
 struct thorvald_pose_struct fusion_model(struct thorvald_pose_struct thor_pose_f, MatrixXd weigh_1, MatrixXd weigh_2){
 
 // normalizing weight
-// p_j(0,0) = weigh_1/(weigh_1+weigh_2);
-// p_j(1,0) = weigh_1/(weigh_1+weigh_2);
+p_j_0 = weigh_1*(weigh_1+weigh_2).inverse();
+p_j_1 = weigh_1*(weigh_1+weigh_2).inverse();
 
+thor_pose_est.landmarks_observed = thor_pose_f.landmarks_observed;	
 
-return thor_pose_f;
+// final state and co-variance model
+thor_pose_est.mu = p_j_0*thor_pose_f.mu + p_j_1*thor_pose_f.mu;
+MatrixXd zi = thor_pose_est.mu - thor_pose_f.mu;
+thor_pose_est.sigma = p_j_0*(thor_pose_f.sigma+(zi*zi.transpose())) + p_j_1*(thor_pose_f.sigma+(zi*zi.transpose()));
+
+return thor_pose_est;
 }
 
 int main(int argc, char** argv)
