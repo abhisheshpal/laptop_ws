@@ -1,1 +1,1 @@
-/usr/bin/cc     CMakeFiles/pps_config.dir/src/pps_config.c.o  -o /home/vigneshnuc/laptop_ws/devel/lib/trigger_sync/pps_config -rdynamic 
+/usr/bin/cc     CMakeFiles/pps_config.dir/src/pps_config.c.o  -o /home/vigmesh/laptop_ws/devel/lib/trigger_sync/pps_config -rdynamic 

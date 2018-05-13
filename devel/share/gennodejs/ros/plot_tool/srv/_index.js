@@ -1,10 +1,10 @@
 
 "use strict";
 
-let PlotPath = require('./PlotPath.js')
 let PlotPose = require('./PlotPose.js')
+let PlotPath = require('./PlotPath.js')
 
 module.exports = {
-  PlotPath: PlotPath,
   PlotPose: PlotPose,
+  PlotPath: PlotPath,
 };

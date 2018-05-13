@@ -35,10 +35,10 @@ sensor_msgs::LaserScan scan_msg_main;
 double current_range_1, current_range_2;
 int count_i_1[1080], count_i_2[1080];
 visualization_msgs::Marker line_strip_1, line_strip_2, final_line;
-nav_msgs::Odometry thorvald_pose;
 thorvald_2d_nav::scan_detected_line meas_pts;
 thorvald_2d_nav::landmarks landmarks_pos;
 tf2_ros::Buffer tfBuffer, tfBuffer1; 
+geometry_msgs::Pose thorvald_pose;
 
 // Our "data".
 struct Point {
@@ -65,6 +65,7 @@ geometry_msgs::TransformStamped transformStamped, transformStamped1;
 geometry_msgs::PoseStamped curr_pose, left_line_1, left_line_1_trans, left_line_2, left_line_2_trans;
 geometry_msgs::PoseStamped curr_pose_trans, right_line_1, right_line_1_trans, right_line_2, right_line_2_trans;
 geometry_msgs::Pose left_l_c, right_l_c;
+
 
 // dummy variables
 int p_1 = 1, l_1 = 1, c_1 = 0, a_1 = 0, b_1 = 0, p_2 = 1, l_2 = 1, c_2 = 0, a_2 = 0, b_2 = 0;

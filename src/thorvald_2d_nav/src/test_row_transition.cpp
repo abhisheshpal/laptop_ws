@@ -11,6 +11,14 @@ void scanCallback (const sensor_msgs::LaserScan::ConstPtr& scan_msg)
 
 } // callback end
 
+// Laser Scan data
+void robotposeCallback (const geometry_msgs::Pose::ConstPtr& pose_msg)
+{
+thor_est.pose.position = pose_msg->position;
+thor_est.pose.orientation = pose_msg->orientation;
+
+} // callback end
+
 // Pole detection
 void Pole_detection(sensor_msgs::LaserScan scan_msg_poles, double itr_begin, double itr_end){
 
@@ -26,7 +34,7 @@ double sum_k[num_ranges];
 
 //---------------------- FIRST MARKER ---------------------------//
         pole_redetect:
-	for (int i = 240; i <= 540; i++){
+	for (int i = 60; i <= 540; i++){
            if((scan_msg_poles.ranges[i] < min_range_right)){
             initial_count_1 = initial_count_1 + 1;
             angle[initial_count_1] = scan_msg_poles.angle_min+i*scan_msg_poles.angle_increment;
@@ -134,6 +142,7 @@ pole_2.pose.position.y = current_range_2*sin(angle_2);
 pole_3.header.frame_id = "hokuyo";
 pole_3.pose.position.x = current_range_3*cos(angle_3);
 pole_3.pose.position.y = current_range_3*sin(angle_3);
+// std::cout << pole_1.pose.position.x << std::endl;
 
  try{
    transformStamped = tfBuffer.lookupTransform("map", "hokuyo", ros::Time(0));
@@ -227,7 +236,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_goal_1.id = 3;
   marker_goal_1.type = visualization_msgs::Marker::CYLINDER;
   marker_goal_1.action = visualization_msgs::Marker::ADD;
-  marker_goal_1.pose.position.x = ((nearest_pole_x + next_nearest_pole_x)/2) + 1.25;
+  marker_goal_1.pose.position.x = ((nearest_pole_x + next_nearest_pole_x)/2) + 2.0;
   marker_goal_1.pose.position.y = (nearest_pole_y + next_nearest_pole_y)/2;
   marker_goal_1.pose.position.z = 0.90;
   marker_goal_1.pose.orientation.w = 1.0;
@@ -242,7 +251,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_goal_2.id = 3;
   marker_goal_2.type = visualization_msgs::Marker::CYLINDER;
   marker_goal_2.action = visualization_msgs::Marker::ADD;
-  marker_goal_2.pose.position.x = ((farthest_pole_x + next_nearest_pole_x)/2) + 1.25;
+  marker_goal_2.pose.position.x = ((farthest_pole_x + next_nearest_pole_x)/2) + 2.0;
   marker_goal_2.pose.position.y = (farthest_pole_y + next_nearest_pole_y)/2;
   marker_goal_2.pose.position.z = 0.90	;
   marker_goal_2.pose.orientation.w = 1.0;
@@ -275,7 +284,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
 }
 
 double pure_pursuit(double obs_range, double obs_bearing){
-double robotlength = 0.8;
+double robotlength = 0.9;
 double steeringAngle = atan(2*robotlength*sin(obs_bearing))/obs_range;
 return steeringAngle;
 }
@@ -287,15 +296,14 @@ bool change_row(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_go
      return true;
    }
 
-
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "test_row_transition");
   ros::NodeHandle n;
 
   // Subscribers
-  ros::Subscriber scan_sub_test = n.subscribe("scan_filtered", 100, scanCallback);
-  // ros::Subscriber pose_sub = n.subscribe("/curr_thor", 100, robotposeCallback);
+  ros::Subscriber scan_sub_test = n.subscribe("scan", 100, scanCallback);
+  ros::Subscriber pose_sub = n.subscribe("/thorvald_pose", 100, robotposeCallback);
 
   // Publishers
  // ros::Publisher scan_pub = n.advertise<sensor_msgs::LaserScan>( "/scan_range", 100);
@@ -321,7 +329,7 @@ int main(int argc, char** argv)
   while (ros::ok()){
   ros::spinOnce();
 
- try{
+/* try{
    transformStamped1 = tfBuffer1.lookupTransform("map", "base_link", ros::Time(0));
  }
  catch (tf2::TransformException &ex1){
@@ -334,6 +342,8 @@ int main(int argc, char** argv)
   tf::Quaternion quat(thor_est_trans.pose.orientation.x,thor_est_trans.pose.orientation.y, thor_est_trans.pose.orientation.z, thor_est_trans.pose.orientation.w);
   quat = quat.normalize();
   yaw = tf::getYaw(quat);
+
+*/
 
   if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0) && (row_transit_mode == row_transit)){ // scan check  
 
@@ -353,28 +363,27 @@ int main(int argc, char** argv)
    max_itr = 1079;
    }
 
-
-
   Pole_detection(scan_msg_main, min_itr , max_itr); // pole detection
-
+	
   if(goal_found == true){
-   goal_range = sqrt(pow((goal_pt[goal_transit].position.y - thor_est_trans.pose.position.y),2) + pow((goal_pt[goal_transit].position.x - thor_est_trans.pose.position.x),2));
-   goal_bearing = atan2((goal_pt[goal_transit].position.y-thor_est_trans.pose.position.y),(goal_pt[goal_transit].position.x - thor_est_trans.pose.position.x)) - yaw;
-   std::cout << "goal_range:" << goal_range << "\n" << "yaw" << yaw << std::endl;
+   goal_range = sqrt(pow((goal_pt[goal_transit].position.y - thor_est.pose.position.y),2) + pow((goal_pt[goal_transit].position.x - thor_est.pose.position.x),2));
+   goal_bearing = atan2((goal_pt[goal_transit].position.y-thor_est.pose.position.y),(goal_pt[goal_transit].position.x - thor_est.pose.position.x)) - yaw;
+    std::cout << "goal_range:" << goal_range << "\n" << "yaw" << yaw << std::endl;
    angular_velocity = pure_pursuit(goal_range, goal_bearing); //pure pursuit controller
 
-   if(goal_range < 0.30){
+   if((goal_range < min_goal_range)){
     est_twist.linear.x = 0.0; 
     est_twist.angular.z = 0.0;
+    min_goal_range = 0.40;
 
-  switch(turn_side){ 
+   switch(turn_side){ 
     case RIGHT:
-    if(yaw>(-(goal_transit*1.40))){
+    if(yaw>(-(goal_transit*1.30))){
     est_twist.angular.z = -0.20; 
     turn_90=false;  
     }
-    else if((yaw<=-2.80)&&(yaw>=-2.90)){ 
-    est_twist.angular.z = fabs(yaw)-2.90; 
+    else if((yaw<=-2.60)&&(yaw>=-2.70)){ 
+    est_twist.angular.z = fabs(yaw)-2.70; 
     }
     else{
     turn_90 = true;
@@ -384,12 +393,12 @@ int main(int argc, char** argv)
     break;
 
     case LEFT:
-    if(yaw<=(goal_transit*1.40)){
+    if(yaw<=(goal_transit*1.30)){
     est_twist.angular.z = 0.20; 
     turn_90=false;  
     }
-    else if((yaw>=2.80)&&(yaw<=2.90)){ 
-    est_twist.angular.z = 2.90-yaw; 
+    else if((yaw>=2.60)&&(yaw<=2.70)){ 
+    est_twist.angular.z = 2.70-yaw; 
     }
     else{
     turn_90 = true;
@@ -402,11 +411,10 @@ int main(int argc, char** argv)
    else{
    est_twist.linear.x = 0.2; 
    est_twist.angular.z = 0;
-   }
+   } 
 
    // Service for end of row transition
-   if ((turn_90 = true) && (goal_transit==2) && ((yaw >= 2.90)||(yaw<=-2.90))){
-     // std::cout << "final_yaw" << yaw << "\n"<< std::endl;
+   if ((turn_90 = true) && (goal_transit==2) && ((yaw >= 2.80)||(yaw<=-2.80))){
      end_row_transit.request.counter = 1;
      end_row_transit_1.request.counter = 1;
      est_twist.angular.z = 0;
@@ -429,9 +437,13 @@ int main(int argc, char** argv)
      goal_transit = 1;
      } 
      if (client1.call(end_row_transit_1)){} 
-   }
+   } 
 
-
+  vis_pub_1.publish(marker_1);
+  vis_pub_2.publish(marker_2);
+  vis_pub_3.publish(marker_3);
+  vis_pub_5.publish(marker_goal_1);
+  vis_pub_6.publish(marker_goal_2);
   } // goal check 
 
   // publish the markers
@@ -441,12 +453,6 @@ int main(int argc, char** argv)
   marker_3.header.stamp = ros::Time::now();
   marker_goal_1.header.stamp = ros::Time::now();
   marker_goal_2.header.stamp = ros::Time::now();
-
-  vis_pub_1.publish(marker_1);
-  vis_pub_2.publish(marker_2);
-  vis_pub_3.publish(marker_3);
-  vis_pub_5.publish(marker_goal_1);
-  vis_pub_6.publish(marker_goal_2);
 
   stopover:
   twist_gazebo.publish(est_twist);

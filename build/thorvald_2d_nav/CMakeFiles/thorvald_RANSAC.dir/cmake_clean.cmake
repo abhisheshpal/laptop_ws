@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/thorvald_RANSAC.dir/src/thorvald_RANSAC.cpp.o"
-  "/home/vigneshnuc/laptop_ws/devel/lib/thorvald_2d_nav/thorvald_RANSAC.pdb"
-  "/home/vigneshnuc/laptop_ws/devel/lib/thorvald_2d_nav/thorvald_RANSAC"
+  "/home/vigmesh/laptop_ws/devel/lib/thorvald_2d_nav/thorvald_RANSAC.pdb"
+  "/home/vigmesh/laptop_ws/devel/lib/thorvald_2d_nav/thorvald_RANSAC"
 )
 
 # Per-language clean rules from dependency scanning.

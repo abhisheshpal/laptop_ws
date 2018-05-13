@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/vigneshnuc/laptop_ws/src
+CMAKE_SOURCE_DIR = /home/vigmesh/laptop_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/vigneshnuc/laptop_ws/build
+CMAKE_BINARY_DIR = /home/vigmesh/laptop_ws/build
 
 # Utility rule file for odometry_package_geneus.
 
@@ -63,10 +63,10 @@ odometry_package/CMakeFiles/odometry_package_geneus.dir/build: odometry_package_
 .PHONY : odometry_package/CMakeFiles/odometry_package_geneus.dir/build
 
 odometry_package/CMakeFiles/odometry_package_geneus.dir/clean:
-	cd /home/vigneshnuc/laptop_ws/build/odometry_package && $(CMAKE_COMMAND) -P CMakeFiles/odometry_package_geneus.dir/cmake_clean.cmake
+	cd /home/vigmesh/laptop_ws/build/odometry_package && $(CMAKE_COMMAND) -P CMakeFiles/odometry_package_geneus.dir/cmake_clean.cmake
 .PHONY : odometry_package/CMakeFiles/odometry_package_geneus.dir/clean
 
 odometry_package/CMakeFiles/odometry_package_geneus.dir/depend:
-	cd /home/vigneshnuc/laptop_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/vigneshnuc/laptop_ws/src /home/vigneshnuc/laptop_ws/src/odometry_package /home/vigneshnuc/laptop_ws/build /home/vigneshnuc/laptop_ws/build/odometry_package /home/vigneshnuc/laptop_ws/build/odometry_package/CMakeFiles/odometry_package_geneus.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/vigmesh/laptop_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/vigmesh/laptop_ws/src /home/vigmesh/laptop_ws/src/odometry_package /home/vigmesh/laptop_ws/build /home/vigmesh/laptop_ws/build/odometry_package /home/vigmesh/laptop_ws/build/odometry_package/CMakeFiles/odometry_package_geneus.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : odometry_package/CMakeFiles/odometry_package_geneus.dir/depend
 

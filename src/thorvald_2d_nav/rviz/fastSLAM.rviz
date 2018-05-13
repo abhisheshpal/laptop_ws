@@ -44,7 +44,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LaserScan
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -71,164 +71,13 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        base_link:
-          Value: true
-        base_sensors:
-          Value: true
-        bat0:
-          Value: true
-        bat1:
-          Value: true
-        corner0:
-          Value: true
-        corner0_1:
-          Value: true
-        corner0_2:
-          Value: true
-        corner1:
-          Value: true
-        corner1_1:
-          Value: true
-        corner1_2:
-          Value: true
-        corner2:
-          Value: true
-        corner2_1:
-          Value: true
-        corner2_2:
-          Value: true
-        corner3:
-          Value: true
-        corner3_1:
-          Value: true
-        corner3_2:
-          Value: true
-        hokuyo:
-          Value: true
-        leg0:
-          Value: true
-        leg1:
-          Value: true
-        leg2:
-          Value: true
-        leg3:
-          Value: true
-        map:
-          Value: true
-        odom:
-          Value: true
-        pipe0_1:
-          Value: true
-        pipe0_2:
-          Value: true
-        pipe1_1:
-          Value: true
-        pipe1_2:
-          Value: true
-        pipe2_1:
-          Value: true
-        pipe2_2:
-          Value: true
-        pipe3_1:
-          Value: true
-        pipe3_2:
-          Value: true
-        septentrio:
-          Value: true
-        top0:
-          Value: true
-        top1:
-          Value: true
-        top2:
-          Value: true
-        top3:
-          Value: true
-        wheel0_link:
-          Value: true
-        wheel1_link:
-          Value: true
-        wheel2_link:
-          Value: true
-        wheel3_link:
-          Value: true
-        xsens:
-          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          odom:
-            base_link:
-              base_sensors:
-                hokuyo:
-                  {}
-                septentrio:
-                  {}
-                xsens:
-                  {}
-              bat0:
-                {}
-              bat1:
-                {}
-              corner0:
-                corner0_1:
-                  {}
-                corner0_2:
-                  {}
-              corner1:
-                corner1_1:
-                  {}
-                corner1_2:
-                  {}
-              corner2:
-                corner2_1:
-                  {}
-                corner2_2:
-                  {}
-              corner3:
-                corner3_1:
-                  {}
-                corner3_2:
-                  {}
-              leg0:
-                wheel0_link:
-                  {}
-              leg1:
-                wheel1_link:
-                  {}
-              leg2:
-                wheel2_link:
-                  {}
-              leg3:
-                wheel3_link:
-                  {}
-              pipe0_1:
-                {}
-              pipe0_2:
-                {}
-              pipe1_1:
-                {}
-              pipe1_2:
-                {}
-              pipe2_1:
-                {}
-              pipe2_2:
-                {}
-              pipe3_1:
-                {}
-              pipe3_2:
-                {}
-              top0:
-                {}
-              top1:
-                {}
-              top2:
-                {}
-              top3:
-                {}
+        {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -241,197 +90,6 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        base_sensors:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        bat0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        bat1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        corner0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        corner0_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        corner0_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        corner1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        corner1_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        corner1_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        corner2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        corner2_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        corner2_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        corner3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        corner3_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        corner3_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        hokuyo:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        leg0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        leg1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        leg2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        leg3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        pipe0_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        pipe0_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        pipe1_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        pipe1_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        pipe2_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        pipe2_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        pipe3_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        pipe3_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        septentrio:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        top0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        top1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        top2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        top3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        wheel0_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        wheel1_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        wheel2_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        wheel3_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        xsens:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
@@ -483,7 +141,7 @@ Visualization Manager:
       Marker Topic: /line_marker_1
       Name: Marker
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -491,7 +149,7 @@ Visualization Manager:
       Marker Topic: /line_marker_2
       Name: Marker
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -499,54 +157,54 @@ Visualization Manager:
       Marker Topic: /final_line
       Name: Marker
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /goal_marker_1
       Name: Marker
       Namespaces:
         {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /landmark_marker_1
       Name: Marker
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /landmark_marker_2
       Name: Marker
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /landmark_marker_3
       Name: Marker
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /landmark_marker_4
       Name: Marker
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
       Color: 25; 255; 0
-      Enabled: true
+      Enabled: false
       Head Diameter: 0.300000012
       Head Length: 0.200000003
       Length: 0.300000012
@@ -564,39 +222,39 @@ Visualization Manager:
       Shaft Length: 0.100000001
       Topic: /thorvald_path
       Unreliable: false
-      Value: true
+      Value: false
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /landmark_marker_5
       Name: Marker
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /landmark_marker_6
       Name: Marker
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /est_l_1
       Name: Marker
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /est_l_2
       Name: Marker
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
-      Value: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48

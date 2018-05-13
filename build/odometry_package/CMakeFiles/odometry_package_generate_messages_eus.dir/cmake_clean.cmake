@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/odometry_package_generate_messages_eus"
-  "/home/vigneshnuc/laptop_ws/devel/share/roseus/ros/odometry_package/manifest.l"
+  "/home/vigmesh/laptop_ws/devel/share/roseus/ros/odometry_package/manifest.l"
 )
 
 # Per-language clean rules from dependency scanning.

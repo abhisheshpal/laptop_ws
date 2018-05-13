@@ -21,7 +21,7 @@
 #include <random>
 #include <string>
 #include <assert.h>
-#include "matplotlibcpp.h"
+// #include "matplotlibcpp.h"
 
 // ROS message includes
 #include <thorvald_2d_nav/scan_detected_line.h>
@@ -37,7 +37,7 @@
 #define INF 1000
 using namespace Eigen;
 
-namespace plt = matplotlibcpp;
+// namespace plt = matplotlibcpp;
 
 // Initialization for callbacks
 geometry_msgs::Twist odom_vel;

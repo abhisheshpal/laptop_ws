@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/thorvald_laserscan.dir/src/thorvald_laserscan.cpp.o"
-  "/home/vigneshnuc/laptop_ws/devel/lib/thorvald_2d_nav/thorvald_laserscan.pdb"
-  "/home/vigneshnuc/laptop_ws/devel/lib/thorvald_2d_nav/thorvald_laserscan"
+  "/home/vigmesh/laptop_ws/devel/lib/thorvald_2d_nav/thorvald_laserscan.pdb"
+  "/home/vigmesh/laptop_ws/devel/lib/thorvald_2d_nav/thorvald_laserscan"
 )
 
 # Per-language clean rules from dependency scanning.

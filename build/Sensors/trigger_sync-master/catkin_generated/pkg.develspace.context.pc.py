@@ -1,8 +1,8 @@
 # generated from catkin/cmake/template/pkg.context.pc.in
 CATKIN_PACKAGE_PREFIX = ""
-PROJECT_PKG_CONFIG_INCLUDE_DIRS = "/home/vigneshnuc/laptop_ws/devel/include;/home/vigneshnuc/laptop_ws/src/Sensors/trigger_sync-master/include".split(';') if "/home/vigneshnuc/laptop_ws/devel/include;/home/vigneshnuc/laptop_ws/src/Sensors/trigger_sync-master/include" != "" else []
+PROJECT_PKG_CONFIG_INCLUDE_DIRS = "/home/vigmesh/laptop_ws/devel/include;/home/vigmesh/laptop_ws/src/Sensors/trigger_sync-master/include".split(';') if "/home/vigmesh/laptop_ws/devel/include;/home/vigmesh/laptop_ws/src/Sensors/trigger_sync-master/include" != "" else []
 PROJECT_CATKIN_DEPENDS = "roscpp".replace(';', ' ')
 PKG_CONFIG_LIBRARIES_WITH_PREFIX = "-ltrigger_sync_lib".split(';') if "-ltrigger_sync_lib" != "" else []
 PROJECT_NAME = "trigger_sync"
-PROJECT_SPACE_DIR = "/home/vigneshnuc/laptop_ws/devel"
+PROJECT_SPACE_DIR = "/home/vigmesh/laptop_ws/devel"
 PROJECT_VERSION = "0.0.0"

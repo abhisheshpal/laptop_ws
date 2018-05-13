@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/vigneshnuc/laptop_ws/src/Sensors/trigger_sync-master/src/pps_config.c
+/home/vigmesh/laptop_ws/src/Sensors/trigger_sync-master/src/pps_config.c
 stdio.h
 -
 stdlib.h
@@ -20,9 +20,9 @@ sys/types.h
 sys/stat.h
 -
 timepps.h
-/home/vigneshnuc/laptop_ws/src/Sensors/trigger_sync-master/src/timepps.h
+/home/vigmesh/laptop_ws/src/Sensors/trigger_sync-master/src/timepps.h
 
-/home/vigneshnuc/laptop_ws/src/Sensors/trigger_sync-master/src/timepps.h
+/home/vigmesh/laptop_ws/src/Sensors/trigger_sync-master/src/timepps.h
 errno.h
 -
 sys/time.h

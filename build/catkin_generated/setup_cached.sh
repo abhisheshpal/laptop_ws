@@ -7,5 +7,7 @@
 # new environment variables
 
 # modified environment variables
-export PATH="/opt/ros/kinetic/bin:/home/vigneshnuc/terrapos-2.4.90/bin:/home/vigneshnuc/bin:/home/vigneshnuc/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
-export PWD="/home/vigneshnuc/laptop_ws/build"
+export LD_LIBRARY_PATH="/home/vigmesh/Thorvald/devel/lib:/opt/ros/kinetic/lib:/opt/ros/kinetic/lib/x86_64-linux-gnu"
+export PKG_CONFIG_PATH="/home/vigmesh/Thorvald/devel/lib/pkgconfig:/opt/ros/kinetic/lib/pkgconfig:/opt/ros/kinetic/lib/x86_64-linux-gnu/pkgconfig"
+export PWD="/home/vigmesh/laptop_ws/build"
+export PYTHONPATH="/home/vigmesh/Thorvald/devel/lib/python2.7/dist-packages:/opt/ros/kinetic/lib/python2.7/dist-packages"

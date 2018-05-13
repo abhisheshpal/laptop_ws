@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/navsat_transform_node.dir/src/navsat_transform_node.cpp.o"
-  "/home/vigneshnuc/laptop_ws/devel/lib/robot_localization/navsat_transform_node.pdb"
-  "/home/vigneshnuc/laptop_ws/devel/lib/robot_localization/navsat_transform_node"
+  "/home/vigmesh/laptop_ws/devel/lib/robot_localization/navsat_transform_node.pdb"
+  "/home/vigmesh/laptop_ws/devel/lib/robot_localization/navsat_transform_node"
 )
 
 # Per-language clean rules from dependency scanning.

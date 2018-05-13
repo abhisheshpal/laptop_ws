@@ -1,12 +1,12 @@
-if(EXISTS "/home/vigneshnuc/laptop_ws/build/Extra_Packages/libpcan/EP_libpcan-prefix/src/peak-linux-driver-8.3.tar.gz")
-  file("MD5" "/home/vigneshnuc/laptop_ws/build/Extra_Packages/libpcan/EP_libpcan-prefix/src/peak-linux-driver-8.3.tar.gz" hash_value)
+if(EXISTS "/home/vigmesh/laptop_ws/build/Extra_Packages/libpcan/EP_libpcan-prefix/src/peak-linux-driver-8.3.tar.gz")
+  file("MD5" "/home/vigmesh/laptop_ws/build/Extra_Packages/libpcan/EP_libpcan-prefix/src/peak-linux-driver-8.3.tar.gz" hash_value)
   if("x${hash_value}" STREQUAL "xd8d58223c1b1c03b891aa43763fec2cb")
     return()
   endif()
 endif()
 message(STATUS "downloading...
      src='http://www.peak-system.com/fileadmin/media/linux/files/peak-linux-driver-8.3.tar.gz'
-     dst='/home/vigneshnuc/laptop_ws/build/Extra_Packages/libpcan/EP_libpcan-prefix/src/peak-linux-driver-8.3.tar.gz'
+     dst='/home/vigmesh/laptop_ws/build/Extra_Packages/libpcan/EP_libpcan-prefix/src/peak-linux-driver-8.3.tar.gz'
      timeout='none'")
 
 
@@ -14,7 +14,7 @@ message(STATUS "downloading...
 
 file(DOWNLOAD
   "http://www.peak-system.com/fileadmin/media/linux/files/peak-linux-driver-8.3.tar.gz"
-  "/home/vigneshnuc/laptop_ws/build/Extra_Packages/libpcan/EP_libpcan-prefix/src/peak-linux-driver-8.3.tar.gz"
+  "/home/vigmesh/laptop_ws/build/Extra_Packages/libpcan/EP_libpcan-prefix/src/peak-linux-driver-8.3.tar.gz"
   SHOW_PROGRESS
   # no TIMEOUT
   STATUS status

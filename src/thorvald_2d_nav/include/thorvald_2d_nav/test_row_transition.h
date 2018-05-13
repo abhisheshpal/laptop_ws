@@ -31,14 +31,14 @@ geometry_msgs::TransformStamped transformStamped, transformStamped1;
 thorvald_2d_nav::sub_goal end_row_transit, end_row_transit_1;
 
 //Parameters for pole detection
-double min_range_left = 2.0, min_range_right = 3.0;
+double min_range_left = 1.0, min_range_right = 3.0;
 sensor_msgs::LaserScan scan_msg_main, scan_msg;
 size_t num_ranges;
 bool goal_found = false;
 double sum_x_1 = 0, sum_y_1 = 0;
 int k = 0, q = 0, n = 0, unfit = 0, unfit_1 = 0, unfit_2 = 0;
 double current_range_1, current_range_2, current_range_3, current_range_4, angle_1, angle_2, angle_3, angle_4;
-int row_transit_mode = 0;
+
 double nearest_pole_x, nearest_pole_y, next_nearest_pole_x, next_nearest_pole_y, farthest_pole_x, farthest_pole_y;
 double min_itr, max_itr;
 int turn_side = 1; // 1 for RIGHT, 2 for LEFT
@@ -52,4 +52,5 @@ visualization_msgs::Marker marker_goal_1, marker_goal_2;
 double linear_velocity = 0.4, angular_velocity = 0.0;
 double goal_range, goal_bearing, a = 0;
 bool pole_detect = false, turn_90 = false; 
-int goal_transit = 1, c = 0, row_transit = 1;
+int goal_transit = 1, c = 0, row_transit = 1, row_transit_mode = 0;
+double min_goal_range = 0.30;

@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/vigneshnuc/laptop_ws/src/Sensors/leica_tca1100/src/leica_tca1100.cpp
+/home/vigmesh/laptop_ws/src/Sensors/leica_tca1100/src/leica_tca1100.cpp
 ros/ros.h
 -
 tf/transform_broadcaster.h
@@ -16,7 +16,7 @@ tf/transform_listener.h
 nav_msgs/Odometry.h
 -
 serial/serial.h
-/home/vigneshnuc/laptop_ws/src/Sensors/leica_tca1100/src/serial/serial.h
+/home/vigmesh/laptop_ws/src/Sensors/leica_tca1100/src/serial/serial.h
 windows.h
 -
 unistd.h
