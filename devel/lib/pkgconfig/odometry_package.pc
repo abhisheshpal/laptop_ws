@@ -1,8 +1,0 @@
-prefix=/home/vigmesh/laptop_ws/devel
-
-Name: odometry_package
-Description: Description of odometry_package
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/vigmesh/laptop_ws/devel/lib 
-Requires: roscpp rospy std_msgs tf nav_msgs

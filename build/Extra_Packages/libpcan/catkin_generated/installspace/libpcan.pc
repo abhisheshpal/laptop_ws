@@ -1,8 +1,0 @@
-prefix=/home/vigmesh/laptop_ws/install
-
-Name: libpcan
-Description: Description of libpcan
-Version: 0.6.10
-Cflags: 
-Libs: -L/home/vigmesh/laptop_ws/install/lib 
-Requires: 

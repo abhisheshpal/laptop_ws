@@ -1,0 +1,43 @@
+<!-- -*- xml -*- -->
+
+<launch>
+
+<!--node pkg="rosserial_python" type="serial_node.py" name="rosserial">
+  <param name="port" value="/dev/ttyUSB1" />
+  <param name="baud" value="57600" />
+</node>
+
+<node pkg="odometry_package" type="odometry_package_node" name="odometry_package_node"/-->
+
+<param name ="/use_sim_time" value="false"/>
+
+<arg name ="/sim_sim" value="True"/>
+
+<include file = "$(find thorvald_2d_nav)/launch/gazebo_row_transition.launch" />
+
+<include file = "$(find laser_filters)/examples/range_filter_example.launch" />
+
+<include file = "$(find thorvald_bringup)/launch/thorvald_ii_4wd4ws_slim/thorvald_ii_4wd4ws_slim_sim_lincoln.launch" />
+
+<node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+ <param name="odom_frame" value="odom"/>
+ <param name="scan" value="scan"/>
+</node>
+
+<node pkg="thorvald_2d_nav" type="test_RANSAC" name="test_RANSAC" output="screen"/>
+
+<!--node pkg="thorvald_2d_nav" type="test_control_modes" name="test_control_modes" output="screen"/-->
+
+<!--node pkg="thorvald_2d_nav" type="fastSLAM" name="fastSLAM" output="screen"/-->
+
+
+<!--node pkg="plot_tool" type="plot_path.py" name="plot_path.py" output="screen"/-->
+
+<!--node pkg="thorvald_2d_nav" type="fastSLAM" name="fastSLAM" output="screen"/-->
+
+<!--node pkg="thorvald_2d_nav" type="thorvald_line_SLAM" name="thorvald_line_SLAM"/-->
+
+<node pkg="rviz" type="rviz" name="rviz" args="-d $(find thorvald_2d_nav)/rviz/lincoln.rviz"/>
+
+
+</launch>

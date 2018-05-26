@@ -1,8 +1,0 @@
-prefix=/home/vigmesh/laptop_ws/devel
-
-Name: thorvald_2d_nav
-Description: Description of thorvald_2d_nav
-Version: 0.0.0
-Cflags: -I/home/vigmesh/laptop_ws/devel/include -I/home/vigmesh/laptop_ws/src/thorvald_2d_nav/include
-Libs: -L/home/vigmesh/laptop_ws/devel/lib 
-Requires: actionlib_msgs move_base roscpp rospy geometry_msgs sensor_msgs std_msgs actionlib_msgs tf visualization_msgs message_generation nav_msgs std_srvs

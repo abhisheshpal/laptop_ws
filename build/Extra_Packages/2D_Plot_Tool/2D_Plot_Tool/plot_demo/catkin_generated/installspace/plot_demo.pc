@@ -1,8 +1,0 @@
-prefix=/home/vigmesh/laptop_ws/install
-
-Name: plot_demo
-Description: Description of plot_demo
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/vigmesh/laptop_ws/install/lib 
-Requires: ecl_geometry geometry_msgs nav_msgs roscpp rospy std_msgs plot_tool

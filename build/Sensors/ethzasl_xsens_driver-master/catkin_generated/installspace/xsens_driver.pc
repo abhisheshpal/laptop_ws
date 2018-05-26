@@ -1,8 +1,0 @@
-prefix=/home/vigmesh/laptop_ws/install
-
-Name: xsens_driver
-Description: Description of xsens_driver
-Version: 2.0.1
-Cflags: 
-Libs: -L/home/vigmesh/laptop_ws/install/lib 
-Requires: rospy std_msgs tf sensor_msgs geometry_msgs diagnostic_msgs
