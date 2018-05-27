@@ -40,11 +40,12 @@ int Total_Points = 15;
 geometry_msgs::Pose Points[20];
 geometry_msgs::Twist est_twist;
 double yaw, position_error, angular_error, q_x , q_y, lastError = 0;
-double K_d = 0.01, K_p = 1.0, K_i = 0.01;
+double K_d = 0.2, K_p = 1.0, K_i = 0.01;
 bool mini_goal = false;
 double _integral = 0;
 double dist_d[2], dist_pt_1, dist_pt_2, dist_pt_f, dist_pt_3, dist_pt_4, dist_pt_f1;
-double omega_exp;
+double slope_1, slope_2, omega, omega_exp;
+double asq, bsq, csq, ang_err;
 
 // dummy variables
 int counter_line = 0, counter_1 = 0, line_count = 0, c = 1;

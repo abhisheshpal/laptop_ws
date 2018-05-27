@@ -183,7 +183,7 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 bool add(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
    {
      end_line = end_line + req.counter;
-     if((end_line > finale_1) && (end_line < 3)){
+     if((end_line > finale_1) && (end_line < 2)){
      finale = 0; 
      ROS_INFO("End of previous line reached");
      finale_1 = end_line;
@@ -194,7 +194,7 @@ bool add(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Res
 
 bool row_transition(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
    {
-     // end_row = end_row + req.counter; /////////// CHANGE IT ///////////
+     end_row = end_row + req.counter; /////////// CHANGE IT ///////////
      row_no = row_no + req.counter;
      if(end_row > finale_2){
      finale = 0; 
@@ -252,8 +252,8 @@ int main(int argc, char** argv)
          // std::cout << "end_row_reach" << end_row_reach << "\n" << std::endl;
          }
         } */
-// end_line = 2;
-        if((end_line==8) && (new_row == false) && (finale == 0)){ /////// TAKE CARE /////////
+
+        if((end_line == 1) && (new_row == false) && (finale == 0)){ /////// TAKE CARE /////////      
         finale = 1;
         end_row_check.request.counter = 1;
         if (client.call(end_row_check)){ 

@@ -9,7 +9,7 @@
 
 <node pkg="odometry_package" type="odometry_package_node" name="odometry_package_node"/-->
 
-<param name ="/use_sim_time" value="false"/>
+<param name ="/use_sim_time" value="true"/>
 
 <arg name ="/sim_sim" value="True"/>
 
@@ -17,21 +17,20 @@
 
 <include file = "$(find laser_filters)/examples/range_filter_example.launch" />
 
+<include file = "$(find thorvald_2d_nav)/launch/amcl.launch" />
+
 <include file = "$(find thorvald_bringup)/launch/thorvald_ii_4wd4ws_slim/thorvald_ii_4wd4ws_slim_sim_lincoln.launch" />
 
-<node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+<!--node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
  <param name="odom_frame" value="odom"/>
  <param name="scan" value="scan"/>
-</node>
+</node-->
 
 <node pkg="thorvald_2d_nav" type="test_RANSAC" name="test_RANSAC" output="screen"/>
 
-<!--node pkg="thorvald_2d_nav" type="test_control_modes" name="test_control_modes" output="screen"/-->
+<node pkg="thorvald_2d_nav" type="test_control_modes" name="test_control_modes" output="screen"/>
 
-<!--node pkg="thorvald_2d_nav" type="fastSLAM" name="fastSLAM" output="screen"/-->
-
-
-<!--node pkg="plot_tool" type="plot_path.py" name="plot_path.py" output="screen"/-->
+<node pkg="thorvald_2d_nav" type="test_row_transition" name="test_row_transition" output="screen"/>
 
 <!--node pkg="thorvald_2d_nav" type="fastSLAM" name="fastSLAM" output="screen"/-->
 

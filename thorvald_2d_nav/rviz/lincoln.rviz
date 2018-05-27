@@ -14,6 +14,7 @@ Panels:
         - /Marker3
         - /Marker4
         - /Marker5
+        - /PoseArray1
       Splitter Ratio: 0.5
     Tree Height: 775
   - Class: rviz/Selection
@@ -239,86 +240,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        rod2_l_wheel0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod2_l_wheel1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod2_l_wheel2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod2_l_wheel3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod2_r_wheel0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod2_r_wheel1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod2_r_wheel2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod2_r_wheel3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod_l_wheel0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod_l_wheel1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod_l_wheel2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod_l_wheel3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod_r_wheel0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod_r_wheel1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod_r_wheel2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rod_r_wheel3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         septentrio:
           Alpha: 1
           Show Axes: false
@@ -440,38 +361,6 @@ Visualization Manager:
           Value: true
         pipe3_2:
           Value: true
-        rod2_l_wheel0:
-          Value: true
-        rod2_l_wheel1:
-          Value: true
-        rod2_l_wheel2:
-          Value: true
-        rod2_l_wheel3:
-          Value: true
-        rod2_r_wheel0:
-          Value: true
-        rod2_r_wheel1:
-          Value: true
-        rod2_r_wheel2:
-          Value: true
-        rod2_r_wheel3:
-          Value: true
-        rod_l_wheel0:
-          Value: true
-        rod_l_wheel1:
-          Value: true
-        rod_l_wheel2:
-          Value: true
-        rod_l_wheel3:
-          Value: true
-        rod_r_wheel0:
-          Value: true
-        rod_r_wheel1:
-          Value: true
-        rod_r_wheel2:
-          Value: true
-        rod_r_wheel3:
-          Value: true
         septentrio:
           Value: true
         top0:
@@ -534,36 +423,16 @@ Visualization Manager:
                   {}
               leg0:
                 wheel0_link:
-                  rod_l_wheel0:
-                    rod2_l_wheel0:
-                      {}
-                  rod_r_wheel0:
-                    rod2_r_wheel0:
-                      {}
+                  {}
               leg1:
                 wheel1_link:
-                  rod_l_wheel1:
-                    rod2_l_wheel1:
-                      {}
-                  rod_r_wheel1:
-                    rod2_r_wheel1:
-                      {}
+                  {}
               leg2:
                 wheel2_link:
-                  rod_l_wheel2:
-                    rod2_l_wheel2:
-                      {}
-                  rod_r_wheel2:
-                    rod2_r_wheel2:
-                      {}
+                  {}
               leg3:
                 wheel3_link:
-                  rod_l_wheel3:
-                    rod2_l_wheel3:
-                      {}
-                  rod_r_wheel3:
-                    rod2_r_wheel3:
-                      {}
+                  {}
               pipe0_1:
                 {}
               pipe0_2:
@@ -594,12 +463,12 @@ Visualization Manager:
       Class: rviz/Map
       Color Scheme: map
       Draw Behind: false
-      Enabled: false
+      Enabled: true
       Name: Map
       Topic: /map
       Unreliable: false
       Use Timestamp: false
-      Value: false
+      Value: true
     - Class: rviz/Marker
       Enabled: true
       Marker Topic: /line_marker_1
@@ -640,6 +509,22 @@ Visualization Manager:
         {}
       Queue Size: 100
       Value: false
+    - Alpha: 1
+      Arrow Length: 0.300000012
+      Axes Length: 0.300000012
+      Axes Radius: 0.00999999978
+      Class: rviz/PoseArray
+      Color: 255; 25; 0
+      Enabled: false
+      Head Length: 0.0700000003
+      Head Radius: 0.0299999993
+      Name: PoseArray
+      Shaft Length: 0.230000004
+      Shaft Radius: 0.00999999978
+      Shape: Arrow (Flat)
+      Topic: /particlecloud
+      Unreliable: false
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -665,25 +550,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 2.00421023
+      Distance: 14.9270554
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 2.05744457
-        Y: -2.4657495
-        Z: 1.64600492
+        X: 2.15546036
+        Y: -2.09032369
+        Z: 3.11116529
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.660398245
+      Pitch: 0.635398328
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.83541679
+      Yaw: 4.72042131
     Saved: ~
 Window Geometry:
   Displays:
