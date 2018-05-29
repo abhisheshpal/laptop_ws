@@ -183,7 +183,8 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 bool add(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
    {
      end_line = end_line + req.counter;
-     if((end_line > finale_1) && (end_line < 2)){
+     if((end_line > finale_1) && (end_line < 4)){
+     // end_line = 0;
      finale = 0; 
      ROS_INFO("End of previous line reached");
      finale_1 = end_line;
@@ -194,14 +195,22 @@ bool add(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Res
 
 bool row_transition(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
    {
-     end_row = end_row + req.counter; /////////// CHANGE IT ///////////
-     row_no = row_no + req.counter;
+     end_row = end_row + req.counter; 
+     landmarks_pos.row_number = landmarks_pos.row_number + req.counter;
      if(end_row > finale_2){
+     end_row = 0;
+     end_line = 0;
+     finale_1 = 0;
      finale = 0; 
      line_pt = 0;
      ROS_INFO("New Row Starts!");
      finale_2 = end_row;
      }
+
+     landmarks_pos.x.resize(6);
+     landmarks_pos.y.resize(6);
+     meas_pts.range.resize(6);
+     meas_pts.bearing.resize(6);
      return true;
    }
 
@@ -232,6 +241,7 @@ int main(int argc, char** argv)
         ros::ServiceClient client = n.serviceClient<thorvald_2d_nav::sub_goal>("/row_transition_mode");
 
         landmarks_pos.landmark_check = 0; 
+        landmarks_pos.row_number = 0; 
         tf::StampedTransform transform;
         tf::TransformListener listener;
         tf2_ros::TransformListener tfListener(tfBuffer);
@@ -246,13 +256,6 @@ int main(int argc, char** argv)
         
       if(scan_msg_main.ranges.size() > 0){
         // end of row detection
- /*       for (int l=360; l <=720; ++l){ // Number of iterations
-         if(((scan_msg_main.ranges[l]) > min_range_view) && ((scan_msg_main.ranges[l]) < max_range) && (!std::isinf(scan_msg_main.ranges[l])) ){
-         end_row_reach = end_row_reach + 1;
-         // std::cout << "end_row_reach" << end_row_reach << "\n" << std::endl;
-         }
-        } */
-
         if((end_line == 1) && (new_row == false) && (finale == 0)){ /////// TAKE CARE /////////      
         finale = 1;
         end_row_check.request.counter = 1;
@@ -424,13 +427,6 @@ int main(int argc, char** argv)
         ros::Duration(1.0).sleep();
         } 
 
-      /*  tf::Quaternion q = tf::createQuaternionFromRPY(0, 0, 0); 
-        tf2::doTransform(curr_pose, curr_pose_trans, transformStamped1);
-        curr_pose_trans.pose.orientation = transformStamped1.transform.rotation;
-        tf::Quaternion quat(curr_pose_trans.pose.orientation.x,curr_pose_trans.pose.orientation.y, curr_pose_trans.pose.orientation.z, curr_pose_trans.pose.orientation.w);
-        quat = quat.normalize();
-        yaw = tf::getYaw(quat); */
-
 // actual range and bearing calculation
 meas_pts.range[0] = sqrt(pow((left_line_2_trans.pose.position.x-thorvald_pose.position.x),2)+pow((left_line_2_trans.pose.position.y-thorvald_pose.position.y),2)); 
 meas_pts.bearing[0] = normalizeangle(atan2((left_line_2_trans.pose.position.y-thorvald_pose.position.y),(left_line_2_trans.pose.position.x-thorvald_pose.position.x)) - yaw);
@@ -457,17 +453,14 @@ meas_pts.bearing[5] = normalizeangle(atan2((right_line_1_trans.pose.position.y-t
         final_line.header.stamp = ros::Time::now();
         meas_pts.header.stamp = ros::Time::now();
         landmarks_pos.header.stamp = ros::Time::now();
-        // curr_pose_trans.header.stamp = ros::Time::now();
 
         if(new_row == true){
-        visualization_msgs::Marker empty_line_strip_1, empty_line_strip_2, empty_final_line;
-        thorvald_2d_nav::scan_detected_line empty_meas_pts; 
-        thorvald_2d_nav::landmarks empty_landmarks_pos;
         line_strip_1 = empty_line_strip_1;
         line_strip_2 = empty_line_strip_2;
         final_line = empty_final_line;
         meas_pts = empty_meas_pts;
         landmarks_pos = empty_landmarks_pos;
+        landmarks_pos.landmark_check = 0; 
         marker_pub_1.publish(line_strip_1);
         marker_pub_2.publish(line_strip_2);
         marker_pub_3.publish(final_line);
@@ -483,8 +476,7 @@ meas_pts.bearing[5] = normalizeangle(atan2((right_line_1_trans.pose.position.y-t
         landmarks_pub.publish(landmarks_pos);
         }   
  
-        // curr_pose_trans.header.frame_id = "/map";
-        // thor_pub.publish(curr_pose_trans);   
+        landmarks_pos.header.frame_id = "/map";
  
         r.sleep();
 	} // node shutdown

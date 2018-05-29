@@ -48,5 +48,5 @@ double slope_1, slope_2, omega, omega_exp;
 double asq, bsq, csq, ang_err;
 
 // dummy variables
-int counter_line = 0, counter_1 = 0, line_count = 0, c = 1;
+int counter_line = 0, counter_1 = 0, line_count = 0, row_count = 0, c = 1;
 

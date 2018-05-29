@@ -27,14 +27,17 @@ landmarks_pose.y[v] = landmarks_msg->y[v];
 }
 
 landmarks_pose.landmark_check = landmarks_msg->landmark_check;
-counter_line = 1;
+landmarks_pose.row_number = landmarks_msg->row_number;
 }
+
+counter_line = 1;
 }
 
 bool row_transition(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
    {
      row_no = row_no + req.counter;
-     // next_row_check = true;  /// change it
+     next_row_check = true; 
+     ROS_INFO("Navigate in New Row"); 
      return true;
    }
 
@@ -132,19 +135,17 @@ int main(int argc, char** argv)
 
   ros::spinOnce();
 
-  if(counter_line > 0){ // generated line check
+  if((counter_line > 0) && (landmarks_pose.landmark_check > 0)){ // generated line check
 
   current_time = ros::Time::now();	
   dt = (current_time - last_time).toSec();
 
-  if((landmarks_pose.landmark_check > line_count) || (next_row_check == true)){
+  if((landmarks_pose.landmark_check > line_count) || ((next_row_check == true)&&(landmarks_pose.row_number > row_count))){
    line_count = landmarks_pose.landmark_check;
-
+   row_count = landmarks_pose.row_number;
     for(int i=1;i<=Total_Points;i++){
     Points[i].position.x = ((thor_est.pose.position.x) *(1-(float(i)/Total_Points))) + ((landmarks_pose.x[5]) *(float(i)/Total_Points));
-    Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.y[5]-1.0) *(float(i)/Total_Points));
-  
-  // std::cout << "pt y[:"<<i<<"]" << Points[i].position.y << "\n" << std::endl;
+    Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.y[5]-1.0) *(float(i)/Total_Points)); 
    }
 
   mini_goal_pts.x = Points[1].position.x;
@@ -165,14 +166,11 @@ int main(int argc, char** argv)
        }
 
        tf2::doTransform(thor_est, thor_est_trans, transformStamped);
-       thor_est_trans.header.frame_id = "/hokuyo";
-  
+       thor_est_trans.header.frame_id = "/hokuyo";  
  
    angular_velocity = control_law(linear_velocity, dt, thor_est_trans); // control law
 
-   // std::cout << "angular_velocity" << angular_velocity << "\n" << std::endl;
-
-   if(fabs(Points[Total_Points].position.y - thor_est.pose.position.y) <= 0.5){
+   if(fabs(Points[Total_Points].position.y - thor_est_trans.pose.position.y) <= 0.5){
    counter_1 = 1;
    mini_goal = false;
    est_twist.linear.x = 0;
@@ -181,10 +179,7 @@ int main(int argc, char** argv)
    }
    else{
    est_twist.linear.x = 0.3;
-  // est_twist.angular.z = 0;
-    // if(c>5){
-     est_twist.angular.z = angular_velocity;
-    // }
+   est_twist.angular.z = angular_velocity;
     } 
 
    twist_gazebo.publish(est_twist);

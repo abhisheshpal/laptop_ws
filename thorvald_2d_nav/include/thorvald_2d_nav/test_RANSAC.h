@@ -67,7 +67,6 @@ geometry_msgs::PoseStamped curr_pose, left_line_1, left_line_1_trans, left_line_
 geometry_msgs::PoseStamped curr_pose_trans, right_line_1, right_line_1_trans, right_line_2, right_line_2_trans;
 geometry_msgs::Pose left_l_c, right_l_c;
 
-
 // dummy variables
 int p_1 = 1, l_1 = 1, c_1 = 0, a_1 = 0, b_1 = 0, p_2 = 1, l_2 = 1, c_2 = 0, a_2 = 0, b_2 = 0;
 int final_count_1 = 0, final_count_2 = 0, final_count_3 = 0, final_count_4 = 0, final_count_5 = 0, final_count_6 = 0, finale = 0;
@@ -76,4 +75,7 @@ int end_row_reach = 0, line_pt = 0;
 double min_range_view = 4.0, max_range = 30.0;
 int end_line = 0, end_row = 0, finale_1 = 0, finale_2 = 0, land_check = 0;
 bool line_found_1 = false, line_found_2 = false, new_row = false;
+visualization_msgs::Marker empty_line_strip_1, empty_line_strip_2, empty_final_line;
+thorvald_2d_nav::scan_detected_line empty_meas_pts; 
+thorvald_2d_nav::landmarks empty_landmarks_pos;
 

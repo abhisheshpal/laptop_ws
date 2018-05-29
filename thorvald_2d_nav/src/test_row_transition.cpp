@@ -24,7 +24,7 @@ yaw = tf::getYaw(quat);
 } // callback end
 
 // Pole detection
-void Pole_detection(sensor_msgs::LaserScan scan_msg_poles, double itr_begin, double itr_end){
+void Pole_detection(sensor_msgs::LaserScan scan_msg_poles, double itr_begin_1, double itr_end_1, double itr_begin_2, double itr_end_2){
 
 if(goal_found == false){
 
@@ -38,7 +38,7 @@ double sum_k[num_ranges];
 
 //---------------------- FIRST MARKER ---------------------------//
         pole_redetect:
-	for (int i = 60; i <= 540; i++){
+	for (int i = itr_begin_1; i <= itr_end_1; i++){
            if((scan_msg_poles.ranges[i] < min_range_right)){
             initial_count_1 = initial_count_1 + 1;
             angle[initial_count_1] = scan_msg_poles.angle_min+i*scan_msg_poles.angle_increment;
@@ -56,11 +56,8 @@ double sum_k[num_ranges];
           Current_y_1 = y[random_count_1];
         for (int j = 1 ; j <= (initial_count_1); j++){
           double itr_loop_1 = count_angle_1[j];
-  	  // double obst_dist_1 = sqrt(pow(y[j]-Current_y_1,2) + pow(x[j]-Current_x_1,2)); // error calculation
   	  double obst_dist_1 = (current_range_1 - scan_msg_poles.ranges[itr_loop_1]); // error calculation
           if (thershold > fabs(obst_dist_1) ){
-	     // sum_x_1+=x[j];
-	     // sum_y_1+=y[j];
               k = k + 1;
               sum_k[k] = count_angle_1[j];
           }
@@ -95,13 +92,13 @@ double sum_k[num_ranges];
   ROS_INFO("Right Poles has to be re-detected");
   goto pole_redetect;
   }
-
+ROS_INFO("over<<");
 //---------------------- THIRD MARKER ---------------------------//
 
   double sum_n[num_ranges];
         
      pole_redetect_left:
-	for (int r = 540; r <=1079; r++){
+	for (int r = itr_begin_2; r <= itr_end_2; r++){
            if((scan_msg_poles.ranges[r] < min_range_left)){
             initial_count_2 = initial_count_2 + 1;
             count_angle_2[initial_count_2] = r;
@@ -205,35 +202,6 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_3.color.b = 1.0;
 
  if(unfit>0){
-/*
- if((marker_1.pose.position.x < marker_2.pose.position.x)&&(marker_1.pose.position.x < marker_3.pose.position.x)){
-  nearest_pole_x = marker_1.pose.position.x;
-  nearest_pole_y = marker_1.pose.position.y;
-  next_nearest_pole_x = marker_2.pose.position.x;
-  next_nearest_pole_y = std::fmin(marker_2.pose.position.y, marker_3.pose.position.y);
-  farthest_pole_x = marker_3.pose.position.x;
-  farthest_pole_y = std::fmax(marker_2.pose.position.y, marker_3.pose.position.y);
-  }
-  else{
-  if(marker_2.pose.position.x < marker_3.pose.position.x) {
-   nearest_pole_x = marker_2.pose.position.x;
-   nearest_pole_y = marker_2.pose.position.y;
-   next_nearest_pole_x = marker_3.pose.position.x;
-   next_nearest_pole_y = std::fmin(marker_1.pose.position.y,marker_3.pose.position.y);
-   farthest_pole_x = marker_3.pose.position.x;
-   farthest_pole_y = std::fmax(marker_1.pose.position.y,marker_3.pose.position.y);
-  }
-  else{
-  nearest_pole_x = marker_3.pose.position.x;
-  nearest_pole_y = marker_3.pose.position.y;
-  next_nearest_pole_x = marker_1.pose.position.x;
-  next_nearest_pole_y = std::fmin(marker_1.pose.position.y,marker_2.pose.position.y);
-  farthest_pole_x = marker_1.pose.position.x;
-  farthest_pole_y = std::fmax(marker_1.pose.position.y,marker_2.pose.position.y);
-  }
-} */
-
-
   if(marker_1.pose.position.x < marker_2.pose.position.x) {
    nearest_pole_x = marker_1.pose.position.x;
    nearest_pole_y = marker_1.pose.position.y;
@@ -275,17 +243,17 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
 
   switch(turn_side){
   case RIGHT: 
-  goal_pt[1].position.x = marker_goal_1.pose.position.x;
-  goal_pt[1].position.y = marker_goal_1.pose.position.y;
-  goal_pt[2].position.x = marker_goal_2.pose.position.x;
-  goal_pt[2].position.y = marker_goal_2.pose.position.y;
+  goal_pt[0].position.x = marker_goal_1.pose.position.x;
+  goal_pt[0].position.y = marker_goal_1.pose.position.y;
+  goal_pt[1].position.x = marker_goal_2.pose.position.x;
+  goal_pt[1].position.y = marker_goal_2.pose.position.y;
   break;
 
   case LEFT: 
-  goal_pt[1].position.x = marker_goal_2.pose.position.x;
-  goal_pt[1].position.y = marker_goal_2.pose.position.y;
-  goal_pt[2].position.x = marker_goal_1.pose.position.x;
-  goal_pt[2].position.y = marker_goal_1.pose.position.y;
+  goal_pt[0].position.x = marker_goal_2.pose.position.x;
+  goal_pt[0].position.y = marker_goal_2.pose.position.y;
+  goal_pt[1].position.x = marker_goal_1.pose.position.x;
+  goal_pt[1].position.y = marker_goal_1.pose.position.y;
   break;
  }
 
@@ -296,7 +264,7 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
 }
 
 double pure_pursuit(double obs_range, double obs_bearing){
-double robotlength = 0.9;
+double robotlength = 0.7;
 double steeringAngle = atan(2*robotlength*sin(obs_bearing))/obs_range;
 return steeringAngle;
 }
@@ -305,6 +273,12 @@ bool change_row(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_go
    {
      row_transit_mode = row_transit_mode + req.counter;
      ROS_INFO("transition service on time");
+     if((row_transit_mode%2) == 0){
+     turn_side = 2;
+     }
+     else{
+     turn_side = 1;
+     }
      return true;
    }
 
@@ -341,52 +315,39 @@ int main(int argc, char** argv)
   while (ros::ok()){
   ros::spinOnce();
 
-/* try{
-   transformStamped1 = tfBuffer1.lookupTransform("map", "base_link", ros::Time(0));
- }
- catch (tf2::TransformException &ex1){
-   ros::Duration(1.0).sleep();
-   // continue;
- }
-
-  tf2::doTransform(thor_est, thor_est_trans, transformStamped1);
-  thor_est_trans.pose.orientation = transformStamped1.transform.rotation;
-  tf::Quaternion quat(thor_est_trans.pose.orientation.x,thor_est_trans.pose.orientation.y, thor_est_trans.pose.orientation.z, thor_est_trans.pose.orientation.w);
-  quat = quat.normalize();
-  yaw = tf::getYaw(quat);
-
-*/
-
   if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0) && (row_transit_mode == row_transit)){ // scan check  
+
+   if(turn_side == RIGHT){
+   min_itr_1 = 1;
+   max_itr_1 = 540;
+   min_itr_2 = 540;
+   max_itr_2 = 1079;
+   }
+
+   if(turn_side == LEFT){
+   min_itr_1 = 540;
+   max_itr_1 = 1079;
+   min_itr_2 = 1;
+   max_itr_2 = 540;
+   }
+  
+  Pole_detection(scan_msg_main, min_itr_1 , max_itr_1, min_itr_2 , max_itr_2); // pole detection
 
   if(row_transit_mode == 2){
   est_twist.linear.x = 0.0; 
   est_twist.angular.z = 0.0;
   goto stopover;
   }
-
-   if(turn_side == 1){
-   min_itr = 1;
-   max_itr = 540;
-   }
-
-   if(turn_side == 2){
-   min_itr = 540;
-   max_itr = 1079;
-   }
-  
-  Pole_detection(scan_msg_main, min_itr , max_itr); // pole detection
 	
   if(goal_found == true){
    goal_range = sqrt(pow((goal_pt[goal_transit].position.y - thor_est.pose.position.y),2) + pow((goal_pt[goal_transit].position.x - thor_est.pose.position.x),2));
    goal_bearing = atan2((goal_pt[goal_transit].position.y-thor_est.pose.position.y),(goal_pt[goal_transit].position.x - thor_est.pose.position.x)) - yaw;
-   std::cout << "goal_range:" << goal_range << "\n" << "yaw" << yaw << std::endl;
+   // std::cout << "goal_range:" << goal_range << "\n" << "yaw" << yaw << std::endl;
    angular_velocity = pure_pursuit(goal_range, goal_bearing); //pure pursuit controller
 
    if((goal_range < min_goal_range)){
     est_twist.linear.x = 0.0; 
     est_twist.angular.z = 0.0;
-   // min_goal_range = 0.40;
 
    switch(turn_side){ 
     case RIGHT:
@@ -394,12 +355,12 @@ int main(int argc, char** argv)
     est_twist.angular.z = -0.20; 
     turn_90=false;  
     }
-    else if((yaw<=-3.0)&&(yaw>=-3.14)){ 
-    est_twist.angular.z = fabs(yaw)-3.14; 
+    else if((yaw<=-1.50)&&(yaw>=-1.57)){ 
+    est_twist.angular.z = fabs(yaw)-1.57; 
     }
     else{
     turn_90 = true;
-    goal_transit = 2;
+    goal_transit = 1;
     est_twist.angular.z = 0.0;
     }
     break;
@@ -409,24 +370,24 @@ int main(int argc, char** argv)
     est_twist.angular.z = 0.20; 
     turn_90=false;  
     }
-    else if((yaw>=3.00)&&(yaw<=3.14)){ 
-    est_twist.angular.z = 3.14-yaw; 
+    else if((yaw>=1.50)&&(yaw<=1.57)){ 
+    est_twist.angular.z = 1.57-yaw; 
     }
     else{
     turn_90 = true;
-    goal_transit = 2;
+    goal_transit = 1;
     est_twist.angular.z = 0.0;
     }
     break;
     }
    } 
    else{
-   est_twist.linear.x = 0.2; 
-   est_twist.angular.z = 0;
+   est_twist.linear.x = 0.3; 
+   est_twist.angular.z = angular_velocity;
    } 
 
    // Service for end of row transition
-   if ((turn_90 = true) && (goal_transit==2) && ((yaw >= 3.10)||(yaw<=-3.10))){
+   if ((turn_90 = true) && (goal_transit==1) && ((yaw >= 1.53)||(yaw<=-1.53))){
      end_row_transit.request.counter = 1;
      end_row_transit_1.request.counter = 1;
      est_twist.angular.z = 0;
@@ -435,22 +396,29 @@ int main(int argc, char** argv)
      switch(turn_side){
       case RIGHT: 
       turn_side = 2;
-      ROS_INFO("Turning Right");
+      ROS_INFO("Turned Right");
       break;
 
       case LEFT:
       turn_side = 1;
-      ROS_INFO("Turning Left");
+      ROS_INFO("Turned Left");
       break;
      }
 
      if (client.call(end_row_transit)){ 
      ROS_INFO("End of the row transition");
-     goal_transit = 1;
+     goal_transit = 0;
+     goal_found = false;
      } 
-     if (client1.call(end_row_transit_1)){} 
+     if (client1.call(end_row_transit_1)){
+     marker_1 = empty_pole_1;
+     marker_2 = empty_pole_2;
+     marker_3 = empty_pole_3;
+     marker_goal_1 =  empty_goal_1;
+     marker_goal_1 =  empty_goal_2;
+     } 
    } 
-//*/
+
   vis_pub_1.publish(marker_1);
   vis_pub_2.publish(marker_2);
   vis_pub_3.publish(marker_3);
@@ -458,20 +426,18 @@ int main(int argc, char** argv)
   vis_pub_6.publish(marker_goal_2);
   } // goal check 
 
-  // publish the markers
  // scan_msg.header.stamp = ros::Time::now();
+  stopover:
+  twist_gazebo.publish(est_twist);
+  } // scan check
+
+  // publish the markers
   marker_1.header.stamp = ros::Time::now();
   marker_2.header.stamp = ros::Time::now();
   marker_3.header.stamp = ros::Time::now();
   marker_goal_1.header.stamp = ros::Time::now();
   marker_goal_2.header.stamp = ros::Time::now();
 
-  stopover:
-  twist_gazebo.publish(est_twist);
-  // r.sleep();
-  } // scan check
-
- // scan_pub.publish(scan_msg);
   } // node shutdown
  return 0;
 } // main loop end
