@@ -55,4 +55,4 @@ double linear_velocity = 0.4, angular_velocity = 0.0;
 double goal_range, goal_bearing, a = 0;
 bool pole_detect = false, turn_90 = false; 
 int goal_transit = 0, c = 0, row_transit = 1, row_transit_mode = 0;
-double min_goal_range = 0.10;
+double min_goal_range = 0.05;

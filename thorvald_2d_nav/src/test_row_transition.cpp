@@ -92,7 +92,7 @@ double sum_k[num_ranges];
   ROS_INFO("Right Poles has to be re-detected");
   goto pole_redetect;
   }
-ROS_INFO("over<<");
+
 //---------------------- THIRD MARKER ---------------------------//
 
   double sum_n[num_ranges];
@@ -125,7 +125,7 @@ if(n == 0){
 ROS_INFO("Left Pole has to be re-detected");
 goto pole_redetect_left;
 }
-
+ROS_INFO("markers found");
 //---------------------- GOAL ---------------------------// 
 geometry_msgs::PoseStamped pole_1, pole_1_transformed;
 geometry_msgs::PoseStamped pole_2, pole_2_transformed;
@@ -155,6 +155,9 @@ pole_3.pose.position.y = current_range_3*sin(angle_3);
 tf2::doTransform(pole_1, pole_1_transformed, transformStamped);
 tf2::doTransform(pole_2, pole_2_transformed, transformStamped);
 tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
+// std::cout << "pole_1.pose.position.x:" << pole_1.pose.position.x  << "\n" << "pole_1_transformed.pose.position.x:" << pole_1_transformed.pose.position.x << "\n" << std::endl;
+// std::cout << "pole_2.pose.position.x:" << pole_2.pose.position.x  << "\n" << "pole_2_transformed.pose.position.x:" << pole_2_transformed.pose.position.x << "\n" << std::endl;
+// std::cout << "pole_3.pose.position.x:" << pole_3.pose.position.x  << "\n" << "pole_3_transformed.pose.position.x:" << pole_3_transformed.pose.position.x << "\n" << std::endl;
 
   marker_1.header.frame_id = "map";
   marker_1.ns = "poles_1";
@@ -217,8 +220,13 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_goal_1.type = visualization_msgs::Marker::CYLINDER;
   marker_goal_1.action = visualization_msgs::Marker::ADD;
   marker_goal_1.pose.position.x = (marker_3.pose.position.x + nearest_pole_x)/2;
+
+  if(((marker_3.pose.position.y + nearest_pole_y)/2) > 0)
   marker_goal_1.pose.position.y = ((marker_3.pose.position.y + nearest_pole_y)/2) + 1.5;
-  marker_goal_1.pose.position.z = 0.90;
+  else
+  marker_goal_1.pose.position.y = ((marker_3.pose.position.y + nearest_pole_y)/2) - 1.5;
+
+  // marker_goal_1.pose.position.z = 0.90;
   marker_goal_1.pose.orientation.w = 1.0;
   marker_goal_1.scale.x = 0.05;
   marker_goal_1.scale.y = 0.05;
@@ -232,8 +240,13 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_goal_2.type = visualization_msgs::Marker::CYLINDER;
   marker_goal_2.action = visualization_msgs::Marker::ADD;
   marker_goal_2.pose.position.x = ((marker_1.pose.position.x + marker_2.pose.position.x)/2);
+
+  if(((marker_1.pose.position.y + marker_2.pose.position.y)/2) > 0)
   marker_goal_2.pose.position.y = ((marker_1.pose.position.y + marker_2.pose.position.y)/2) + 1.5;
-  marker_goal_2.pose.position.z = 0.90;
+  else
+  marker_goal_2.pose.position.y = ((marker_1.pose.position.y + marker_2.pose.position.y)/2) - 1.5;
+  
+  // marker_goal_2.pose.position.z = 0.90;
   marker_goal_2.pose.orientation.w = 1.0;
   marker_goal_2.scale.x = 0.05;
   marker_goal_2.scale.y = 0.05;
@@ -241,7 +254,12 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   marker_goal_2.color.a = 1.0; // Don't forget to set the alpha!
   marker_goal_2.color.g = 1.0;
 
-  switch(turn_side){
+  goal_pt[0].position.x = marker_goal_1.pose.position.x;
+  goal_pt[0].position.y = marker_goal_1.pose.position.y;
+  goal_pt[1].position.x = marker_goal_2.pose.position.x;
+  goal_pt[1].position.y = marker_goal_2.pose.position.y;
+
+ /*  switch(turn_side){
   case RIGHT: 
   goal_pt[0].position.x = marker_goal_1.pose.position.x;
   goal_pt[0].position.y = marker_goal_1.pose.position.y;
@@ -249,13 +267,13 @@ tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
   goal_pt[1].position.y = marker_goal_2.pose.position.y;
   break;
 
-  case LEFT: 
+ case LEFT: 
   goal_pt[0].position.x = marker_goal_2.pose.position.x;
   goal_pt[0].position.y = marker_goal_2.pose.position.y;
   goal_pt[1].position.x = marker_goal_1.pose.position.x;
   goal_pt[1].position.y = marker_goal_1.pose.position.y;
   break;
- }
+ } */
 
   goal_found = true; 
   }
@@ -292,7 +310,6 @@ int main(int argc, char** argv)
   ros::Subscriber pose_sub = n.subscribe("/thorvald_pose", 100, robotposeCallback);
 
   // Publishers
- // ros::Publisher scan_pub = n.advertise<sensor_msgs::LaserScan>( "/scan_range", 100);
   ros::Publisher twist_gazebo = n.advertise<geometry_msgs::Twist>( "/nav_vel", 100);
   ros::Publisher vis_pub_1 = n.advertise<visualization_msgs::Marker>( "pole_marker_1", 1 );
   ros::Publisher vis_pub_2 = n.advertise<visualization_msgs::Marker>( "pole_marker_2", 1 );
@@ -315,7 +332,7 @@ int main(int argc, char** argv)
   while (ros::ok()){
   ros::spinOnce();
 
-  if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0) && (row_transit_mode == row_transit)){ // scan check  
+   if ((scan_msg_main.ranges.size() > 0) && (row_transit_mode>0) && (row_transit_mode == row_transit)){ // scan check  
 
    if(turn_side == RIGHT){
    min_itr_1 = 1;
@@ -333,12 +350,13 @@ int main(int argc, char** argv)
   
   Pole_detection(scan_msg_main, min_itr_1 , max_itr_1, min_itr_2 , max_itr_2); // pole detection
 
-  if(row_transit_mode == 2){
+ /* if(row_transit_mode == 4){
   est_twist.linear.x = 0.0; 
   est_twist.angular.z = 0.0;
   goto stopover;
-  }
-	
+  } */
+
+/*	
   if(goal_found == true){
    goal_range = sqrt(pow((goal_pt[goal_transit].position.y - thor_est.pose.position.y),2) + pow((goal_pt[goal_transit].position.x - thor_est.pose.position.x),2));
    goal_bearing = atan2((goal_pt[goal_transit].position.y-thor_est.pose.position.y),(goal_pt[goal_transit].position.x - thor_est.pose.position.x)) - yaw;
@@ -387,7 +405,7 @@ int main(int argc, char** argv)
    } 
 
    // Service for end of row transition
-   if ((turn_90 = true) && (goal_transit==1) && ((yaw >= 1.53)||(yaw<=-1.53))){
+   if ((turn_90 = true) && (goal_transit==1) && ((yaw >= 1.55)||(yaw<=-1.55))){
      end_row_transit.request.counter = 1;
      end_row_transit_1.request.counter = 1;
      est_twist.angular.z = 0;
@@ -419,14 +437,14 @@ int main(int argc, char** argv)
      } 
    } 
 
+  } // goal check 
+*/
   vis_pub_1.publish(marker_1);
   vis_pub_2.publish(marker_2);
   vis_pub_3.publish(marker_3);
   vis_pub_5.publish(marker_goal_1);
   vis_pub_6.publish(marker_goal_2);
-  } // goal check 
 
- // scan_msg.header.stamp = ros::Time::now();
   stopover:
   twist_gazebo.publish(est_twist);
   } // scan check

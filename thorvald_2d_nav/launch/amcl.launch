@@ -4,7 +4,7 @@
 
 <param name="use_sim_time" value="true"/>
 
-<arg name="map_file" default="$(find thorvald_2d_nav)/maps/sim_poles.yaml"/>
+<arg name="map_file" default="$(find thorvald_2d_nav)/maps/just_one_column.yaml"/>
 
 <!-- Run the map server -->
 <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
@@ -28,9 +28,9 @@
         <param name="gui_publish_rate" value="10.0"/>
 
 		<!--initial pose --> 
-        <param name="initial_pose_x" value="0.745"/>
-        <param name="initial_pose_y" value="-1.497"/>
-        <param name="initial_pose_a" value="1.551"/>
+        <param name="initial_pose_x" value="-0.746"/>
+        <param name="initial_pose_y" value="-1.382"/>
+        <param name="initial_pose_a" value="1.570"/>
         <param name="initial_cov_xx" value="0.0"/>
         <param name="initial_cov_yy" value="0.0"/>
         <param name="initial_cov_aa" value="0.0"/>

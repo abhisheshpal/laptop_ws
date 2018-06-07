@@ -13,28 +13,43 @@
 
 <arg name ="/sim_sim" value="True"/>
 
+<!-- GAZEBO SIMULATION -->
 <include file = "$(find thorvald_2d_nav)/launch/gazebo_row_transition.launch" />
 
+<!--LASER FILTERS-->
 <include file = "$(find laser_filters)/examples/range_filter_example.launch" />
 
+<!--LOCALIZATION-->
 <include file = "$(find thorvald_2d_nav)/launch/amcl.launch" />
 
-<include file = "$(find thorvald_bringup)/launch/thorvald_ii_4wd4ws_slim/thorvald_ii_4wd4ws_slim_sim_lincoln.launch" />
+<!--THORVALD BRINGUP-->
+<include file = "$(find thorvald_bringup)/launch/thorvald_ii_4wd4ws_slim/thorvald_ii_4wd4ws_slim_sim_vignesh.launch" />
 
 <!--node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
  <param name="odom_frame" value="odom"/>
  <param name="scan" value="scan"/>
 </node-->
 
-<node pkg="thorvald_2d_nav" type="test_RANSAC" name="test_RANSAC" output="screen"/>
+<!--include file = "$(find thorvald_2d_nav)/launch/thor_localization.launch" /-->
 
-<node pkg="thorvald_2d_nav" type="test_control_modes" name="test_control_modes" output="screen"/>
+<!--include file = "$(find thorvald_2d_nav)/launch/move_base_nav.launch" /-->
 
-<node pkg="thorvald_2d_nav" type="test_row_transition" name="test_row_transition" output="screen"/>
+<!--include file = "$(find waypoints_nmbu)/launch/record_waypoints.launch" /-->
+
+<!--include file = "$(find waypoints_nmbu)/launch/navigate_waypoints.launch" /-->
+
+<!--node pkg="thorvald_2d_nav" type="test_row_transition" name="test_row_transition" output="screen"/-->
+
+<!--node pkg="thorvald_2d_nav" type="simple_navigation_goals" name="simple_navigation_goals"/-->
+
+<!--node pkg="thorvald_2d_nav" type="test_RANSAC" name="test_RANSAC" output="screen"/-->
+
+<!--node pkg="thorvald_2d_nav" type="test_control_modes" name="test_control_modes" output="screen"/-->
 
 <!--node pkg="thorvald_2d_nav" type="fastSLAM" name="fastSLAM" output="screen"/-->
 
 <!--node pkg="thorvald_2d_nav" type="thorvald_line_SLAM" name="thorvald_line_SLAM"/-->
+
 
 <node pkg="rviz" type="rviz" name="rviz" args="-d $(find thorvald_2d_nav)/rviz/lincoln.rviz"/>
 

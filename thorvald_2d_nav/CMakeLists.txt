@@ -129,6 +129,8 @@ catkin_package(
   message_generation
   nav_msgs
   std_srvs
+  move_base_msgs
+  actionlib
 #  DEPENDS system_lib
 )
 
@@ -183,6 +185,9 @@ include_directories(${PYTHON_INCLUDE_DIRS})
  add_executable(test_control_modes src/test_control_modes.cpp)
  target_link_libraries(test_control_modes ${catkin_LIBRARIES})
 
+ add_executable(simple_navigation_goals src/simple_navigation_goals.cpp)
+ target_link_libraries(simple_navigation_goals ${catkin_LIBRARIES})
+
  #add_executable(test_line_SLAM src/test_line_SLAM.cpp)
  #target_link_libraries(test_line_SLAM ${catkin_LIBRARIES})
 
@@ -223,6 +228,7 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 add_dependencies(test_row_transition ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(test_RANSAC ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(test_control_modes ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(simple_navigation_goals ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 #add_dependencies(test_line_SLAM ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 #add_dependencies(fastSLAM ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 #add_dependencies(fusion_model ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

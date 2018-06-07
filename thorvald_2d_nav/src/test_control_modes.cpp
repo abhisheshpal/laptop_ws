@@ -145,9 +145,20 @@ int main(int argc, char** argv)
    row_count = landmarks_pose.row_number;
     for(int i=1;i<=Total_Points;i++){
     Points[i].position.x = ((thor_est.pose.position.x) *(1-(float(i)/Total_Points))) + ((landmarks_pose.x[5]) *(float(i)/Total_Points));
-    Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.y[5]-1.0) *(float(i)/Total_Points)); 
-   }
 
+    if(landmarks_pose.y[5]>0.0){
+     if(landmarks_pose.y[5]>1.0){
+     Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.y[5]-1.0) *(float(i)/Total_Points)); 
+     }
+     else{ 
+     Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((1.0-landmarks_pose.y[5]) *(float(i)/Total_Points)); 
+     }
+    }
+    else{ 
+    Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.y[5]+1.0) *(float(i)/Total_Points)); 
+    } 
+  }
+  std::cout << "Points[Total_Points].y:" << Points[Total_Points].position.y << "\n" << std::endl;
   mini_goal_pts.x = Points[1].position.x;
   mini_goal_pts.y = Points[1].position.y;
   mini_goal = true;

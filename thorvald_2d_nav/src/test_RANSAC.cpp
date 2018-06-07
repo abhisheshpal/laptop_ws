@@ -183,7 +183,7 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 bool add(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
    {
      end_line = end_line + req.counter;
-     if((end_line > finale_1) && (end_line < 4)){
+     if((end_line > finale_1) && (end_line < 5)){
      // end_line = 0;
      finale = 0; 
      ROS_INFO("End of previous line reached");

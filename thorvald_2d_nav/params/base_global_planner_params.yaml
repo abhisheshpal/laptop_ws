@@ -1,0 +1,2 @@
+navfn/NavfnROS:
+ default tolerance: 0.05
