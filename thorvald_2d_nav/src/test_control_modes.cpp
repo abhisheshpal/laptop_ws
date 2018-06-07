@@ -132,7 +132,7 @@ int main(int argc, char** argv)
   double dt;
 
   while (ros::ok()){
-
+ros::Rate r(10); // 10 hz
   ros::spinOnce();
 
   if((counter_line > 0) && (landmarks_pose.landmark_check > 0)){ // generated line check

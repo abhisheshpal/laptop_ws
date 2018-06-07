@@ -17,7 +17,6 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   nav_msgs
   std_srvs
-  plot_tool
 )
 
 find_package(Eigen3 REQUIRED)
@@ -80,7 +79,7 @@ add_message_files(
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
    DEPENDENCIES
-   std_msgs geometry_msgs actionlib_msgs std_srvs plot_tool# Or other packages containing msgs
+   std_msgs geometry_msgs actionlib_msgs std_srvs # Or other packages containing msgs
  )
 
 ################################################

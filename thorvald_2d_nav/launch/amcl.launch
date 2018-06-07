@@ -4,7 +4,7 @@
 
 <param name="use_sim_time" value="true"/>
 
-<arg name="map_file" default="$(find thorvald_2d_nav)/maps/just_one_column.yaml"/>
+<arg name="map_file" default="$(find thorvald_2d_nav)/maps/just_three_rows.yaml"/>
 
 <!-- Run the map server -->
 <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
