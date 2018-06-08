@@ -155,9 +155,6 @@ pole_3.pose.position.y = current_range_3*sin(angle_3);
 tf2::doTransform(pole_1, pole_1_transformed, transformStamped);
 tf2::doTransform(pole_2, pole_2_transformed, transformStamped);
 tf2::doTransform(pole_3, pole_3_transformed, transformStamped);
-// std::cout << "pole_1.pose.position.x:" << pole_1.pose.position.x  << "\n" << "pole_1_transformed.pose.position.x:" << pole_1_transformed.pose.position.x << "\n" << std::endl;
-// std::cout << "pole_2.pose.position.x:" << pole_2.pose.position.x  << "\n" << "pole_2_transformed.pose.position.x:" << pole_2_transformed.pose.position.x << "\n" << std::endl;
-// std::cout << "pole_3.pose.position.x:" << pole_3.pose.position.x  << "\n" << "pole_3_transformed.pose.position.x:" << pole_3_transformed.pose.position.x << "\n" << std::endl;
 
   marker_1.header.frame_id = "map";
   marker_1.ns = "poles_1";
