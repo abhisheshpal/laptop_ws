@@ -193,8 +193,8 @@ include_directories(${PYTHON_INCLUDE_DIRS})
  #add_executable(fastSLAM src/fastSLAM.cpp)
  #target_link_libraries(fastSLAM ${catkin_LIBRARIES} ${PYTHON_LIBRARIES})
 
- #add_executable(fusion_model src/test_fusion.cpp)
- #target_link_libraries(fusion_model ${catkin_LIBRARIES} ${PYTHON_LIBRARIES})
+ add_executable(fusion_model src/test_fusion.cpp)
+ target_link_libraries(fusion_model ${catkin_LIBRARIES} ${PYTHON_LIBRARIES})
 
  #add_executable(gps_switch_server src/gps_server.cpp)
  #target_link_libraries(gps_switch_server ${catkin_LIBRARIES})
@@ -230,7 +230,7 @@ add_dependencies(test_control_modes ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${cat
 add_dependencies(simple_navigation_goals ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 #add_dependencies(test_line_SLAM ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 #add_dependencies(fastSLAM ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-#add_dependencies(fusion_model ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(fusion_model ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 #add_dependencies(gazebo_line ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 #add_dependencies(gps_switch_server ${${thorvald_2d_nav}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
