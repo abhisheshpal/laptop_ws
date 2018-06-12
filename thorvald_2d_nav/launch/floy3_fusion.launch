@@ -3,7 +3,7 @@
 <launch>
 
 <!--THORVALD BRINGUP-->
-<include file = "$(find thorvald_bringup)/launch/thorvald_ii_4wd4ws_slim/thorvald_ii_4wd4ws_slim_sim_vignesh.launch" />
+<!--include file = "$(find thorvald_bringup)/launch/thorvald_ii_4wd4ws_slim/thorvald_ii_4wd4ws_slim_sim.launch" /-->
 
 <!--LOCALIZATION-->
 <include file = "$(find thorvald_2d_nav)/launch/floy3_amcl.launch" />
@@ -13,6 +13,7 @@
 
 <!--WAYPOINTS NAVGATION-->
 <!--include file = "$(find waypoints_nmbu)/launch/navigate_waypoints.launch" /-->
+<include file = "$(find waypoints_nmbu)/launch/record_waypoints.launch" />
 
 <!--include file = "$(find thorvald_2d_nav)/launch/move_base_nav.launch" /-->
 

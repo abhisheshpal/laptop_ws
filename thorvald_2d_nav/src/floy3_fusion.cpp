@@ -37,11 +37,14 @@ MatrixXd sigma = MatrixXd::Zero(2*total_landmarks + 3,2*total_landmarks + 3); //
 thorvald_pose_struct thor_pose, thor_pose_est;
 geometry_msgs::Pose true_pose;
 geometry_msgs::PoseStamped thor_est;
-nav_msgs::Odometry thor_est_gps;
+nav_msgs::Odometry thor_est_gps, fus_pos_p;
 MatrixXd expp = MatrixXd::Zero(1,1);
 MatrixXd weight_1 = MatrixXd::Zero(1,1);
 MatrixXd weight_2 = MatrixXd::Zero(1,1);
 MatrixXd zi =  MatrixXd::Zero(2*total_landmarks + 3,1);
+MatrixXd weight = MatrixXd::Zero(1,1);
+int connected_sensor = 1;
+enum sensor_type {GPS = 1, LASER = 2};
 
 // update step variables
 double yaw, motion_noise = 0.00001, measurement_noise = 0.0001;
@@ -78,23 +81,37 @@ double normalizeangle(double bearing){
 
 MatrixXd measurement_model(struct thorvald_pose_struct thor_pose3){
 
-// For Laser
+switch(connected_sensor){
+case GPS:// For GPS
 H(0,0) = 1; 
 H(1,1) = 1; 
-H(2,2) = 1; 
+H(2,2) = 0; 
+break;
 
-// For GPS
+case LASER: // For Laser
 H(0,0) = 1; 
 H(1,1) = 1; 
 H(2,2) = 1; 
+break;
+}
 
 return H;
 }
 
+void correction_step_gps(struct thorvald_pose_struct thor_pose2, MatrixXd diff2){
 
-void correction_step(struct thorvald_pose_struct thor_pose1, MatrixXd diff1){
+ // calculate jacobian w.r.t landmark pose
+  H = measurement_model(thor_pose2);
 
-  // calculate jacobian w.r.t landmark pose
+ // Finish the correction step by computing the new mu and sigma.
+ // thor_pose1.mu = thor_pose1.mu + K*diff1;
+ // thor_pose1.sigma =  (MatrixXd::Identity((2*total_landmarks+3),(2*total_landmarks+3))- K*H)*thor_pose1.sigma;
+ // thor_pose1.mu(2,0)= normalizeangle(thor_pose1.mu(2,0));
+}
+
+void correction_step_laser(struct thorvald_pose_struct thor_pose1, MatrixXd diff1){
+
+ // calculate jacobian w.r.t landmark pose
   H = measurement_model(thor_pose1);
 
  // Finish the correction step by computing the new mu and sigma.
@@ -103,8 +120,9 @@ void correction_step(struct thorvald_pose_struct thor_pose1, MatrixXd diff1){
   thor_pose1.mu(2,0)= normalizeangle(thor_pose1.mu(2,0));
 }
 
+
 MatrixXd compute_weight(struct thorvald_pose_struct thor_pose5, MatrixXd innovation){
-	MatrixXd weight = MatrixXd::Zero(1,1);
+
 C = H*thor_pose5.sigma*H.transpose() + Q;
 expp = (-0.5*innovation.transpose()*C.inverse()*innovation).exp();
 weight = (1/ (pow((2*M_PI),n1/2) * sqrt(C.determinant()))) * expp;
@@ -117,14 +135,15 @@ struct thorvald_pose_struct fusion_model(struct thorvald_pose_struct thor_pose_f
 p_j_0 = weigh_1*(weigh_1+weigh_2).inverse();
 p_j_1 = weigh_1*(weigh_1+weigh_2).inverse();
 
+double p_j_0_n = p_j_0(0.0);
+double p_j_1_n = p_j_1(0,0);
+
 thor_pose_est.landmarks_observed = thor_pose_f.landmarks_observed;	
 
 // final state and co-variance model
 thor_pose_est.mu = thor_pose_f.mu*p_j_0 + thor_pose_f.mu*p_j_1;
 zi = thor_pose_est.mu - thor_pose_f.mu;
-ROS_INFO("1");
-thor_pose_est.sigma = p_j_0*(thor_pose_f.sigma+(zi.transpose()*zi)) + p_j_1*(thor_pose_f.sigma+(zi.transpose()*zi));
-ROS_INFO("2");
+thor_pose_est.sigma = p_j_0_n*(thor_pose_f.sigma+(zi*zi.transpose())) + p_j_1_n*(thor_pose_f.sigma+(zi*zi.transpose()));
 return thor_pose_est;
 }
 
@@ -137,12 +156,16 @@ int main(int argc, char** argv)
   // Subscribers
   ros::Subscriber pose_sub = n.subscribe("/thorvald_pose", 100, thorposeCallback);
   ros::Subscriber pose_sub1 = n.subscribe("/thor_est_laser", 100, estposeCallback);
-  ros::Subscriber pose_sub2 = n.subscribe("/odometry/global", 100, estposeCallback1);
+  ros::Subscriber pose_sub2 = n.subscribe("/odometry/gps", 100, estposeCallback1);
 
+  // Publishers
+  ros::Publisher fus_pose_pub = n.advertise<nav_msgs::Odometry>("/fusion_pose", 100);
+  
   while (ros::ok()){
 
   // update step
-  correction_step(thor_pose, diff);
+  correction_step_gps(thor_pose, diff);
+  correction_step_laser(thor_pose, diff);
 
   // compute weight
   if(n1 == 1){
@@ -155,7 +178,14 @@ int main(int argc, char** argv)
 
   // fusion model
   thor_pose = fusion_model(thor_pose, weight_1, weight_2);
-ROS_INFO("afa1");
+ // ROS_INFO("over");
+
+  fus_pos_p.pose.pose.position.x = thor_pose.mu(0,0);
+  fus_pos_p.pose.pose.position.y = thor_pose.mu(1,0);
+  fus_pos_p.pose.pose.orientation = tf::createQuaternionMsgFromYaw(thor_pose.mu(0,0));
+
+  fus_pose_pub.publish(fus_pos_p);
+
   r.sleep();
   }
   return 0;

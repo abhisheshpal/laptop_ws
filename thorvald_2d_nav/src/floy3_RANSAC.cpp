@@ -65,7 +65,6 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
             double error_1 = y_1[index_1] - (model_1.m*x_1[index_1] + model_1.b); // error calculation
 
             if((thershold > error_1) && (-thershold < error_1) && (error_1 != 0)){  // check for threshold
-            // std::cout << "error_1:" << abs(error_1) << "\n" << std::endl;
               current_best_inlierpoints_1[p_1].real_x = x_1[index_1];
               current_best_inlierpoints_1[p_1].real_y = y_1[index_1];
               p_1 = p_1 +1;
@@ -79,7 +78,6 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
 
         if(final_count_1 > d){ // selecting the inliers with max of points    
          if((final_count_1 > final_count_2) && (fabs(y_1[aIndex_1]) < 1.2) && (fabs(y_1[bIndex_1]) < 1.2)){
-                    // std::cout << final_count_1 << std::endl;
             if(scan_msg_main.ranges[aIndex_1]<scan_msg_main.ranges[bIndex_1]){
             final_Index_1[1].real_x = x_1[aIndex_1];
             final_Index_1[1].real_y = y_1[aIndex_1];
@@ -183,7 +181,7 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 bool add(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
    {
      end_line = end_line + req.counter;
-     if((end_line > finale_1) && (end_line < 5)){
+     if((end_line > finale_1) && (end_line < 2)){
      // end_line = 0;
      finale = 0; 
      ROS_INFO("End of previous line reached");
@@ -222,7 +220,7 @@ int main(int argc, char** argv)
         ros::Rate r(10);
 
         // Subscribers
-	ros::Subscriber scan_sub_test = n.subscribe("scan_filtered", 100, scanCallback);
+	ros::Subscriber scan_sub_test = n.subscribe("scan", 100, scanCallback);
 	ros::Subscriber pose_sub_test = n.subscribe("thorvald_pose", 100, poseCallback);
 
         // Publishers
@@ -231,7 +229,6 @@ int main(int argc, char** argv)
         ros::Publisher marker_pub_3 = n.advertise<visualization_msgs::Marker>("final_line", 10);
         ros::Publisher point_pub = n.advertise<thorvald_2d_nav::scan_detected_line>("measurement_points", 10);
         ros::Publisher landmarks_pub = n.advertise<thorvald_2d_nav::landmarks>("landmark_points", 10);
-        // ros::Publisher thor_pub = n.advertise<geometry_msgs::PoseStamped>("curr_thor", 10); // gm
 
         // Service Servers
         ros::ServiceServer service1 = n.advertiseService("/sub_goal_check", add);
@@ -286,17 +283,17 @@ int main(int argc, char** argv)
           ros::Duration(1.0).sleep();
           }
  
-            left_line_1.header.frame_id = "hokuyo";
+            left_line_1.header.frame_id = "map";
             left_line_1.pose.position.x = final_Index_1[1].real_x;
             left_line_1.pose.position.y = final_Index_1[1].real_y;
-            left_line_2.header.frame_id = "hokuyo";
+            left_line_2.header.frame_id = "map";
             left_line_2.pose.position.x = final_Index_1[2].real_x;
             left_line_2.pose.position.y = final_Index_1[2].real_y;
 
-            right_line_1.header.frame_id = "hokuyo";
+            right_line_1.header.frame_id = "map";
             right_line_1.pose.position.x = final_Index_2[1].real_x;
             right_line_1.pose.position.y = final_Index_2[1].real_y;
-            right_line_2.header.frame_id = "hokuyo";
+            right_line_2.header.frame_id = "map";
             right_line_2.pose.position.x = final_Index_2[2].real_x;
             right_line_2.pose.position.y = final_Index_2[2].real_y;
 
@@ -304,8 +301,6 @@ int main(int argc, char** argv)
             tf2::doTransform(left_line_2, left_line_2_trans, transformStamped);
             tf2::doTransform(right_line_1, right_line_1_trans, transformStamped);
             tf2::doTransform(right_line_2, right_line_2_trans, transformStamped);
-
-            // std::cout << "final_Index_1[1].real_y :" << final_Index_1[1].real_y << "\n" << "final_Index_2[1].real_y :" << final_Index_2[1].real_y<< "\n" << std::endl;
 
         if((line_found_1==false) || (fabs(left_line_2.pose.position.x - left_line_1.pose.position.x)< 1.0)){
         ROS_INFO("Line 1 has to be re-detected!");
@@ -380,7 +375,6 @@ int main(int argc, char** argv)
         landmarks_pos.y[5] = (left_line_2_trans.pose.position.y + right_line_2_trans.pose.position.y)/2;
         landmarks_pos.landmark_check = landmarks_pos.landmark_check + 1;
        
-        line_strip_1.header.frame_id = "/map";
         line_strip_1.action = visualization_msgs::Marker::ADD;
         line_strip_1.pose.position.z = 0.75;
         line_strip_1.pose.orientation.w = 1.0;
@@ -391,7 +385,7 @@ int main(int argc, char** argv)
         line_strip_1.color.b = 1.0;
         line_strip_1.color.a = 1.0;
 
-        line_strip_2.header.frame_id = "/map";
+
         line_strip_2.action = visualization_msgs::Marker::ADD;
         line_strip_2.pose.position.z = 0.75;
         line_strip_2.pose.orientation.w = 1.0;
@@ -402,7 +396,7 @@ int main(int argc, char** argv)
         line_strip_2.color.b = 1.0;
         line_strip_2.color.a = 1.0;
 
-        final_line.header.frame_id = "/map";
+
         final_line.action = visualization_msgs::Marker::ADD;
         final_line.pose.position.z = 0.0;
         final_line.pose.orientation.w = 1.0;
@@ -419,40 +413,40 @@ int main(int argc, char** argv)
 
         line_publish:
 
-        try{
-        transformStamped1 = tfBuffer1.lookupTransform("map", "base_link", ros::Time(0));
-        }
-        catch (tf2::TransformException &ex1){
-        ROS_WARN("%s",ex1.what());
-        ros::Duration(1.0).sleep();
-        } 
-
 // actual range and bearing calculation
-meas_pts.range[0] = sqrt(pow((left_line_2_trans.pose.position.x-thorvald_pose.position.x),2)+pow((left_line_2_trans.pose.position.y-thorvald_pose.position.y),2)); 
-meas_pts.bearing[0] = normalizeangle(atan2((left_line_2_trans.pose.position.y-thorvald_pose.position.y),(left_line_2_trans.pose.position.x-thorvald_pose.position.x)) - yaw);
-meas_pts.range[1] = sqrt(pow((right_line_2_trans.pose.position.x-thorvald_pose.position.x),2)+pow((right_line_2_trans.pose.position.y-thorvald_pose.position.y),2)); 
-meas_pts.bearing[1] = normalizeangle(atan2((right_line_2_trans.pose.position.y-thorvald_pose.position.y),(right_line_2_trans.pose.position.x-thorvald_pose.position.x)) - yaw);
+double line_local[5];
+
+meas_pts.bearing[0] = normalizeangle(atan2((left_line_1_trans.pose.position.y-thorvald_pose.position.y),(left_line_1_trans.pose.position.x-thorvald_pose.position.x)) - yaw);
+line_local[0] = left_line_1_trans.pose.position.y/(sin(meas_pts.bearing[0]));  
+meas_pts.range[0] = std::fabs(line_local[0] - thorvald_pose.position.x*cos(meas_pts.bearing[0]) - thorvald_pose.position.y*sin(meas_pts.bearing[0]));
+
+meas_pts.bearing[1] = normalizeangle(atan2((left_line_2_trans.pose.position.y-thorvald_pose.position.y),(left_line_2_trans.pose.position.x-thorvald_pose.position.x)) - yaw);
+line_local[1] = left_line_2_trans.pose.position.y/(sin(meas_pts.bearing[1]));  
+meas_pts.range[1] = std::fabs(line_local[1] - thorvald_pose.position.x*cos(meas_pts.bearing[1]) - thorvald_pose.position.y*sin(meas_pts.bearing[1]));
+
+meas_pts.bearing[2] = normalizeangle(atan2((right_line_1_trans.pose.position.y-thorvald_pose.position.y),(right_line_1_trans.pose.position.x-thorvald_pose.position.x)) - yaw);
+line_local[2] = right_line_1_trans.pose.position.y/(sin(meas_pts.bearing[2])); 
+meas_pts.range[2] = std::fabs(line_local[2] - thorvald_pose.position.x*cos(meas_pts.bearing[2]) - thorvald_pose.position.y*sin(meas_pts.bearing[2])); 
+ 
+meas_pts.bearing[3] = normalizeangle(atan2((right_line_2_trans.pose.position.y-thorvald_pose.position.y),(right_line_2_trans.pose.position.x-thorvald_pose.position.x)) - yaw);
+line_local[3] = right_line_2_trans.pose.position.y/(sin(meas_pts.bearing[3]));  
+meas_pts.range[3] = std::fabs(line_local[3] - thorvald_pose.position.x*cos(meas_pts.bearing[3]) - thorvald_pose.position.y*sin(meas_pts.bearing[3])); 
 
 left_l_c.position.x = (left_line_1_trans.pose.position.x + left_line_2_trans.pose.position.x)/2;
 left_l_c.position.y = (left_line_1_trans.pose.position.y + left_line_2_trans.pose.position.y)/2;
+
+meas_pts.bearing[4] = normalizeangle(atan2((left_l_c.position.y-thorvald_pose.position.y),(left_l_c.position.x-thorvald_pose.position.x)) - yaw);
+line_local[4] = left_l_c.position.y/(sin(meas_pts.bearing[4]));  
+meas_pts.range[4] = std::fabs(line_local[4] - thorvald_pose.position.x*cos(meas_pts.bearing[4]) - thorvald_pose.position.y*sin(meas_pts.bearing[4])); 
+
 right_l_c.position.x = (right_line_1_trans.pose.position.x + right_line_2_trans.pose.position.x)/2;
 right_l_c.position.y = (right_line_1_trans.pose.position.y + right_line_2_trans.pose.position.y)/2;
 
-meas_pts.range[2] = sqrt(pow((left_l_c.position.x-thorvald_pose.position.x),2)+pow((left_l_c.position.y-thorvald_pose.position.y),2));                
-meas_pts.bearing[2] = normalizeangle(atan2((left_l_c.position.y-thorvald_pose.position.y),(left_l_c.position.x-thorvald_pose.position.x)) - yaw);
-meas_pts.range[3] = sqrt(pow((right_l_c.position.x-thorvald_pose.position.x),2)+pow((right_l_c.position.y-thorvald_pose.position.y),2));                
-meas_pts.bearing[3] = normalizeangle(atan2((right_l_c.position.y-thorvald_pose.position.y),(right_l_c.position.x-thorvald_pose.position.x)) - yaw);
+meas_pts.bearing[5] = normalizeangle(atan2((right_l_c.position.y-thorvald_pose.position.y),(right_l_c.position.x-thorvald_pose.position.x)) - yaw);
+line_local[5] = right_l_c.position.y/(sin(meas_pts.bearing[5]));  
+meas_pts.range[5] = std::fabs(line_local[5] - thorvald_pose.position.x*cos(meas_pts.bearing[5]) - thorvald_pose.position.y*sin(meas_pts.bearing[5])); 
 
-meas_pts.range[4] = sqrt(pow((left_line_1_trans.pose.position.x-thorvald_pose.position.x),2)+pow((left_line_1_trans.pose.position.y-thorvald_pose.position.y),2));        
-meas_pts.range[5] = sqrt(pow((right_line_1_trans.pose.position.x-thorvald_pose.position.x),2)+pow((right_line_1_trans.pose.position.y-thorvald_pose.position.y),2)); 
-meas_pts.bearing[4] = normalizeangle(atan2((left_line_1_trans.pose.position.y-thorvald_pose.position.y),(left_line_1_trans.pose.position.x-thorvald_pose.position.x)) - yaw);
-meas_pts.bearing[5] = normalizeangle(atan2((right_line_1_trans.pose.position.y-thorvald_pose.position.y),(right_line_1_trans.pose.position.x-thorvald_pose.position.x)) - yaw);
-
-        line_strip_1.header.stamp = ros::Time::now();
-        line_strip_2.header.stamp = ros::Time::now();
-        final_line.header.stamp = ros::Time::now();
-        meas_pts.header.stamp = ros::Time::now();
-        landmarks_pos.header.stamp = ros::Time::now();
+meas_pts.meas_update = true;
 
         if(new_row == true){
         line_strip_1 = empty_line_strip_1;
@@ -475,8 +469,17 @@ meas_pts.bearing[5] = normalizeangle(atan2((right_line_1_trans.pose.position.y-t
         point_pub.publish(meas_pts);
         landmarks_pub.publish(landmarks_pos);
         }   
+
+        line_strip_1.header.stamp = ros::Time::now();
+        line_strip_2.header.stamp = ros::Time::now();
+        final_line.header.stamp = ros::Time::now();
+        meas_pts.header.stamp = ros::Time::now();
+        landmarks_pos.header.stamp = ros::Time::now();
  
+        line_strip_1.header.frame_id = "/map";
+        line_strip_2.header.frame_id = "/map";
         landmarks_pos.header.frame_id = "/map";
+        final_line.header.frame_id = "/map";
  
         r.sleep();
 	} // node shutdown

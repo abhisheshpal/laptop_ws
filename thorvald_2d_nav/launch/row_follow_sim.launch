@@ -20,7 +20,8 @@
 <include file = "$(find laser_filters)/examples/range_filter_example.launch" />
 
 <!--LOCALIZATION-->
-<include file = "$(find thorvald_2d_nav)/launch/amcl.launch" />
+<!--include file = "$(find thorvald_2d_nav)/launch/amcl.launch" /-->
+<include file = "$(find thorvald_2d_nav)/launch/thor_localization_map.launch" />
 
 <!--THORVALD BRINGUP-->
 <include file = "$(find thorvald_bringup)/launch/thorvald_ii_4wd4ws_slim/thorvald_ii_4wd4ws_slim_sim_vignesh.launch" />
@@ -31,7 +32,11 @@
  <param name="scan" value="scan_filtered"/>
 </node-->
 
-<include file = "$(find thorvald_2d_nav)/launch/thor_localization.launch" />
+<!--include file = "$(find thorvald_2d_nav)/launch/thor_localization.launch" /-->
+
+<node pkg="thorvald_2d_nav" type="floy3_RANSAC" name="floy3_RANSAC" output="screen"/>
+
+<!--node pkg="thorvald_2d_nav" type="floy3_control_modes" name="floy3_control_modes" output="screen"/-->
 
 <!--include file = "$(find thorvald_2d_nav)/launch/move_base_nav.launch" /-->
 
@@ -42,10 +47,6 @@
 <!--node pkg="thorvald_2d_nav" type="test_row_transition" name="test_row_transition" output="screen"/-->
 
 <!--node pkg="thorvald_2d_nav" type="simple_navigation_goals" name="simple_navigation_goals"/-->
-
-<!--node pkg="thorvald_2d_nav" type="test_RANSAC" name="test_RANSAC" output="screen"/-->
-
-<!--node pkg="thorvald_2d_nav" type="test_control_modes" name="test_control_modes" output="screen"/-->
 
 <!--node pkg="thorvald_2d_nav" type="fastSLAM" name="fastSLAM" output="screen"/-->
 

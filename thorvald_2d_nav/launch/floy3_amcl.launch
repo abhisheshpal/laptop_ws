@@ -9,7 +9,7 @@
 
 <node pkg="amcl" type="amcl" name="amcl" output="screen">
 
- <remap from="scan" to="scan_filtered"/>
+ <!--remap from="scan" to="scan_filtered"/-->
 
     <!-- see param description on http://www.ros.org/wiki/amcl -->     
 		<!--overall filter -->
@@ -26,9 +26,9 @@
         <param name="gui_publish_rate" value="10.0"/>
 
 		<!--initial pose --> 
-        <!--param name="initial_pose_x" value="-0.746"/-->
-        <!--param name="initial_pose_y" value="-1.382"/-->
-        <!--param name="initial_pose_a" value="1.570"/-->
+        <param name="initial_pose_x" value="0"/>
+        <param name="initial_pose_y" value="0"/>
+        <param name="initial_pose_a" value="1.570"/>
         <param name="initial_cov_xx" value="0.0"/>
         <param name="initial_cov_yy" value="0.0"/>
         <param name="initial_cov_aa" value="0.0"/>
