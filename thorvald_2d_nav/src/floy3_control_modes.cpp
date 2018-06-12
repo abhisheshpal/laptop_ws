@@ -181,7 +181,7 @@ int main(int argc, char** argv)
        thor_est_trans.header.frame_id = "/hokuyo";  
  
    angular_velocity = control_law(linear_velocity, dt, thor_est_trans); // control law
-   std::cout << "Points[Total_Points].x:" << Points[Total_Points].position.x << "\n" << "thor_est_trans.pose.position.x:" << thor_est_trans.pose.position.x << "\n" << std::endl;
+//   std::cout << "Points[Total_Points].x:" << Points[Total_Points].position.x << "\n" << "thor_est_trans.pose.position.x:" << thor_est_trans.pose.position.x << "\n" << std::endl;
    if(fabs(Points[Total_Points].position.x - thor_est_trans.pose.position.x) <= 0.5){
    counter_1 = 1;
    mini_goal = false;

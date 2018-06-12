@@ -23,7 +23,7 @@
 #include <assert.h>
 
 using namespace Eigen;
-int n1 = 1, total_landmarks = 4;
+int n1 = 1, total_landmarks = 2;
 MatrixXd p_j_0 = MatrixXd::Zero(1,1);
 MatrixXd p_j_1 = MatrixXd::Zero(1,1);
 
@@ -36,8 +36,7 @@ MatrixXd sigma = MatrixXd::Zero(2*total_landmarks + 3,2*total_landmarks + 3); //
 
 thorvald_pose_struct thor_pose, thor_pose_est;
 geometry_msgs::Pose true_pose;
-geometry_msgs::PoseStamped thor_est;
-nav_msgs::Odometry thor_est_gps, fus_pos_p;
+nav_msgs::Odometry thor_est_g, fus_pos_p, thor_est_l;
 MatrixXd expp = MatrixXd::Zero(1,1);
 MatrixXd weight_1 = MatrixXd::Zero(1,1);
 MatrixXd weight_2 = MatrixXd::Zero(1,1);
@@ -45,9 +44,11 @@ MatrixXd zi =  MatrixXd::Zero(2*total_landmarks + 3,1);
 MatrixXd weight = MatrixXd::Zero(1,1);
 int connected_sensor = 1;
 enum sensor_type {GPS = 1, LASER = 2};
+double yaw, yaw_l ,yaw_g;
+int sub_check_1 = 0, sub_check_2 = 0, sub_check_3 = 0;
 
 // update step variables
-double yaw, motion_noise = 0.00001, measurement_noise = 0.0001;
+double motion_noise = 0.00001, measurement_noise = 0.0001;
 MatrixXd H = MatrixXd::Zero(2*total_landmarks + 3,2*total_landmarks + 3); // H - Jacobian
 MatrixXd K = MatrixXd::Zero(2*total_landmarks + 3,2*total_landmarks + 3); // Kalman gain
 MatrixXd Z = MatrixXd::Zero(2,1); // Z
@@ -60,14 +61,29 @@ MatrixXd C = MatrixXd::Zero(2*total_landmarks + 3,2*total_landmarks + 3); // C f
 void thorposeCallback(const geometry_msgs::Pose::ConstPtr& curr_pose){
 true_pose.position = curr_pose->position;
 true_pose.orientation = curr_pose->orientation;
+
+tf::Quaternion quat(true_pose.orientation.x,true_pose.orientation.y, true_pose.orientation.z, true_pose.orientation.w);
+quat = quat.normalize();
+yaw = tf::getYaw(quat);
+sub_check_1 = 1;
 }
 
-void estposeCallback(const geometry_msgs::PoseStamped::ConstPtr& est_pose){
-thor_est.pose = est_pose->pose;
+void estposeCallback(const nav_msgs::Odometry::ConstPtr& est_pose){
+thor_est_l.pose.pose.position = est_pose->pose.pose.position;
+thor_est_l.pose.pose.orientation = est_pose->pose.pose.orientation;
+
+tf::Quaternion quat_l(thor_est_l.pose.pose.orientation.x,thor_est_l.pose.pose.orientation.y, thor_est_l.pose.pose.orientation.z, thor_est_l.pose.pose.orientation.w);
+quat_l = quat_l.normalize();
+yaw_l = tf::getYaw(quat_l);
+sub_check_2 = 1;
 }
 
-void estposeCallback1(const nav_msgs::Odometry::ConstPtr& est_pose){
-thor_est_gps.pose.pose = est_pose->pose.pose;
+void estposeCallback1(const nav_msgs::Odometry::ConstPtr& est_pose_g){
+thor_est_g.pose.pose = est_pose_g->pose.pose;
+tf::Quaternion quat_g(thor_est_g.pose.pose.orientation.x,thor_est_g.pose.pose.orientation.y, thor_est_g.pose.pose.orientation.z, thor_est_g.pose.pose.orientation.w);
+quat_g = quat_g.normalize();
+yaw_g = tf::getYaw(quat_g);
+sub_check_3 = 1;
 }
 
 
@@ -98,26 +114,46 @@ break;
 return H;
 }
 
-void correction_step_gps(struct thorvald_pose_struct thor_pose2, MatrixXd diff2){
+struct thorvald_pose_struct correction_step_gps(nav_msgs::Odometry thor_pose_g){
+
+struct thorvald_pose_struct thor_pos_g;
 
  // calculate jacobian w.r.t landmark pose
-  H = measurement_model(thor_pose2);
+  H = measurement_model(thor_pos_g);
+ 
+ // Kalman Gain
+  K = thor_pos_g.sigma*H.transpose()*(H*thor_pos_g.sigma*H.transpose()+Q).inverse();
 
+ // Innovation
+  diff = expectedZ - Z;
+  
  // Finish the correction step by computing the new mu and sigma.
- // thor_pose1.mu = thor_pose1.mu + K*diff1;
- // thor_pose1.sigma =  (MatrixXd::Identity((2*total_landmarks+3),(2*total_landmarks+3))- K*H)*thor_pose1.sigma;
- // thor_pose1.mu(2,0)= normalizeangle(thor_pose1.mu(2,0));
+  thor_pos_g.mu = thor_pos_g.mu + K*diff;
+  thor_pos_g.sigma =  (MatrixXd::Identity((2*total_landmarks+3),(2*total_landmarks+3))- K*H)*thor_pos_g.sigma;
+  thor_pos_g.mu(2,0)= normalizeangle(thor_pos_g.mu(2,0));
+
+return thor_pos_g;
 }
 
-void correction_step_laser(struct thorvald_pose_struct thor_pose1, MatrixXd diff1){
+struct thorvald_pose_struct correction_step_laser(nav_msgs::Odometry thor_pose_l){
+
+struct thorvald_pose_struct thor_pos_l;
 
  // calculate jacobian w.r.t landmark pose
-  H = measurement_model(thor_pose1);
+  H = measurement_model(thor_pos_l);
 
+ // Kalman Gain
+  K = thor_pos_l.sigma*H.transpose()*(H*thor_pos_l.sigma*H.transpose()+Q).inverse();
+ 
+ // Innovation
+  diff = expectedZ - Z;
+ 
  // Finish the correction step by computing the new mu and sigma.
-  thor_pose1.mu = thor_pose1.mu + K*diff1;
-  thor_pose1.sigma =  (MatrixXd::Identity((2*total_landmarks+3),(2*total_landmarks+3))- K*H)*thor_pose1.sigma;
-  thor_pose1.mu(2,0)= normalizeangle(thor_pose1.mu(2,0));
+  thor_pos_l.mu = thor_pos_l.mu + K*diff;
+  thor_pos_l.sigma =  (MatrixXd::Identity((2*total_landmarks+3),(2*total_landmarks+3))- K*H)*thor_pos_l.sigma;
+  thor_pos_l.mu(2,0)= normalizeangle(thor_pos_l.mu(2,0));
+
+return thor_pos_l;
 }
 
 
@@ -155,17 +191,21 @@ int main(int argc, char** argv)
 
   // Subscribers
   ros::Subscriber pose_sub = n.subscribe("/thorvald_pose", 100, thorposeCallback);
-  ros::Subscriber pose_sub1 = n.subscribe("/thor_est_laser", 100, estposeCallback);
+  ros::Subscriber pose_sub1 = n.subscribe("/line_pose", 100, estposeCallback);
   ros::Subscriber pose_sub2 = n.subscribe("/odometry/gps", 100, estposeCallback1);
 
   // Publishers
   ros::Publisher fus_pose_pub = n.advertise<nav_msgs::Odometry>("/fusion_pose", 100);
-  
+  struct thorvald_pose_struct thor_g, thor_l; 
+
   while (ros::ok()){
 
+  ros::spinOnce();
+
+  if((sub_check_1>0)&&(sub_check_2>0)&&(sub_check_3>0)){
   // update step
-  correction_step_gps(thor_pose, diff);
-  correction_step_laser(thor_pose, diff);
+  thor_g = correction_step_gps(thor_est_g);
+  thor_l = correction_step_laser(thor_est_l);
 
   // compute weight
   if(n1 == 1){
@@ -185,7 +225,7 @@ int main(int argc, char** argv)
   fus_pos_p.pose.pose.orientation = tf::createQuaternionMsgFromYaw(thor_pose.mu(0,0));
 
   fus_pose_pub.publish(fus_pos_p);
-
+  }
   r.sleep();
   }
   return 0;

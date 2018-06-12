@@ -141,7 +141,7 @@ landmarks_pose.y[5] = (landmarks_pose.y[2]+landmarks_pose.y[3])/2;
         }
       }           
 
-        std::cout << "min_itr[0]:" << min_itr[0] <<  "\n"<< "min_itr[1]:" << min_itr[1] <<  "\n" << std::endl;
+        // std::cout << "min_itr[0]:" << min_itr[0] <<  "\n"<< "min_itr[1]:" << min_itr[1] <<  "\n" << std::endl;
       // Landmarks observation
      for (int z = 0; z < total_landmarks; z++){
 

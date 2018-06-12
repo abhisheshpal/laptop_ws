@@ -36,7 +36,9 @@
 
 <node pkg="thorvald_2d_nav" type="floy3_RANSAC" name="floy3_RANSAC" output="screen"/>
 
-<!--node pkg="thorvald_2d_nav" type="floy3_control_modes" name="floy3_control_modes" output="screen"/-->
+<node pkg="thorvald_2d_nav" type="floy3_control_modes" name="floy3_control_modes" output="screen"/>
+
+<node pkg="thorvald_2d_nav" type="floy3_line_SLAM" name="floy3_line_SLAM" output="screen"/>
 
 <!--include file = "$(find thorvald_2d_nav)/launch/move_base_nav.launch" /-->
 
