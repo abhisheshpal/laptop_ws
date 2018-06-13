@@ -13,6 +13,7 @@
 #include <nav_msgs/Path.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/PoseArray.h>
 #include <std_msgs/Float64MultiArray.h>
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
@@ -24,8 +25,6 @@
 
 using namespace Eigen;
 int n1 = 1, total_landmarks = 2;
-MatrixXd p_j_0 = MatrixXd::Zero(1,1);
-MatrixXd p_j_1 = MatrixXd::Zero(1,1);
 
 // Thorvald pose structure
 struct thorvald_pose_struct{
@@ -36,12 +35,15 @@ MatrixXd sigma = MatrixXd::Zero(2*total_landmarks + 3,2*total_landmarks + 3); //
 
 thorvald_pose_struct thor_pose, thor_pose_est;
 geometry_msgs::Pose true_pose;
+geometry_msgs::PoseArray waypts_pos;
 nav_msgs::Odometry thor_est_g, fus_pos_p, thor_est_l;
 MatrixXd expp = MatrixXd::Zero(1,1);
 MatrixXd weight_1 = MatrixXd::Zero(1,1);
 MatrixXd weight_2 = MatrixXd::Zero(1,1);
 MatrixXd zi =  MatrixXd::Zero(2*total_landmarks + 3,1);
 MatrixXd weight = MatrixXd::Zero(1,1);
+MatrixXd p_j_0 = MatrixXd::Zero(1,1);
+MatrixXd p_j_1 = MatrixXd::Zero(1,1);
 int connected_sensor = 1;
 enum sensor_type {GPS = 1, LASER = 2};
 double yaw, yaw_l ,yaw_g;
@@ -84,6 +86,16 @@ tf::Quaternion quat_g(thor_est_g.pose.pose.orientation.x,thor_est_g.pose.pose.or
 quat_g = quat_g.normalize();
 yaw_g = tf::getYaw(quat_g);
 sub_check_3 = 1;
+}
+
+void wayptCallback(const geometry_msgs::PoseArray::ConstPtr& waypt_sub_pose){
+if(waypt_sub_pose->poses.size()>0){
+ waypts_pos.header.stamp = waypt_sub_pose->header.stamp;
+ for(int wd = 0; wd < waypt_sub_pose->poses.size(); wd++){
+ waypts_pos.poses[wd] = waypt_sub_pose->poses[wd];
+ }
+}
+
 }
 
 
@@ -183,6 +195,7 @@ thor_pose_est.sigma = p_j_0_n*(thor_pose_f.sigma+(zi*zi.transpose())) + p_j_1_n*
 return thor_pose_est;
 }
 
+
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "floy3_fusion");
@@ -193,16 +206,22 @@ int main(int argc, char** argv)
   ros::Subscriber pose_sub = n.subscribe("/thorvald_pose", 100, thorposeCallback);
   ros::Subscriber pose_sub1 = n.subscribe("/line_pose", 100, estposeCallback);
   ros::Subscriber pose_sub2 = n.subscribe("/odometry/gps", 100, estposeCallback1);
+  ros::Subscriber waypt_sub = n.subscribe("/way_pts", 100, wayptCallback);
 
   // Publishers
   ros::Publisher fus_pose_pub = n.advertise<nav_msgs::Odometry>("/fusion_pose", 100);
   struct thorvald_pose_struct thor_g, thor_l; 
+  std::string filename;
+  n.param("filename", filename, filename);
 
   while (ros::ok()){
 
+  // getwaypoints(filename);
+
   ros::spinOnce();
 
-  if((sub_check_1>0)&&(sub_check_2>0)&&(sub_check_3>0)){
+  if((sub_check_1>0)&&(sub_check_2>0)&&(sub_check_3>0) &&(waypts_pos.poses.size()>0)){
+
   // update step
   thor_g = correction_step_gps(thor_est_g);
   thor_l = correction_step_laser(thor_est_l);
