@@ -222,7 +222,7 @@ int main(int argc, char** argv)
         ros::Rate r(10);
 
         // Subscribers
-	ros::Subscriber scan_sub_test = n.subscribe("scan_filtered", 100, scanCallback);
+	ros::Subscriber scan_sub_test = n.subscribe("scan", 100, scanCallback);
 	ros::Subscriber pose_sub_test = n.subscribe("thorvald_pose", 100, poseCallback);
 
         // Publishers

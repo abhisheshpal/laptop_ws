@@ -9,7 +9,7 @@
 
 <node pkg="amcl" type="amcl" name="amcl" output="screen">
 
- <!--remap from="scan" to="scan_filtered"/-->
+ <remap from="scan" to="scan"/>
 
     <!-- see param description on http://www.ros.org/wiki/amcl -->     
 		<!--overall filter -->
