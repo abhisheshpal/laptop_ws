@@ -81,10 +81,10 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     <state world_name='default'>
-      <sim_time>2337 273000000</sim_time>
-      <real_time>152 359130899</real_time>
-      <wall_time>1528444798 122879221</wall_time>
-      <iterations>128000</iterations>
+      <sim_time>2302 578000000</sim_time>
+      <real_time>108 213724593</real_time>
+      <wall_time>1528964589 735530295</wall_time>
+      <iterations>93305</iterations>
       <model name='ground_plane'>
         <pose frame=''>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -96,241 +96,241 @@
         </link>
       </model>
       <model name='pole'>
-        <pose frame=''>0.006729 5.96138 1.25 -1e-06 0 -0.018141</pose>
+        <pose frame=''>0.006715 5.9613 1.24999 0 -1e-06 -0.016992</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>0.006729 5.96138 1.25 -1e-06 0 -0.018141</pose>
+          <pose frame=''>0.006715 5.9613 1.24999 0 -1e-06 -0.016992</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_10'>
-        <pose frame=''>4.20397 0.001805 1.24999 -1e-06 -0 -0.022684</pose>
+        <pose frame=''>4.20397 0.001829 1.25 -1e-06 -1e-06 -0.022796</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>4.20397 0.001805 1.24999 -1e-06 -0 -0.022684</pose>
+          <pose frame=''>4.20397 0.001829 1.25 -1e-06 -1e-06 -0.022796</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_11'>
-        <pose frame=''>5.61625 0.001683 1.24999 -0 1e-06 -0.022807</pose>
+        <pose frame=''>5.61625 0.001647 1.24999 -1e-06 -0 -0.022703</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>5.61625 0.001683 1.24999 -0 1e-06 -0.022807</pose>
+          <pose frame=''>5.61625 0.001647 1.24999 -1e-06 -0 -0.022703</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_11_clone'>
-        <pose frame=''>0.000726 2.98379 1.25 -1e-06 1e-06 -0.029162</pose>
+        <pose frame=''>0.000733 2.98388 1.24999 -1e-06 2e-06 -0.029597</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>0.000726 2.98379 1.25 -1e-06 1e-06 -0.029162</pose>
+          <pose frame=''>0.000733 2.98388 1.24999 -1e-06 2e-06 -0.029597</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <acceleration>0 0 -9.8 -1e-06 0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_12'>
-        <pose frame=''>1.41363 5.9612 1.24999 -0 2e-06 -0.012928</pose>
+        <pose frame=''>1.41364 5.96128 1.25 -1e-06 -1e-06 -0.013858</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>1.41363 5.9612 1.24999 -0 2e-06 -0.012928</pose>
+          <pose frame=''>1.41364 5.96128 1.25 -1e-06 -1e-06 -0.013858</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_13'>
-        <pose frame=''>2.80803 5.96134 1.25 0 3e-06 -0.012566</pose>
+        <pose frame=''>2.80805 5.96144 1.25 0 -1e-06 -0.014469</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>2.80803 5.96134 1.25 0 3e-06 -0.012566</pose>
+          <pose frame=''>2.80805 5.96144 1.25 0 -1e-06 -0.014469</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_14'>
-        <pose frame=''>4.21953 5.9614 1.25 -1e-06 -1e-06 -0.01398</pose>
+        <pose frame=''>4.21952 5.96113 1.25 -1e-06 1e-06 -0.012843</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>4.21953 5.9614 1.25 -1e-06 -1e-06 -0.01398</pose>
+          <pose frame=''>4.21952 5.96113 1.25 -1e-06 1e-06 -0.012843</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_15'>
-        <pose frame=''>5.62352 5.961 1.25 0 1e-06 -0.012143</pose>
+        <pose frame=''>5.62349 5.96086 1.25 -1e-06 1e-06 -0.009635</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>5.62352 5.961 1.25 0 1e-06 -0.012143</pose>
+          <pose frame=''>5.62349 5.96086 1.25 -1e-06 1e-06 -0.009635</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_2'>
-        <pose frame=''>0.034215 0.094332 1.24999 -0 -1e-06 0.045779</pose>
+        <pose frame=''>0.03423 0.094504 1.24999 -0 -1e-06 0.044543</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>0.034215 0.094332 1.24999 -0 -1e-06 0.045779</pose>
+          <pose frame=''>0.03423 0.094504 1.24999 -0 -1e-06 0.044543</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_2_clone'>
-        <pose frame=''>-1.39995 0.092246 1.25 0 1e-06 0.043779</pose>
+        <pose frame=''>-1.39995 0.092148 1.25 -1e-06 -1e-06 0.044399</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>-1.39995 0.092246 1.25 0 1e-06 0.043779</pose>
+          <pose frame=''>-1.39995 0.092148 1.25 -1e-06 -1e-06 0.044399</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_2_clone_0'>
-        <pose frame=''>-1.39996 2.90025 1.25 -1e-06 1e-06 0.043412</pose>
+        <pose frame=''>-1.39993 2.90041 1.24999 0 1e-06 0.042038</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>-1.39996 2.90025 1.25 -1e-06 1e-06 0.043412</pose>
+          <pose frame=''>-1.39993 2.90041 1.24999 0 1e-06 0.042038</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_2_clone_1'>
-        <pose frame=''>-1.39996 5.80032 1.24999 0 1e-06 0.042644</pose>
+        <pose frame=''>-1.39998 5.80017 1.24999 -1e-06 -1e-06 0.044483</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>-1.39996 5.80032 1.24999 0 1e-06 0.042644</pose>
+          <pose frame=''>-1.39998 5.80017 1.24999 -1e-06 -1e-06 0.044483</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_3'>
-        <pose frame=''>1.40473 2.98137 1.24999 0 1e-06 -0.015574</pose>
+        <pose frame=''>1.40476 2.98139 1.25 -1e-06 1e-06 -0.017683</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>1.40473 2.98137 1.24999 0 1e-06 -0.015574</pose>
+          <pose frame=''>1.40476 2.98139 1.25 -1e-06 1e-06 -0.017683</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_5'>
-        <pose frame=''>2.79586 2.98132 1.25 -1e-06 -0 -0.017622</pose>
+        <pose frame=''>2.79586 2.9814 1.24999 -1e-06 -0 -0.01763</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>2.79586 2.98132 1.25 -1e-06 -0 -0.017622</pose>
+          <pose frame=''>2.79586 2.9814 1.24999 -1e-06 -0 -0.01763</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_6'>
-        <pose frame=''>4.22242 2.98132 1.24999 -1e-06 -5e-06 -0.014877</pose>
+        <pose frame=''>4.22243 2.98125 1.24999 0 -1e-06 -0.015515</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>4.22242 2.98132 1.24999 -1e-06 -5e-06 -0.014877</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 -9.8 -1e-06 -2e-06 0</acceleration>
-          <wrench>0 0 -0.35729 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='pole_7'>
-        <pose frame=''>5.60736 2.98119 1.25 -1e-06 1e-06 -0.015302</pose>
-        <scale>1 1 1</scale>
-        <link name='link_0'>
-          <pose frame=''>5.60736 2.98119 1.25 -1e-06 1e-06 -0.015302</pose>
+          <pose frame=''>4.22243 2.98125 1.24999 0 -1e-06 -0.015515</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
-      <model name='pole_8'>
-        <pose frame=''>1.40424 0.001707 1.25 -1e-06 0 -0.020278</pose>
+      <model name='pole_7'>
+        <pose frame=''>5.60736 2.9814 1.25 0 3e-06 -0.015054</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>1.40424 0.001707 1.25 -1e-06 0 -0.020278</pose>
+          <pose frame=''>5.60736 2.9814 1.25 0 3e-06 -0.015054</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 0 1e-06 0</acceleration>
+          <wrench>0 0 -0.35729 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='pole_8'>
+        <pose frame=''>1.40425 0.001666 1.25 -0 1e-06 -0.020338</pose>
+        <scale>1 1 1</scale>
+        <link name='link_0'>
+          <pose frame=''>1.40425 0.001666 1.25 -0 1e-06 -0.020338</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='pole_9'>
-        <pose frame=''>2.80806 0.00183 1.24999 -1e-06 -1e-06 -0.040007</pose>
+        <pose frame=''>2.80807 0.001895 1.24999 0 1e-06 -0.040139</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose frame=''>2.80806 0.00183 1.24999 -1e-06 -1e-06 -0.040007</pose>
+          <pose frame=''>2.80807 0.001895 1.24999 0 1e-06 -0.040139</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -0.35729 0 -0 0</wrench>
         </link>
       </model>
       <model name='thorvald_ii'>
-        <pose frame=''>-0.709158 -1.5163 -1e-05 -1.4e-05 -0 1.5806</pose>
+        <pose frame=''>-0.7221 -1.40326 -1e-05 -1.4e-05 -0 1.5606</pose>
         <scale>1 1 1</scale>
         <link name='base_link'>
-          <pose frame=''>-0.709158 -1.5163 -1e-05 -1.4e-05 -0 1.5806</pose>
-          <velocity>-0.00017 -3e-06 0.004759 -3.8e-05 -3.6e-05 -1.4e-05</velocity>
-          <acceleration>-0.024237 0.00312 9.51875 -0.083276 -0.064037 0.000317</acceleration>
-          <wrench>-2.03591 0.262066 799.575 0 -0 0</wrench>
+          <pose frame=''>-0.7221 -1.40326 -1e-05 -1.4e-05 -0 1.5606</pose>
+          <velocity>-0.000169 1e-06 0.004759 -3.8e-05 -3.4e-05 -1.4e-05</velocity>
+          <acceleration>-0.024597 0.003603 9.51884 -0.084684 -0.063478 0.000297</acceleration>
+          <wrench>-2.06611 0.302681 799.582 0 -0 0</wrench>
         </link>
         <link name='leg0'>
-          <pose frame=''>-0.40381 -2.06033 0.199999 -1.3e-05 -0 1.5806</pose>
-          <velocity>-0.000104 9e-06 0.005722 -3.9e-05 0.000118 4e-06</velocity>
-          <acceleration>0.158501 -0.004225 11.4433 -0.077601 0.238037 0.000211</acceleration>
-          <wrench>0.158501 -0.004225 11.4433 0 -0 0</wrench>
+          <pose frame=''>-0.427693 -1.95329 0.199999 -1.3e-05 0 1.5606</pose>
+          <velocity>-0.000103 1.1e-05 0.005722 -3.6e-05 0.00012 3e-06</velocity>
+          <acceleration>0.15815 -0.007379 11.4442 -0.072824 0.238393 0.000243</acceleration>
+          <wrench>0.15815 -0.007379 11.4442 0 -0 0</wrench>
         </link>
         <link name='leg1'>
-          <pose frame=''>-0.41454 -0.966385 0.199999 -1.3e-05 -0 1.58061</pose>
-          <velocity>-9.6e-05 -2e-06 0.005714 -1.8e-05 0.000121 2.3e-05</velocity>
-          <acceleration>0.144068 -0.027248 11.4269 -0.036031 0.242941 0.000985</acceleration>
-          <wrench>0.144068 -0.027248 11.4269 0 -0 0</wrench>
+          <pose frame=''>-0.416542 -0.859351 0.199999 -1.3e-05 0 1.5606</pose>
+          <velocity>-9.6e-05 0 0.005714 -1.6e-05 0.000122 2.2e-05</velocity>
+          <acceleration>0.143282 -0.030119 11.4279 -0.031152 0.242461 0.001145</acceleration>
+          <wrench>0.143282 -0.030119 11.4279 0 -0 0</wrench>
         </link>
         <link name='leg2'>
-          <pose frame=''>-1.01451 -0.972269 0.199995 -1.4e-05 0 1.58061</pose>
-          <velocity>-0.000107 -1.1e-05 0.006648 -3.8e-05 4e-06 7.1e-05</velocity>
-          <acceleration>0.121946 -0.062342 13.2965 -0.076945 0.009674 0.003118</acceleration>
-          <wrench>0.121946 -0.062342 13.2965 0 -0 0</wrench>
+          <pose frame=''>-1.01651 -0.853235 0.199995 -1.4e-05 -0 1.56061</pose>
+          <velocity>-0.000107 -9e-06 0.006648 -3.8e-05 6e-06 6.7e-05</velocity>
+          <acceleration>0.120493 -0.064773 13.2958 -0.076729 0.010215 0.003565</acceleration>
+          <wrench>0.120493 -0.064773 13.2958 0 -0 0</wrench>
         </link>
         <link name='leg3'>
-          <pose frame=''>-1.00378 -2.06622 0.199983 -1.4e-05 1e-06 1.58061</pose>
-          <velocity>-0.000198 9e-06 0.004152 -8.2e-05 -4.3e-05 2.3e-05</velocity>
-          <acceleration>-0.028131 -0.021007 8.30489 -0.164397 -0.085659 0.001029</acceleration>
-          <wrench>-0.028131 -0.021007 8.30489 0 -0 0</wrench>
+          <pose frame=''>-1.02766 -1.94718 0.199983 -1.4e-05 1e-06 1.5606</pose>
+          <velocity>-0.000196 1.3e-05 0.004153 -8.3e-05 -4e-05 2.1e-05</velocity>
+          <acceleration>-0.028607 -0.020439 8.30479 -0.166059 -0.083447 0.001185</acceleration>
+          <wrench>-0.028607 -0.020439 8.30479 0 -0 0</wrench>
         </link>
         <link name='wheel0_link'>
-          <pose frame=''>-0.40381 -2.06033 0.200002 -1.57081 -0.017851 1.58061</pose>
-          <velocity>4.8e-05 1.2e-05 0.006372 -6e-05 0.000239 4e-06</velocity>
-          <acceleration>0.46285 0.001486 12.7445 -0.004672 0.481361 -4.3e-05</acceleration>
-          <wrench>0.46285 0.001486 12.7445 0 -0 0</wrench>
+          <pose frame=''>-0.427692 -1.95329 0.200002 -1.57081 -0.014912 1.5606</pose>
+          <velocity>4.8e-05 1.1e-05 0.006373 -5.5e-05 0.000242 3e-06</velocity>
+          <acceleration>0.462274 -0.007757 12.7458 0.005031 0.48018 7e-06</acceleration>
+          <wrench>0.462274 -0.007757 12.7458 0 -0 0</wrench>
         </link>
         <link name='wheel1_link'>
-          <pose frame=''>-0.414539 -0.966385 0.200002 -1.57081 0.002137 1.58061</pose>
-          <velocity>4.8e-05 -6e-06 0.006391 2.9e-05 0.00024 2.3e-05</velocity>
-          <acceleration>0.432551 -0.03513 12.7815 -0.004707 0.480846 -0.000142</acceleration>
-          <wrench>0.432551 -0.03513 12.7815 0 -0 0</wrench>
+          <pose frame=''>-0.416542 -0.859351 0.200002 -1.57081 0.001944 1.5606</pose>
+          <velocity>4.8e-05 -7e-06 0.006391 3.4e-05 0.000241 2.1e-05</velocity>
+          <acceleration>0.431314 -0.043782 12.7828 0.004921 0.479652 0.000106</acceleration>
+          <wrench>0.431314 -0.043782 12.7828 0 -0 0</wrench>
         </link>
         <link name='wheel2_link'>
-          <pose frame=''>-1.01451 -0.97227 0.200002 -1.57081 -0.004447 1.58061</pose>
-          <velocity>8e-06 -2.2e-05 0.008015 0.000103 4.2e-05 7e-05</velocity>
-          <acceleration>0.35353 -0.083013 16.029 -0.000925 0.083304 -0.000485</acceleration>
-          <wrench>0.35353 -0.083013 16.029 0 -0 0</wrench>
+          <pose frame=''>-1.01651 -0.853236 0.200002 -1.57081 -0.002672 1.56061</pose>
+          <velocity>8e-06 -2.2e-05 0.008014 0.000105 4.1e-05 6.5e-05</velocity>
+          <acceleration>0.351402 -0.090125 16.0279 0.000572 0.082375 0.000233</acceleration>
+          <wrench>0.351402 -0.090125 16.0279 0 -0 0</wrench>
         </link>
         <link name='wheel3_link'>
-          <pose frame=''>-1.00378 -2.06622 0.200002 -1.57081 0.010781 1.58061</pose>
-          <velocity>-1e-06 4e-06 0.008 -2.2e-05 -6e-06 2.2e-05</velocity>
-          <acceleration>0.364856 -0.03121 15.9999 7.7e-05 -0.010343 -0.000124</acceleration>
-          <wrench>0.364856 -0.03121 15.9999 0 -0 0</wrench>
+          <pose frame=''>-1.02766 -1.94718 0.200002 -1.57081 0.008389 1.5606</pose>
+          <velocity>-1e-06 4e-06 0.007999 -2.2e-05 -4e-06 2.1e-05</velocity>
+          <acceleration>0.3637 -0.038508 15.9988 -0.000186 -0.011247 0.000127</acceleration>
+          <wrench>0.3637 -0.038508 15.9988 0 -0 0</wrench>
         </link>
       </model>
       <light name='sun'>
@@ -339,7 +339,7 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>-0.680391 -17.6611 14.1415 0 0.648184 1.56687</pose>
+        <pose frame=''>1.55449 -20.4595 14.9776 0 0.648184 1.56687</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -2257,7 +2257,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-M.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-M.stl</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2279,7 +2279,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-MIRROR-M.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-MIRROR-M.stl</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2301,7 +2301,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-M.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-M.stl</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2323,7 +2323,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-MIRROR-M.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-MIRROR-M.stl</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2345,7 +2345,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/bat_enc_modules/836586-1-DUMMY-RevA.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/bat_enc_modules/836586-1-DUMMY-RevA.stl</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2367,7 +2367,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/bat_enc_modules/836586-1-DUMMY-RevA.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/bat_enc_modules/836586-1-DUMMY-RevA.stl</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2565,7 +2565,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/hokuyo/hokuyo.dae</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/hokuyo/hokuyo.dae</uri>
             </mesh>
           </geometry>
           <material>
@@ -2580,7 +2580,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-M.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-M.stl</uri>
             </mesh>
           </geometry>
         </visual>
@@ -2589,7 +2589,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-MIRROR-M.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-MIRROR-M.stl</uri>
             </mesh>
           </geometry>
         </visual>
@@ -2598,7 +2598,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-M.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-M.stl</uri>
             </mesh>
           </geometry>
         </visual>
@@ -2607,7 +2607,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-MIRROR-M.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/tower_modules/DUMMY-TOWER-MIRROR-M.stl</uri>
             </mesh>
           </geometry>
         </visual>
@@ -2616,7 +2616,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/bat_enc_modules/836586-1-DUMMY-RevA.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/bat_enc_modules/836586-1-DUMMY-RevA.stl</uri>
             </mesh>
           </geometry>
         </visual>
@@ -2625,7 +2625,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/bat_enc_modules/836586-1-DUMMY-RevA.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/bat_enc_modules/836586-1-DUMMY-RevA.stl</uri>
             </mesh>
           </geometry>
         </visual>
@@ -2643,7 +2643,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
             </mesh>
           </geometry>
         </visual>
@@ -2652,7 +2652,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
             </mesh>
           </geometry>
         </visual>
@@ -2670,7 +2670,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
             </mesh>
           </geometry>
         </visual>
@@ -2679,7 +2679,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
             </mesh>
           </geometry>
         </visual>
@@ -2697,7 +2697,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
             </mesh>
           </geometry>
         </visual>
@@ -2706,7 +2706,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
             </mesh>
           </geometry>
         </visual>
@@ -2724,7 +2724,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
             </mesh>
           </geometry>
         </visual>
@@ -2733,7 +2733,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/clamps/DUMMY-T-BRACKET.stl</uri>
             </mesh>
           </geometry>
         </visual>
@@ -2811,6 +2811,7 @@
         </visual>
         <gravity>1</gravity>
         <velocity_decay/>
+        <self_collide>0</self_collide>
         <sensor name='head_hokuyo_sensor' type='ray'>
           <visualize>1</visualize>
           <update_rate>40</update_rate>
@@ -2847,7 +2848,6 @@
           </plugin>
           <pose frame=''>0.67 0 0.75 0 -0 0</pose>
         </sensor>
-        <self_collide>0</self_collide>
         <kinematic>0</kinematic>
       </link>
       <link name='leg0'>
@@ -2869,7 +2869,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-RevA.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-RevA.stl</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2891,12 +2891,13 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-RevA.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-RevA.stl</uri>
             </mesh>
           </geometry>
         </visual>
         <self_collide>0</self_collide>
         <kinematic>0</kinematic>
+        <gravity>1</gravity>
       </link>
       <joint name='steering0' type='revolute'>
         <child>leg0</child>
@@ -3005,7 +3006,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-MIRROR-RevA.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-MIRROR-RevA.stl</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -3027,12 +3028,13 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-MIRROR-RevA.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-MIRROR-RevA.stl</uri>
             </mesh>
           </geometry>
         </visual>
         <self_collide>0</self_collide>
         <kinematic>0</kinematic>
+        <gravity>1</gravity>
       </link>
       <joint name='steering1' type='revolute'>
         <child>leg1</child>
@@ -3141,7 +3143,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-RevA.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-RevA.stl</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -3163,12 +3165,13 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-RevA.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-RevA.stl</uri>
             </mesh>
           </geometry>
         </visual>
         <self_collide>0</self_collide>
         <kinematic>0</kinematic>
+        <gravity>1</gravity>
       </link>
       <joint name='steering2' type='revolute'>
         <child>leg2</child>
@@ -3277,7 +3280,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-MIRROR-RevA.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-MIRROR-RevA.stl</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -3299,12 +3302,13 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>/home/vigneshnuc/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-MIRROR-RevA.stl</uri>
+              <uri>/home/vignesh/Thorvald/src/thorvald_model/meshes/drive_modules/836745-5-DUMMY-MIRROR-RevA.stl</uri>
             </mesh>
           </geometry>
         </visual>
         <self_collide>0</self_collide>
         <kinematic>0</kinematic>
+        <gravity>1</gravity>
       </link>
       <joint name='steering3' type='revolute'>
         <child>leg3</child>
@@ -3437,15 +3441,12 @@
         <velocitydrift>0 0 0</velocitydrift>
         <velocitygaussiannoise>0.1 0.1 0.1</velocitygaussiannoise>
         <robotNamespace>/</robotNamespace>
-        <frameName>base_link</frameName>
-        <xyzOffset>-0.66 0 -0.9</xyzOffset>
-        <rpyOffset>0 -0 0</rpyOffset>
       </plugin>
       <static>0</static>
       <plugin name='imu_plugin' filename='libgazebo_ros_imu.so'>
         <alwaysOn>true</alwaysOn>
         <frameId>xsens</frameId>
-        <topicName>imu/data</topicName>
+        <topicName>imu</topicName>
         <serviceName>imu_service</serviceName>
         <gaussianNoise>0.0</gaussianNoise>
         <updateRate>20.0</updateRate>

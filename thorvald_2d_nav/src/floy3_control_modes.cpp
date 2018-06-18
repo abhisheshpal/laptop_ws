@@ -1,5 +1,6 @@
-#include "test_control_modes.h"
+#include "floy3_control_modes.h"
 
+double integrate = 0;
 // Thorvald Estimated Pose data
 void robotposeCallback (const geometry_msgs::Pose::ConstPtr& pose_msg)
 {
@@ -41,7 +42,8 @@ bool row_transition(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::su
      return true;
    }
 
-double control_law(double v, double _dt, geometry_msgs::PoseStamped hokuyo_pose){
+double control_law(double v, double _dt, geometry_msgs::PoseStamped hokuyo_pose, double _integral){
+
 
    slope_1 = (landmarks_pose.y[1]-landmarks_pose.y[5])/(landmarks_pose.x[1]-landmarks_pose.x[5]); 
    slope_2 = (landmarks_pose.y[3]-landmarks_pose.y[5])/(landmarks_pose.x[3]-landmarks_pose.x[5]);
@@ -61,10 +63,13 @@ double control_law(double v, double _dt, geometry_msgs::PoseStamped hokuyo_pose)
   angular_error += 2*M_PI;}
 
   // CONTROL LAW
-  // double robotlength = 0.75;
-  // double omega = atan(2*robotlength*sin(angular_error))/position_error;
-  // double omega = v * pow(cos(angular_error),3) * (-(K_d*tan(angular_error)) - (K_p*position_error));
-
+   //double robotlength = 0.75;
+  // omega = atan(2*robotlength*sin(angular_error))/position_error;
+    
+  //   double radius = 0.5* (position_error/sin(angular_error));
+  //   omega = 0.2/radius;
+/// omega = v * pow(cos(angular_error),3) * (-(K_d*tan(angular_error)) - (K_p*position_error));
+/*
   dist_pt_1 = ((landmarks_pose.y[1]-landmarks_pose.y[0])*hokuyo_pose.pose.position.x)-((landmarks_pose.x[1]-landmarks_pose.x[0])*hokuyo_pose.pose.position.y)+(landmarks_pose.x[1]*landmarks_pose.y[0])-(landmarks_pose.y[1]*landmarks_pose.x[0]);
   dist_pt_2 = pow(landmarks_pose.y[1]-landmarks_pose.y[0],2) + pow(landmarks_pose.x[1]-landmarks_pose.x[0],2);
   dist_pt_f = abs(dist_pt_1)/sqrt(dist_pt_2);
@@ -72,25 +77,31 @@ double control_law(double v, double _dt, geometry_msgs::PoseStamped hokuyo_pose)
   dist_pt_3 = ((landmarks_pose.y[3]-landmarks_pose.y[2])*hokuyo_pose.pose.position.x)-((landmarks_pose.x[3]-landmarks_pose.x[2])*hokuyo_pose.pose.position.y)+(landmarks_pose.x[3]*landmarks_pose.y[2])-(landmarks_pose.y[3]*landmarks_pose.x[2]);
   dist_pt_4 = sqrt(pow(landmarks_pose.y[3]-landmarks_pose.y[2],2) + pow(landmarks_pose.x[3]-landmarks_pose.x[2],2));
   dist_pt_f1 = abs(dist_pt_3)/dist_pt_4;
-
+*/
   /* asq = sqrt(pow(landmarks_pose.x[1]-hokuyo_pose.pose.position.x,2) + pow(landmarks_pose.y[1]-hokuyo_pose.pose.position.y,2)); 
    bsq = sqrt(pow(landmarks_pose.x[0]-hokuyo_pose.pose.position.x,2) + pow(landmarks_pose.y[0]-hokuyo_pose.pose.position.y,2));
    csq = sqrt(pow(landmarks_pose.x[0]-landmarks_pose.x[1],2) + pow(landmarks_pose.y[0]-landmarks_pose.y[1],2));
 
    ang_err = acos((asq + bsq - csq)/2*sqrt(asq*bsq));*/
-
-   omega_exp = K_d * (dist_d[0]-dist_pt_f) * _dt +  K_d * (dist_d[1]-dist_pt_f1)*_dt;
-
-  //  std::cout << "ang_err:" << ang_err << "\n" << std::endl;
+  // double dist_err = dist_d[0]-dist_pt_f;
+ //  _integral = (_integral + dist_err) * _dt;
+ //  omega = K_p * (dist_err) * _dt + K_d * (dist_err-lastError)* _dt + K_i * (_integral);
+ //  lastError = dist_err;
  
-  /* _integral += angular_error * _dt;
-  omega = K_p * angular_error *_dt + K_d *(angular_error - lastError)* _dt;
-  lastError = angular_error; */
+  _integral = (_integral + angular_error) * _dt;
+//     std::cout << "integral" << _integral << "\n" << "angular_error" << _integral + angular_error << std::endl;
+  if(!std::isnan(_integral)){
+  integrate = _integral;
+  }
+  omega = K_p * angular_error *_dt + K_d *(angular_error - lastError)*_dt + K_i * integrate * _dt;
+  lastError = angular_error; 
+       
 
-  if (omega_exp > M_PI){
-  omega_exp -= 2*M_PI;}
-  if(omega_exp < -M_PI){
-  omega_exp += 2*M_PI;}
+    std::cout << "omega:" << omega << "\n" << std::endl;
+  if (omega > M_PI){
+  omega -= 2*M_PI;}
+  if(omega < -M_PI){
+  omega += 2*M_PI;}
   
    if((fabs(position_error) <= 0.2) && (c<=Total_Points)){
    // ROS_INFO("New Mini-Goal Initiated");
@@ -98,9 +109,9 @@ double control_law(double v, double _dt, geometry_msgs::PoseStamped hokuyo_pose)
    mini_goal_pts.y = Points[c].position.y;
    c = c + 1;
    mini_goal = true;
-  }
+   }
 
-  return omega_exp;
+  return omega;
 }
 
 int main(int argc, char** argv)
@@ -129,7 +140,7 @@ int main(int argc, char** argv)
   tf::StampedTransform transform;
   tf::TransformListener listener;
   tf2_ros::TransformListener tfListener(tfBuffer);
-  double dt;
+  double dt, intregral = 0;
 
   while (ros::ok()){
 
@@ -144,8 +155,8 @@ int main(int argc, char** argv)
    line_count = landmarks_pose.landmark_check;
    row_count = landmarks_pose.row_number;
     for(int i=1;i<=Total_Points;i++){
-    Points[i].position.x = ((thor_est.pose.position.x) *(1-(float(i)/Total_Points))) + ((landmarks_pose.x[5]) *(float(i)/Total_Points));
-    Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.y[5]-1.0) *(float(i)/Total_Points)); 
+    Points[i].position.x = ((thor_est.pose.position.x) *(1-(float(i)/Total_Points))) + ((landmarks_pose.x[5]-0.8) *(float(i)/Total_Points));
+    Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.y[5]) *(float(i)/Total_Points)); 
 
     /*if(landmarks_pose.y[5]>0.0){
      if(landmarks_pose.y[5]>1.0){
@@ -180,8 +191,8 @@ int main(int argc, char** argv)
        tf2::doTransform(thor_est, thor_est_trans, transformStamped);
        thor_est_trans.header.frame_id = "/hokuyo";  
  
-   angular_velocity = control_law(linear_velocity, dt, thor_est_trans); // control law
-//   std::cout << "Points[Total_Points].x:" << Points[Total_Points].position.x << "\n" << "thor_est_trans.pose.position.x:" << thor_est_trans.pose.position.x << "\n" << std::endl;
+   angular_velocity = control_law(linear_velocity, dt, thor_est_trans, intregral); // control law
+// std::cout << "Points[Total_Points].x:" << Points[Total_Points].position.x << "\n" << "thor_est_trans.pose.position.x:" << thor_est_trans.pose.position.x << "\n" << std::endl;
    if(fabs(Points[Total_Points].position.x - thor_est_trans.pose.position.x) <= 0.5){
    counter_1 = 1;
    mini_goal = false;

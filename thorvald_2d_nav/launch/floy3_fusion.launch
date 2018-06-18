@@ -7,20 +7,23 @@
 
 <!--GPS LOCALIZATION-->
 <!--include file = "$(find thorvald_2d_nav)/launch/thor_localization.launch" /-->
-<include file = "$(find thorvald_2d_nav)/launch/thor_localization_map.launch" />
+<!--include file = "$(find thorvald_2d_nav)/launch/thor_localization_map.launch" /-->
+
+<node pkg="robot_pose_publisher" type="robot_pose_publisher" name="robot_pose_publisher" output="screen">
+ <remap from="robot_pose" to="thorvald_pose"/>
+</node>
 
 <node pkg="thorvald_2d_nav" type="floy3_RANSAC" name="floy3_RANSAC" output="screen"/>
 
-<node pkg="thorvald_2d_nav" type="floy3_line_SLAM" name="floy3_line_SLAM"/>
+<!--node pkg="thorvald_2d_nav" type="floy3_line_SLAM" name="floy3_line_SLAM"/-->
 
 <!--WAYPOINTS NAVGATION-->
 <!--include file = "$(find waypoints_nmbu)/launch/navigate_waypoints.launch" /-->
 <!--include file = "$(find waypoints_nmbu)/launch/record_waypoints.launch" /-->
 
-<node pkg="thorvald_2d_nav" type="floy3_fusion" name="floy3_fusion"/>
+<!--node pkg="thorvald_2d_nav" type="floy3_fusion" name="floy3_fusion"/-->
 
 <!--node pkg="thorvald_2d_nav" type="floy3_control_modes" name="floy3_control_modes" output="screen"/-->
-
 
 <!--include file = "$(find thorvald_2d_nav)/launch/move_base_nav.launch" /-->
 

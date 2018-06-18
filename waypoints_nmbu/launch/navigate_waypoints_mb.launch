@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!--param name="use_sim_time" value="true"/-->
+
+  <arg name="field_name"    default="floy_3_1"/>
+  <!--arg name="joy_config" default="elecom_joy"/-->
+  <arg name="joy_dev" default="/dev/input/js0"/>
+  <!--iarg name="map_file" default="$(find thorvald_2d_nav)/maps/sim_2.yaml"/-->
+  <arg name="filename" default="$(find waypoints_nmbu)/waypoints_files/waypoints_$(arg field_name).yaml"/>
+  <arg name="save_joy_button" default="0"/>
+  <arg name="total_waypoints" default="10"/>
+
+  <include file ="$(find thorvald_2d_nav)/launch/move_base_nav.launch" />  
+
+  <node name="gps_waypoints_nav_mb" pkg="waypoints_nmbu" type="gps_waypoints_nav_mb" output="screen">
+    <param name="save_joy_button" value="$(arg save_joy_button)"/>
+    <param name="total_waypoints" value="$(arg total_waypoints)"/>
+    <param name="filename" value="$(arg filename)"/> 
+  </node>
+
+  <!--node pkg="rviz" type="rviz" name="rviz" args="-d $(find orne_navigation_executor)/rviz_cfg/nav.rviz"/-->
+</launch>

@@ -17,7 +17,7 @@
     <!--param name="base_global_planner" type="string" value="base_global_planner/TrajectoryPlannerROS" /-->
     <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
 
-    <remap from="odom" to="/odometry/gazebo" />
+    <remap from="odom" to="/odometry/base_raw" />
     <remap from="cmd_vel" to="/nav_vel" />
     <remap from="/map" to="/map" />
 

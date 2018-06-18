@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="field_name"    default="floy3_1"/>
+  <arg name="joy_dev" default="/dev/input/js0"/>
+  <!--arg name="map_file" default="$(find thorvald_2d_nav)/maps/sim_poles.yaml"/-->
+  <arg name="filename" default="$(find waypoints_nmbu)/waypoints_files/waypoints_$(arg field_name).yaml"/>
+  <arg name="save_joy_button" default="0"/>
+  <arg name="total_waypoints" default="15"/>
+  
+
+  <node name="waypoint_saver" pkg="waypoints_nmbu" type="waypoint_saver" output="screen">
+    <param name="save_joy_button" value="$(arg save_joy_button)"/>
+    <param name="filename" value="$(arg filename)"/> 
+  </node>
+
+
+</launch>

@@ -111,7 +111,7 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 	x_2[i_2] = scan_msg_main.ranges[i_2]*cos(angle_2[i_2]);
 	y_2[i_2] = scan_msg_main.ranges[i_2]*sin(angle_2[i_2]);
 
-          if(!std::isnan(x_2[i_2]) && !std::isnan(y_2[i_2]) && (scan_msg_main.ranges[i_2] < 5.5)){
+          if(!std::isnan(x_2[i_2]) && !std::isnan(y_2[i_2]) && (scan_msg_main.ranges[i_2] < 5.0)){
            count_i_2[l_2] = i_2;
            l_2 = l_2 + 1;                
           } // storing the ith value with pre-conditions
@@ -181,7 +181,7 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 bool add(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
    {
      end_line = end_line + req.counter;
-     if((end_line > finale_1) && (end_line < 2)){
+     if((end_line > finale_1) && (end_line < 5)){
      // end_line = 0;
      finale = 0; 
      ROS_INFO("End of previous line reached");
@@ -253,7 +253,7 @@ int main(int argc, char** argv)
         
       if(scan_msg_main.ranges.size() > 0){
         // end of row detection
-        if((end_line == 1) && (new_row == false) && (finale == 0)){ /////// TAKE CARE /////////      
+        if((end_line == 4) && (new_row == false) && (finale == 0)){ /////// TAKE CARE /////////      
         finale = 1;
         end_row_check.request.counter = 1;
         if (client.call(end_row_check)){ 
@@ -376,7 +376,7 @@ int main(int argc, char** argv)
         landmarks_pos.landmark_check = landmarks_pos.landmark_check + 1;
        
         line_strip_1.action = visualization_msgs::Marker::ADD;
-        line_strip_1.pose.position.z = 0.75;
+        line_strip_1.pose.position.z = 0.9;
         line_strip_1.pose.orientation.w = 1.0;
         line_strip_1.type = visualization_msgs::Marker::LINE_STRIP;
         line_strip_1.lifetime = ros::Duration(0.1);
@@ -387,7 +387,7 @@ int main(int argc, char** argv)
 
 
         line_strip_2.action = visualization_msgs::Marker::ADD;
-        line_strip_2.pose.position.z = 0.75;
+        line_strip_2.pose.position.z = 0.9;
         line_strip_2.pose.orientation.w = 1.0;
         line_strip_2.type = visualization_msgs::Marker::LINE_STRIP;
         line_strip_2.lifetime = ros::Duration(0.1);

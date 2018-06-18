@@ -26,7 +26,7 @@
 geometry_msgs::Point n;
 int k; // iterations need to find the best model
 double thershold = 0.05;
-int d = 25; // nearby point to fit the line
+int d = 20; // nearby point to fit the line
 
 double best_model;
 size_t num_ranges;

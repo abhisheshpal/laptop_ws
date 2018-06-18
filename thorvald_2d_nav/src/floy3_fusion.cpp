@@ -80,17 +80,21 @@ yaw_l = tf::getYaw(quat_l);
 sub_check_2 = 1;
 }
 
-void estposeCallback1(const nav_msgs::Odometry::ConstPtr& est_pose_g){
+/*void estposeCallback1(const nav_msgs::Odometry::ConstPtr& est_pose_g){
 thor_est_g.pose.pose = est_pose_g->pose.pose;
+
+   ROS_INFO("here2");
 tf::Quaternion quat_g(thor_est_g.pose.pose.orientation.x,thor_est_g.pose.pose.orientation.y, thor_est_g.pose.pose.orientation.z, thor_est_g.pose.pose.orientation.w);
 quat_g = quat_g.normalize();
 yaw_g = tf::getYaw(quat_g);
 sub_check_3 = 1;
-}
+} */
 
 void wayptCallback(const geometry_msgs::PoseArray::ConstPtr& waypt_sub_pose){
+waypts_pos.poses.resize(waypt_sub_pose->poses.size());
+
+std::cout << waypt_sub_pose->poses.size() << std::endl;
 if(waypt_sub_pose->poses.size()>0){
- waypts_pos.header.stamp = waypt_sub_pose->header.stamp;
  for(int wd = 0; wd < waypt_sub_pose->poses.size(); wd++){
  waypts_pos.poses[wd] = waypt_sub_pose->poses[wd];
  }
@@ -220,7 +224,7 @@ int main(int argc, char** argv)
   // Subscribers
   ros::Subscriber pose_sub = n.subscribe("/thorvald_pose", 100, thorposeCallback);
   ros::Subscriber pose_sub1 = n.subscribe("/line_pose", 100, estposeCallback);
-  ros::Subscriber pose_sub2 = n.subscribe("/odometry/gps", 100, estposeCallback1);
+ // ros::Subscriber pose_sub2 = n.subscribe("/odometry/gps", 100, estposeCallback1);
   ros::Subscriber waypt_sub = n.subscribe("/way_pts", 100, wayptCallback);
 
   // Publishers
@@ -238,10 +242,9 @@ int main(int argc, char** argv)
   if((sub_check_1>0)&&(waypts_pos.poses.size()>0)){
 
   // current waypoint check
-   for(int i=0;i<waypts_pos.poses.size();i++){
+   for(int i=1;i<waypts_pos.poses.size();i++){
      if((true_pose.position.x-waypts_pos.poses[i].position.x)<0.1) current_waypoint_ = waypts_pos.poses[i];
    }
-
   // update step
  // thor_g = correction_step_gps(thor_est_g, current_waypoint_);
   thor_l = correction_step_laser(thor_est_l , current_waypoint_);
