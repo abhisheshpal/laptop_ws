@@ -15,7 +15,7 @@
   <!--node name="joy_node" pkg="joy" type="joy_node" output="screen">
   </node-->
 
-  <node name="gps_waypoints_nav" pkg="waypoints_nmbu" type="gps_waypoints_nav" output="screen">
+  <node name="gps_waypoints_nav_sim" pkg="waypoints_nmbu" type="gps_waypoints_nav_sim" output="screen">
     <param name="save_joy_button" value="$(arg save_joy_button)"/>
     <param name="total_waypoints" value="$(arg total_waypoints)"/>
     <param name="filename" value="$(arg filename)"/> 
