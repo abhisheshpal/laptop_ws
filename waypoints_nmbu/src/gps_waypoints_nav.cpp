@@ -33,8 +33,8 @@ double q_x, q_y, position_error_, angular_error_;
 geometry_msgs::PointStamped curr_pose; 
 int total_waypoints = 10, no = 0;
 std::string filename;
-double yaw, yaw1, K_p = 0.05, sub_count = 0;
-double lin_vel_max = 0.2, ang_vel_max = 1.57;
+double yaw, yaw1, K_p = 0.5, K_a = 0.5, sub_count = 0;
+double lin_vel_max = 0.3, ang_vel_max = 1.57;
 
 void computeWpOrientation(int no){
         for(int it = 0; it < total_waypoints; it++){
@@ -117,7 +117,7 @@ void computeWpOrientation(int no){
 
    geometry_msgs::Twist waypoint_control(geometry_msgs::Pose current_goal, double pos_err, double ang_err){
    nav_velocities.linear.x = K_p * pos_err;
-   nav_velocities.angular.z = K_p * ang_err;
+   nav_velocities.angular.z = K_a * ang_err;
 
    if(nav_velocities.linear.x > lin_vel_max) nav_velocities.linear.x = lin_vel_max;
    if(nav_velocities.angular.z > ang_vel_max) nav_velocities.angular.z = ang_vel_max;
@@ -150,7 +150,7 @@ int main(int argc, char **argv)
   ros::Publisher waypoints_loc_ = n.advertise<geometry_msgs::PoseArray>("/way_pts",1);
 
   // Subscribers
-  ros::Subscriber odom_gaz_sub_ = n.subscribe("/odometry/base_raw",1, &odomcallback);
+  ros::Subscriber odom_gaz_sub_ = n.subscribe("/odometry/gazebo",1, &odomcallback);
   ros::Subscriber robo_pos_sub_ = n.subscribe("/thorvald_pose",1, &roboposcallback);
  
   // Service Servers
