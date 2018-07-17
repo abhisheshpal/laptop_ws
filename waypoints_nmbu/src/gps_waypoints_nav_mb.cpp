@@ -31,19 +31,23 @@ geometry_msgs::Pose last_waypoint_;
 std::string robot_frame_, world_frame_;
 double q_x, q_y, position_error_, angular_error_;
 geometry_msgs::PointStamped curr_pose; 
-int total_waypoints = 10, no = 0;
+int total_waypoints = 1, no = 0, present_waypoints = 1;
 std::string filename;
 double yaw, yaw1, K_p = 0.05, sub_count = 0;
 double lin_vel_max = 0.2, ang_vel_max = 1.57;
+thorvald_2d_nav::sub_goal end_row_transit, end_row_transit_1, end_row_transit_2;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
 void computeWpOrientation(int no){
-        for(int it = 0; it < total_waypoints; it++){
-            double goal_direction = atan2(waypoints_.poses[it+1].position.y - waypoints_.poses[it].position.y,
-                                          waypoints_.poses[it+1].position.x - waypoints_.poses[it].position.x);
-            waypoints_.poses[it+1].orientation = tf::createQuaternionMsgFromYaw(goal_direction);
-        }
+       // for(int it = 0; it < total_waypoints; it++){
+         //   double goal_direction = atan2(waypoints_.poses[it+1].position.y - waypoints_.poses[it].position.y,
+           //                               waypoints_.poses[it+1].position.x - waypoints_.poses[it].position.x);
+        //}
+
+        waypoints_.poses[1].orientation = tf::createQuaternionMsgFromYaw(3.14);
+        waypoints_.poses[2].orientation = tf::createQuaternionMsgFromYaw(1.57);
+       // waypoints_.poses[3].orientation = tf::createQuaternionMsgFromYaw(0);
         waypoints_.header.frame_id = world_frame_;
         waypoints_.header.stamp = ros::Time::now();
     }
@@ -132,6 +136,11 @@ bool change_row(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_go
    {
      row_transit_mode = row_transit_mode + req.counter;
      ROS_INFO("transition service on time");
+     if(row_transit_mode == 2){
+     no = 2;
+     present_waypoints = 2;
+     current_waypoint_ = waypoints_.poses[no];}
+     
      if((row_transit_mode%2) == 0){
      turn_side = 2;
      }
@@ -143,7 +152,7 @@ bool change_row(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_go
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "gps_waypoints_nav_mb");
+  ros::init(argc, argv, "gps_waypoints_nav_mb_sim");
   ros::NodeHandle n;
   ros::Rate r(1); // 1 hz
 
@@ -152,18 +161,23 @@ int main(int argc, char **argv)
   ros::Publisher waypoints_loc_ = n.advertise<geometry_msgs::PoseArray>("/way_pts",1);
 
   // Subscribers
-  ros::Subscriber odom_gaz_sub_ = n.subscribe("/odometry/base_raw",1, &odomcallback);
+  ros::Subscriber odom_gaz_sub_ = n.subscribe("/odometry/filtered/local",1, &odomcallback);
   ros::Subscriber robo_pos_sub_ = n.subscribe("/thorvald_pose",1, &roboposcallback);
  
   // Service Servers
   ros::ServiceServer service = n.advertiseService("/row_transition_mode", change_row);
+
+  // Service Client
+  ros::ServiceClient client = n.serviceClient<thorvald_2d_nav::sub_goal>("/row_transition_end_1");
+  ros::ServiceClient client1 = n.serviceClient<thorvald_2d_nav::sub_goal>("/row_transition_end_2");
+  ros::ServiceClient client2 = n.serviceClient<thorvald_2d_nav::sub_goal>("/row_transition_end_3");
   
   // Params
   n.param("robot_frame", robot_frame_, std::string("/base_link"));
   n.param("world_frame", world_frame_, std::string("/map"));
-  n.param("/gps_waypoints_nav/total_waypoints", total_waypoints, 10);
+  n.param("/gps_waypoints_nav_mb/total_waypoints", total_waypoints, 2);
   std::string filename = "";
-  n.getParam("/gps_waypoints_nav/filename", filename);
+  n.getParam("/gps_waypoints_nav_mb/filename", filename);
 
    if(filename != ""){
    ROS_INFO_STREAM("Read waypoints data from " << filename);
@@ -172,7 +186,7 @@ int main(int argc, char **argv)
    }
     else{
     last_waypoint_ = waypoints_.poses[total_waypoints];
-    waypoints_.poses[0].orientation = tf::createQuaternionMsgFromYaw(0);
+    waypoints_.poses[0].orientation = tf::createQuaternionMsgFromYaw(1.57);
     computeWpOrientation(no);
     }
    current_waypoint_ = waypoints_.poses[0];
@@ -188,7 +202,7 @@ int main(int argc, char **argv)
    if((sub_count==1) && (row_transit_mode>row_no)){ // sub check
       
       Next_pt:
-      if(no<total_waypoints){ 
+      if(no<(present_waypoints+1)){ 
            // tell the action client that we want to spin a thread by default
            MoveBaseClient ac("move_base", true);
 
@@ -206,16 +220,17 @@ int main(int argc, char **argv)
            goal.target_pose.pose.position.x =  current_waypoint_.position.x;
            goal.target_pose.pose.position.y =  current_waypoint_.position.y;
            goal.target_pose.pose.orientation = current_waypoint_.orientation;    
-           
            ROS_INFO("SENDING GOAL!!!");
            ac.sendGoal(goal);
            ac.waitForResult();
 
            if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
-            ROS_INFO("Reached the upcoming Goal");
+            ROS_INFO("Goal Reached");
             ROS_INFO("Go to next waypoint");
             no = no + 1;
+            if(no<(present_waypoints+1)){ 
             current_waypoint_ = waypoints_.poses[no];
+            }
             goto Next_pt;
            }
            else{ 
@@ -224,7 +239,16 @@ int main(int argc, char **argv)
          }
 
          else{
-          ROS_INFO("End of Row Transition");
+          end_row_transit.request.counter = 1;
+          end_row_transit_1.request.counter = 1;
+          end_row_transit_2.request.counter = 1;
+          if (client.call(end_row_transit)){ 
+          ROS_INFO("End of Row Transition_1");
+          } 
+          if (client1.call(end_row_transit_1)){
+          ROS_INFO("End of Row Transition_2");
+          }
+          if (client2.call(end_row_transit_2)){}
           nav_velocities.linear.x  = 0;
           nav_velocities.angular.z = 0;
           row_no = row_transit_mode;

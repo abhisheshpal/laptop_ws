@@ -1,0 +1,15 @@
+waypoints:
+    - point:
+        x: 6.0
+        y: 3.94
+        z: 0
+    - point:
+        x: 7.0
+        y: 3.94
+        z: 0
+    - point:
+        x: 8.0
+        y: 3.94
+        z: 0
+
+

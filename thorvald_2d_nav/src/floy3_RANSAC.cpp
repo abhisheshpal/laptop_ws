@@ -1,4 +1,4 @@
-#include "test_RANSAC.h"
+#include "floy3_RANSAC.h"
 
 // Laser Scan data
 void scanCallback (const sensor_msgs::LaserScan::ConstPtr& scan_msg)
@@ -23,13 +23,19 @@ void poseCallback (const geometry_msgs::Pose::ConstPtr& pose_msg)
 {
 thorvald_pose.position = pose_msg->position;
 thorvald_pose.orientation = pose_msg->orientation;
+
+tf::Quaternion quat(thorvald_pose.orientation.x,thorvald_pose.orientation.y, thorvald_pose.orientation.z, thorvald_pose.orientation.w);
+quat = quat.normalize();
+yaw = tf::getYaw(quat);
+
+pose_tmp = 1;
 } // callback end
 
 // RANSAC for line detection
 Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
 
         // x, y, theta calculation
-	for (int i_1 = (num_ranges/6); i_1 <= (num_ranges/2); i_1++){
+	for (int i_1 = 0; i_1 <= (num_ranges/2); i_1++){
 	 angle_1[i_1] = scan_msg_main.angle_min +i_1*scan_msg_main.angle_increment; 
 	 x_1[i_1] = scan_msg_main.ranges[i_1]*cos(angle_1[i_1]);
 	 y_1[i_1] = scan_msg_main.ranges[i_1]*sin(angle_1[i_1]);
@@ -106,12 +112,12 @@ Point Line_detection_1(sensor_msgs::LaserScan scan_msgs, Point* line_pt_1){
 Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 
         // x, y, theta calculation
-	for (int i_2 = (num_ranges/2); i_2 <= 920; i_2++){
+	for (int i_2 = (num_ranges/2); i_2 <= num_ranges; i_2++){
 	angle_2[i_2] = scan_msg_main.angle_min+i_2*scan_msg_main.angle_increment;
 	x_2[i_2] = scan_msg_main.ranges[i_2]*cos(angle_2[i_2]);
 	y_2[i_2] = scan_msg_main.ranges[i_2]*sin(angle_2[i_2]);
 
-          if(!std::isnan(x_2[i_2]) && !std::isnan(y_2[i_2]) && (scan_msg_main.ranges[i_2] < 5.0)){
+          if(!std::isnan(x_2[i_2]) && !std::isnan(y_2[i_2]) && (scan_msg_main.ranges[i_2] < 5.5)){
            count_i_2[l_2] = i_2;
            l_2 = l_2 + 1;                
           } // storing the ith value with pre-conditions
@@ -181,7 +187,7 @@ Point Line_detection_2(sensor_msgs::LaserScan scan_msgs, Point* line_pt_2){
 bool add(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::sub_goal::Response &res)
    {
      end_line = end_line + req.counter;
-     if((end_line > finale_1) && (end_line < 5)){
+     if((end_line > finale_1) && (end_line < 6)){
      // end_line = 0;
      finale = 0; 
      ROS_INFO("End of previous line reached");
@@ -236,6 +242,8 @@ int main(int argc, char** argv)
 
         // Service Client
         ros::ServiceClient client = n.serviceClient<thorvald_2d_nav::sub_goal>("/row_transition_mode");
+        ros::ServiceClient client1 = n.serviceClient<thorvald_2d_nav::sub_goal>("/row_transition_mode_1");
+        ros::ServiceClient client2 = n.serviceClient<thorvald_2d_nav::sub_goal>("/row_transition_mode_2");
 
         landmarks_pos.landmark_check = 0; 
         landmarks_pos.row_number = 0; 
@@ -252,19 +260,28 @@ int main(int argc, char** argv)
 	ros::spinOnce();
         
       if(scan_msg_main.ranges.size() > 0){
+
         // end of row detection
-        if((end_line == 4) && (new_row == false) && (finale == 0)){ /////// TAKE CARE /////////      
+        if((end_line == 5) && (new_row == false) && (finale == 0)){ /////// TAKE CARE /////////      
         finale = 1;
+        end_row_check_1.request.counter = 1;
+        end_row_check_2.request.counter = 1;
+        if (client2.call(end_row_check_2)){
+        // ROS_INFO("Reached End of Row_3");
+        }
+        if (client1.call(end_row_check_1)){
+        ROS_INFO("Reached End of Row_2");
+        }
         end_row_check.request.counter = 1;
         if (client.call(end_row_check)){ 
-        ROS_INFO("Reached End of Row");
+        ROS_INFO("Reached End of Row_1");
         new_row = true;
         goto line_publish;}
         }
        }
 
         line_detect:
-        if(scan_msg_main.ranges.size() > 0 && (finale == 0)){ // check for new lines
+        if(scan_msg_main.ranges.size() > 0 && (finale == 0) && (pose_tmp == 1)){ // check for new lines
 
           ROS_INFO("Line Detection starts");
           line_detect_1:
@@ -376,7 +393,7 @@ int main(int argc, char** argv)
         landmarks_pos.landmark_check = landmarks_pos.landmark_check + 1;
        
         line_strip_1.action = visualization_msgs::Marker::ADD;
-        line_strip_1.pose.position.z = 0.9;
+        line_strip_1.pose.position.z = 0.8;
         line_strip_1.pose.orientation.w = 1.0;
         line_strip_1.type = visualization_msgs::Marker::LINE_STRIP;
         line_strip_1.lifetime = ros::Duration(0.1);
@@ -387,7 +404,7 @@ int main(int argc, char** argv)
 
 
         line_strip_2.action = visualization_msgs::Marker::ADD;
-        line_strip_2.pose.position.z = 0.9;
+        line_strip_2.pose.position.z = 0.8;
         line_strip_2.pose.orientation.w = 1.0;
         line_strip_2.type = visualization_msgs::Marker::LINE_STRIP;
         line_strip_2.lifetime = ros::Duration(0.1);
@@ -408,74 +425,69 @@ int main(int argc, char** argv)
         final_line.color.a = 1.0;
 
         finale = 1;
+
+        meas_pts.meas_update = true;
       
         }// check for new lines
 
-        line_publish:
+      // actual range and bearing calculation
+      meas_pts.bearing[0] = normalizeangle(atan2((left_line_1_trans.pose.position.y-thorvald_pose.position.y),(left_line_1_trans.pose.position.x-thorvald_pose.position.x)));
+      line_local[0] = (left_line_1_trans.pose.position.y-thorvald_pose.position.y)/(sin(meas_pts.bearing[0]));  
+      meas_pts.range[0] = std::fabs(line_local[0] - thorvald_pose.position.x*cos(meas_pts.bearing[0]) - thorvald_pose.position.y*sin(meas_pts.bearing[0]));
 
-// actual range and bearing calculation
-double line_local[5];
+      meas_pts.bearing[1] = normalizeangle(atan2((left_line_2_trans.pose.position.y-thorvald_pose.position.y),(left_line_2_trans.pose.position.x-thorvald_pose.position.x)));
+      line_local[1] = (left_line_2_trans.pose.position.y-thorvald_pose.position.y)/(sin(meas_pts.bearing[1]));  
+      meas_pts.range[1] = std::fabs(line_local[1] - thorvald_pose.position.x*cos(meas_pts.bearing[1]) - thorvald_pose.position.y*sin(meas_pts.bearing[1]));
 
-meas_pts.bearing[0] = normalizeangle(atan2((left_line_1_trans.pose.position.y-thorvald_pose.position.y),(left_line_1_trans.pose.position.x-thorvald_pose.position.x)) - yaw);
-line_local[0] = left_line_1_trans.pose.position.y/(sin(meas_pts.bearing[0]));  
-meas_pts.range[0] = std::fabs(line_local[0] - thorvald_pose.position.x*cos(meas_pts.bearing[0]) - thorvald_pose.position.y*sin(meas_pts.bearing[0]));
-
-meas_pts.bearing[1] = normalizeangle(atan2((left_line_2_trans.pose.position.y-thorvald_pose.position.y),(left_line_2_trans.pose.position.x-thorvald_pose.position.x)) - yaw);
-line_local[1] = left_line_2_trans.pose.position.y/(sin(meas_pts.bearing[1]));  
-meas_pts.range[1] = std::fabs(line_local[1] - thorvald_pose.position.x*cos(meas_pts.bearing[1]) - thorvald_pose.position.y*sin(meas_pts.bearing[1]));
-
-meas_pts.bearing[2] = normalizeangle(atan2((right_line_1_trans.pose.position.y-thorvald_pose.position.y),(right_line_1_trans.pose.position.x-thorvald_pose.position.x)) - yaw);
-line_local[2] = right_line_1_trans.pose.position.y/(sin(meas_pts.bearing[2])); 
-meas_pts.range[2] = std::fabs(line_local[2] - thorvald_pose.position.x*cos(meas_pts.bearing[2]) - thorvald_pose.position.y*sin(meas_pts.bearing[2])); 
+      meas_pts.bearing[2] = normalizeangle(atan2((right_line_1_trans.pose.position.y-thorvald_pose.position.y),(right_line_1_trans.pose.position.x-thorvald_pose.position.x)));
+      line_local[2] = (right_line_1_trans.pose.position.y-thorvald_pose.position.y)/(sin(meas_pts.bearing[2])); 
+      meas_pts.range[2] = std::fabs(line_local[2] - thorvald_pose.position.x*cos(meas_pts.bearing[2]) - thorvald_pose.position.y*sin(meas_pts.bearing[2])); 
  
-meas_pts.bearing[3] = normalizeangle(atan2((right_line_2_trans.pose.position.y-thorvald_pose.position.y),(right_line_2_trans.pose.position.x-thorvald_pose.position.x)) - yaw);
-line_local[3] = right_line_2_trans.pose.position.y/(sin(meas_pts.bearing[3]));  
-meas_pts.range[3] = std::fabs(line_local[3] - thorvald_pose.position.x*cos(meas_pts.bearing[3]) - thorvald_pose.position.y*sin(meas_pts.bearing[3])); 
+      meas_pts.bearing[3] = normalizeangle(atan2((right_line_2_trans.pose.position.y-thorvald_pose.position.y),(right_line_2_trans.pose.position.x-thorvald_pose.position.x)));
+      line_local[3] = (right_line_2_trans.pose.position.y-thorvald_pose.position.y)/(sin(meas_pts.bearing[3]));  
+      meas_pts.range[3] = std::fabs(line_local[3] - thorvald_pose.position.x*cos(meas_pts.bearing[3]) - thorvald_pose.position.y*sin(meas_pts.bearing[3])); 
 
-left_l_c.position.x = (left_line_1_trans.pose.position.x + left_line_2_trans.pose.position.x)/2;
-left_l_c.position.y = (left_line_1_trans.pose.position.y + left_line_2_trans.pose.position.y)/2;
+      left_l_c.position.x = (left_line_1_trans.pose.position.x + left_line_2_trans.pose.position.x)/2;
+      left_l_c.position.y = (left_line_1_trans.pose.position.y + left_line_2_trans.pose.position.y)/2;
 
-meas_pts.bearing[4] = normalizeangle(atan2((left_l_c.position.y-thorvald_pose.position.y),(left_l_c.position.x-thorvald_pose.position.x)) - yaw);
-line_local[4] = left_l_c.position.y/(sin(meas_pts.bearing[4]));  
-meas_pts.range[4] = std::fabs(line_local[4] - thorvald_pose.position.x*cos(meas_pts.bearing[4]) - thorvald_pose.position.y*sin(meas_pts.bearing[4])); 
+      meas_pts.bearing[4] = normalizeangle(atan2((left_l_c.position.y-thorvald_pose.position.y),(left_l_c.position.x-thorvald_pose.position.x)));
+      line_local[4] = (left_l_c.position.y-thorvald_pose.position.y)/(sin(meas_pts.bearing[4]));  
+      meas_pts.range[4] = std::fabs(line_local[4] - thorvald_pose.position.x*cos(meas_pts.bearing[4]) - thorvald_pose.position.y*sin(meas_pts.bearing[4])); 
 
-right_l_c.position.x = (right_line_1_trans.pose.position.x + right_line_2_trans.pose.position.x)/2;
-right_l_c.position.y = (right_line_1_trans.pose.position.y + right_line_2_trans.pose.position.y)/2;
+      right_l_c.position.x = (right_line_1_trans.pose.position.x + right_line_2_trans.pose.position.x)/2;
+      right_l_c.position.y = (right_line_1_trans.pose.position.y + right_line_2_trans.pose.position.y)/2;
 
-meas_pts.bearing[5] = normalizeangle(atan2((right_l_c.position.y-thorvald_pose.position.y),(right_l_c.position.x-thorvald_pose.position.x)) - yaw);
-line_local[5] = right_l_c.position.y/(sin(meas_pts.bearing[5]));  
-meas_pts.range[5] = std::fabs(line_local[5] - thorvald_pose.position.x*cos(meas_pts.bearing[5]) - thorvald_pose.position.y*sin(meas_pts.bearing[5])); 
+      meas_pts.bearing[5] = normalizeangle(atan2((right_l_c.position.y-thorvald_pose.position.y),(right_l_c.position.x-thorvald_pose.position.x)));
+      line_local[5] = (right_l_c.position.y-thorvald_pose.position.y)/(sin(meas_pts.bearing[5]));  
+      meas_pts.range[5] = std::fabs(line_local[5] - thorvald_pose.position.x*cos(meas_pts.bearing[5]) - thorvald_pose.position.y*sin(meas_pts.bearing[5])); 
 
-meas_pts.meas_update = true;
-
+        line_publish:
         if(new_row == true){
         line_strip_1 = empty_line_strip_1;
         line_strip_2 = empty_line_strip_2;
         final_line = empty_final_line;
         meas_pts = empty_meas_pts;
         landmarks_pos = empty_landmarks_pos;
+
+        meas_pts.meas_update = false;
         landmarks_pos.landmark_check = 0; 
-        marker_pub_1.publish(line_strip_1);
-        marker_pub_2.publish(line_strip_2);
-        marker_pub_3.publish(final_line);
-        point_pub.publish(meas_pts);
-        landmarks_pub.publish(landmarks_pos);
         new_row = false;
         }
-        else{
+
         marker_pub_1.publish(line_strip_1);
         marker_pub_2.publish(line_strip_2);
         marker_pub_3.publish(final_line);
         point_pub.publish(meas_pts);
         landmarks_pub.publish(landmarks_pos);
-        }   
+          
 
         line_strip_1.header.stamp = ros::Time::now();
         line_strip_2.header.stamp = ros::Time::now();
         final_line.header.stamp = ros::Time::now();
         meas_pts.header.stamp = ros::Time::now();
         landmarks_pos.header.stamp = ros::Time::now();
- 
+
+        meas_pts.header.frame_id = "/map";
         line_strip_1.header.frame_id = "/map";
         line_strip_2.header.frame_id = "/map";
         landmarks_pos.header.frame_id = "/map";

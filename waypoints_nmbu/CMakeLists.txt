@@ -168,6 +168,7 @@ set_target_properties(YAML_LIB PROPERTIES LINKER_LANGUAGE CXX)
 add_executable(gps_waypoints_nav src/gps_waypoints_nav.cpp)
 add_executable(gps_waypoints_nav_mb src/gps_waypoints_nav_mb.cpp)
 add_executable(waypoint_saver src/waypoint_saver.cpp)
+add_executable(simple_navigation_goals_mb src/simple_navigation_goals_mb.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -180,11 +181,13 @@ add_executable(waypoint_saver src/waypoint_saver.cpp)
 add_dependencies(gps_waypoints_nav ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(gps_waypoints_nav_mb ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(waypoint_saver ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(simple_navigation_goals_mb ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
  target_link_libraries(gps_waypoints_nav ${catkin_LIBRARIES} YAML_LIB yaml-cpp)
  target_link_libraries(gps_waypoints_nav_mb ${catkin_LIBRARIES} YAML_LIB yaml-cpp)
  target_link_libraries(waypoint_saver ${catkin_LIBRARIES} )
+ target_link_libraries(simple_navigation_goals_mb ${catkin_LIBRARIES} YAML_LIB yaml-cpp)
 #############
 ## Install ##
 #############

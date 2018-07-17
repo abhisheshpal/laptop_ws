@@ -11,6 +11,7 @@ tf::Quaternion quat(thor_est.pose.orientation.x,thor_est.pose.orientation.y, tho
 quat = quat.normalize();
 yaw = tf::getYaw(quat);
 
+counter_pose = 1;
 }
 
 //line points 
@@ -44,7 +45,6 @@ bool row_transition(thorvald_2d_nav::sub_goal::Request &req, thorvald_2d_nav::su
 
 double control_law(double v, double _dt, geometry_msgs::PoseStamped hokuyo_pose, double _integral){
 
-
    slope_1 = (landmarks_pose.y[1]-landmarks_pose.y[5])/(landmarks_pose.x[1]-landmarks_pose.x[5]); 
    slope_2 = (landmarks_pose.y[3]-landmarks_pose.y[5])/(landmarks_pose.x[3]-landmarks_pose.x[5]);
 
@@ -55,8 +55,8 @@ double control_law(double v, double _dt, geometry_msgs::PoseStamped hokuyo_pose,
   q_x =  mini_goal_pts.x-hokuyo_pose.pose.position.x;
   q_y =  mini_goal_pts.y-hokuyo_pose.pose.position.y;
   position_error = sqrt(pow(q_x,2) + pow(q_y,2));
-  angular_error = atan2(q_y,q_x)- yaw;
- 
+  angular_error = atan2(q_y,q_x);
+  std::cout << "mini_goal_pts.y:" << mini_goal_pts.y  << "\n" << "hokuyo_pose.pose.position.y:" << hokuyo_pose.pose.position.y << "\n" << std::endl;
   if (angular_error > M_PI){
   angular_error -= 2*M_PI;}
   if (angular_error < -M_PI){
@@ -89,27 +89,33 @@ double control_law(double v, double _dt, geometry_msgs::PoseStamped hokuyo_pose,
  //  lastError = dist_err;
  
   _integral = (_integral + angular_error) * _dt;
-//     std::cout << "integral" << _integral << "\n" << "angular_error" << _integral + angular_error << std::endl;
+  //   std::cout << "integral" << _integral << "\n" << "angular_error" << _integral + angular_error << std::endl;
   if(!std::isnan(_integral)){
   integrate = _integral;
   }
-  omega = K_p * angular_error *_dt + K_d *(angular_error - lastError)*_dt + K_i * integrate * _dt;
-  lastError = angular_error; 
+  // omega = K_p * angular_error *_dt + K_d *(angular_error - lastError)*_dt + K_i * integrate * _dt;
+  //omega = K_p * angular_error *_dt + K_d *(angular_error - lastError)*_dt ;
+   if(q_y<0){
+   omega = 0.03 *q_y + (0.03*(q_y-lastError));}
+   else{
+   omega =  0.1 * q_y + 0.1 *(q_y-lastError);
+   }
+   lastError = q_y; 
        
 
-    std::cout << "omega:" << omega << "\n" << std::endl;
+  std::cout << "q_y:" << q_y << "\n" << "omega:" << omega << "\n" << std::endl;
   if (omega > M_PI){
   omega -= 2*M_PI;}
   if(omega < -M_PI){
   omega += 2*M_PI;}
   
-   if((fabs(position_error) <= 0.2) && (c<=Total_Points)){
+/*   if((q_x < 0.4) && (c<=Total_Points)){
    // ROS_INFO("New Mini-Goal Initiated");
    mini_goal_pts.x = Points[c].position.x;
    mini_goal_pts.y = Points[c].position.y;
    c = c + 1;
    mini_goal = true;
-   }
+   } */
 
   return omega;
 }
@@ -146,7 +152,7 @@ int main(int argc, char** argv)
 
   ros::spinOnce();
 
-  if((counter_line > 0) && (landmarks_pose.landmark_check > 0)){ // generated line check
+  if((counter_line > 0) && (counter_pose > 0) && (landmarks_pose.landmark_check > 0)){ // generated line check
 
   current_time = ros::Time::now();	
   dt = (current_time - last_time).toSec();
@@ -154,21 +160,22 @@ int main(int argc, char** argv)
   if((landmarks_pose.landmark_check > line_count) || ((next_row_check == true)&&(landmarks_pose.row_number > row_count))){
    line_count = landmarks_pose.landmark_check;
    row_count = landmarks_pose.row_number;
-    for(int i=1;i<=Total_Points;i++){
-    Points[i].position.x = ((thor_est.pose.position.x) *(1-(float(i)/Total_Points))) + ((landmarks_pose.x[5]-0.8) *(float(i)/Total_Points));
-    Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.y[5]) *(float(i)/Total_Points)); 
 
-    /*if(landmarks_pose.y[5]>0.0){
-     if(landmarks_pose.y[5]>1.0){
-     Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.y[5]-1.0) *(float(i)/Total_Points)); 
-     }
-     else{ 
-     Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((1.0-landmarks_pose.y[5]) *(float(i)/Total_Points)); 
-     }
+ /*   // for immediate stop
+    if(row_count == 2){
+    est_twist.linear.x = 0;
+    est_twist.angular.z = 0;
+    goto stop;
     }
-    else{ 
-    Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.y[5]+1.0) *(float(i)/Total_Points)); 
-    } */
+*/
+    for(int i=1;i<=Total_Points;i++){
+  // if(landmarks_pose.x[5] > thor_est.pose.position.x){
+    Points[i].position.x = ((thor_est.pose.position.x) *(1-(float(i)/Total_Points))) + ((landmarks_pose.x[5]-1.0) *(float(i)/Total_Points));
+   //  }
+   // else{
+   // Points[i].position.x = ((thor_est.pose.position.x) *(1-(float(i)/Total_Points))) + ((landmarks_pose.x[5]+1.2) *(float(i)/Total_Points));
+   // }
+    Points[i].position.y = (thor_est.pose.position.y *(1-(float(i)/Total_Points))) + ((landmarks_pose.y[5]) *(float(i)/Total_Points)); 
   }
 
   mini_goal_pts.x = Points[1].position.x;
@@ -192,8 +199,8 @@ int main(int argc, char** argv)
        thor_est_trans.header.frame_id = "/hokuyo";  
  
    angular_velocity = control_law(linear_velocity, dt, thor_est_trans, intregral); // control law
-// std::cout << "Points[Total_Points].x:" << Points[Total_Points].position.x << "\n" << "thor_est_trans.pose.position.x:" << thor_est_trans.pose.position.x << "\n" << std::endl;
-   if(fabs(Points[Total_Points].position.x - thor_est_trans.pose.position.x) <= 0.5){
+
+   if(std::fabs(Points[Total_Points].position.x - thor_est_trans.pose.position.x) <= 0.5){
    counter_1 = 1;
    mini_goal = false;
    est_twist.linear.x = 0;
@@ -201,10 +208,11 @@ int main(int argc, char** argv)
    ROS_INFO("Final Mini-Goal Reached");
    }
    else{
-   est_twist.linear.x = 0.2;
+   est_twist.linear.x = 0.25;
    est_twist.angular.z = angular_velocity;
     } 
-
+   
+   stop:
    twist_gazebo.publish(est_twist);
    } // final min-goal check
 
